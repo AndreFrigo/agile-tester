@@ -1,0 +1,22 @@
+{
+  "name": "spectron-test-framework",
+  "version": "1.0.0",
+  "description": "Test Framework for Electron Desktop Application",
+  "main": "test.js",
+  "scripts": {
+    "test:demo": "mocha ./src/test-suites/test-spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mocha": "^5.2.3",
+    "@types/webdriverio": "^4.10.2",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "electron": "^2.0.2",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.0.2",
+    "robotjs": "^0.5.1",
+    "spectron": "^3.8.0"
+  }
+}
