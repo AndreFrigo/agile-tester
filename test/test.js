@@ -3,9 +3,13 @@ var assert = require('assert');
 const {testList} = require ("./test-list.js");
 var app = null;
 
+// Italiano:1, Inglese:2, Spagnolo:3
+var language = 0;
+
+
+
 //apre l'applicazione prima di iniziare il test
 before(function(done) {
-    console.log('before every test in every file');
     app = new Application({
         path: 'C:\\Program Files (x86)\\Praim\\Agile\\AgileConfigurator\\AgileConfigurator.exe'
     });
@@ -49,12 +53,20 @@ describe('Test', function(){
         assert.equal(count, 1);
         });
     };
+
+    //Va nella sezione impostazioni, nessun controllo
+    it('Navigates to settings', async () => {
+        await app.client.click('#menu-link-1');
+        await app.client.waitUntilWindowLoaded();
+        assert.equal(1,1);
+    });
+    
+    //Dalla sezione impostazioni va a quella della lingua, funziona solo in italiano, nessun controllo
+    it('Navigates to language', async () => {
+        await app.client.click('=LINGUA');
+        await app.client.waitUntilWindowLoaded();
+        assert.equal(1,1);
+    });
+      
     
 })
-
-
-
-
-
-
-

@@ -5,7 +5,7 @@ const testList={
     appIsRunning: false,
     
     //Controlla che sia aperta una singola finestra dell'applicazione
-    onlyOneWindow: true
+    onlyOneWindow: false
 };
 
 module.exports = {testList};
