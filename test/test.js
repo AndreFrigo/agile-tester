@@ -1,6 +1,6 @@
-var Application = require('spectron').Application
+var Application = require('spectron').Application;
 var assert = require('assert');
-
+const {testList} = require ("./test-list.js");
 var app = null;
 
 //apre l'applicazione prima di iniziare il test
@@ -33,19 +33,25 @@ describe('Test', function(){
     })
 
     //Controlla se l'applicazione è attiva
-    it('App is running', async () => {
+    if(testList.appIsRunning){
+        it('App is running', async () => {
         var running = app.isRunning();
         assert.equal(running, true);
-    });
+        });
+    };
+    
 
     //Controlla che sia aperta una singola finestra dell'applicazione
-    it('Shows an initial window', async () => {
+    if(testList.onlyOneWindow){
+        it('Shows an initial window', async () => {
         app.client.waitUntilWindowLoaded();
         const count = await app.client.getWindowCount();
         assert.equal(count, 1);
-      });
-
+        });
+    };
+    
 })
+
 
 
 
