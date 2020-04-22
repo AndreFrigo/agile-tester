@@ -57,16 +57,17 @@ describe('Test', function(){
     //Va nella sezione impostazioni, nessun controllo
     it('Navigates to settings', async () => {
         await app.client.click('#menu-link-1');
-        await app.client.waitUntilWindowLoaded();
+        app.client.waitUntilWindowLoaded();
         assert.equal(1,1);
     });
     
-    //Dalla sezione impostazioni va a quella della lingua, funziona solo in italiano, nessun controllo
+    //Dalla sezione impostazioni va a quella della lingua, nessun controllo
     it('Navigates to language', async () => {
-        await app.client.click('=LINGUA');
-        await app.client.waitUntilWindowLoaded();
+        const lingua = app.client.$('#language-tab.tab > a');
+        await lingua.click();
+        app.client.waitUntilWindowLoaded();
         assert.equal(1,1);
     });
-      
+
     
 })
