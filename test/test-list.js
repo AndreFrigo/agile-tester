@@ -5,7 +5,10 @@ const testList={
     appIsRunning: false,
     
     //Controlla che sia aperta una singola finestra dell'applicazione
-    onlyOneWindow: false
+    onlyOneWindow: false,
+
+    //Cambia lingua in inglese
+    englishLanguage: true
 };
 
 module.exports = {testList};
