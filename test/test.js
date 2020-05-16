@@ -47,7 +47,6 @@ describe('Test', function(){
     it('Checking language', async () => {
         const lang = app.client.$('#menu-link-1');
         await lang.getText().then(function(lan){
-            console.log("lingua pre: "+lan);
             if(lan == "Impostazioni di Sistema") language = 1;
             if(lan == "System Settings") language = 2;
             if(lan == "Ajustes del Sistema") language = 3;
@@ -81,25 +80,17 @@ describe('Test', function(){
 
         //Dalla sezione lingua in italiano, imposta la lingua inglese, nessun controllo
         it('Select english as language', async () => {
-            //var dataActivates = "";
             const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
-            //is visible sbe true
-            // sbe.getAttribute('data-activates').then(function(attr){
-            //     dataActivates += attr;
-            // });
             await sbe.click();
-            this.timeout(5000);
+
+            app.client.pause(5000);
+            //TODO: qua crasha perchè non aspetta!!
+
             await app.client.click("span=Inglese");
-
-            //const sbm = app.client.$("#"+dataActivates+" > li.selected > span");
-            //is visible sbm true
-        
-            //const sbi = app.client.$("#language > span > div > div > div > select.initialized");
-            //is visible sbi false
-
-            //await sbi.selectByIndex(0);
+            //TODO: farlo funzionare per qualsiasi lingua di partenza e aggiornare lingua una volta selezionata 
 
             assert.equal(1,1);
+            //TODO: implementare controllo
         });
     }
     
