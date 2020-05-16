@@ -44,6 +44,16 @@ describe('Test', function(){
         });
     };
 
+    it('Checking language', async () => {
+        const lang = app.client.$('#menu-link-1');
+        await lang.getText().then(function(lan){
+            console.log("lingua pre: "+lan);
+            if(lan == "Impostazioni di Sistema") language = 1;
+            if(lan == "System Settings") language = 2;
+            if(lan == "Ajustes del Sistema") language = 3;
+        })
+    })
+    
 
     //Controlla che sia aperta una singola finestra dell'applicazione
     if(testList.onlyOneWindow){
