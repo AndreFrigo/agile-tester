@@ -19,12 +19,12 @@ before(function(done) {
 });
 
 //chiude l'applicazione alla fine dei test
-after(function (done) {
-    if (app && app.isRunning()) {
-        app.stop();
-    }
-    done();
-});
+// after(function (done) {
+//     if (app && app.isRunning()) {
+//         app.stop();
+//     }
+//     done();
+// });
 
 
 
@@ -69,5 +69,26 @@ describe('Test', function(){
         assert.equal(1,1);
     });
 
+    //Dalla sezione lingua in italiano, imposta la lingua inglese, nessun controllo
+    it('Select english as language', async () => {
+        //var dataActivates = "";
+        const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
+        //is visible sbe true
+        // sbe.getAttribute('data-activates').then(function(attr){
+        //     dataActivates += attr;
+        // });
+        await sbe.click();
+        this.timeout(5000);
+        await app.client.click("span=Inglese");
+
+        //const sbm = app.client.$("#"+dataActivates+" > li.selected > span");
+        //is visible sbm true
     
+        //const sbi = app.client.$("#language > span > div > div > div > select.initialized");
+        //is visible sbi false
+
+        //await sbi.selectByIndex(0);
+
+        assert.equal(1,1);
+    });
 })
