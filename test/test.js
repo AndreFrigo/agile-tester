@@ -14,7 +14,6 @@ before(function(done) {
         path: 'C:\\Program Files (x86)\\Praim\\Agile\\AgileConfigurator\\AgileConfigurator.exe',
         waitTimeout: 10000
     });
-    console.log("Applicazione caricata");
     app.start();
     done();
 });
@@ -63,31 +62,33 @@ describe('Test', function(){
             if(lan == "System Settings") language = 2;
             if(lan == "Ajustes del Sistema") language = 3;
         })
+        if(language > 0 &&  language < 4){
+            assert.ok(language);
+        }
     });
     
     if(testList.englishLanguage){
         describe("Choose english as language", function(){
-            //Va nella sezione impostazioni, nessun controllo
+            //Va nella sezione impostazioni
             it('Navigates to settings', async () => {
-                await app.client.click('#menu-link-1');
+                const click = await app.client.click('#menu-link-1');
                 app.client.waitUntilWindowLoaded();
-                assert.equal(1,1);
+                assert.ok(click);
             });
             
-            //Dalla sezione impostazioni va a quella della lingua, nessun controllo
+            //Dalla sezione impostazioni va a quella della lingua
             it('Navigates to language', async () => {
                 const lingua = app.client.$('#language-tab.tab > a');
-                await lingua.click();
+                const click = await lingua.click();
                 app.client.waitUntilWindowLoaded();
-                assert.equal(1,1);
+                assert.ok(click);
             });
 
-            //Dalla sezione lingua in italiano, apri la scelta della lingua, nessun controllo
+            //Dalla sezione lingua in italiano, apri la scelta della lingua
             it('Open language list', async () => {
                 const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
-                await sbe.click();
-                assert.equal(1,1);
-                //TODO: implementare controllo
+                const click = await sbe.click();
+                assert.ok(click);
             });
 
             //Sceglie la lingua inglese
