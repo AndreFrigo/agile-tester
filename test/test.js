@@ -45,9 +45,6 @@ describe('Test', function(){
         });
     };
 
-    
-    
-
     //Controlla che sia aperta una singola finestra dell'applicazione
     if(testList.onlyOneWindow){
         it('Shows an initial window', async () => {
@@ -89,20 +86,37 @@ describe('Test', function(){
             it('Open language list', async () => {
                 const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
                 await sbe.click();
-                //TODO: farlo funzionare per qualsiasi lingua di partenza e aggiornare lingua una volta selezionata 
-
                 assert.equal(1,1);
                 //TODO: implementare controllo
             });
 
             //Sceglie la lingua inglese
             it('Select english as language', async () => {
-                
-                await app.client.click("span=Inglese");
-                assert.equal(1,1);
-                //TODO: implementare controllo
+                var choice = ""
+                switch(language){
+                    case 1 : {
+                        choice+="span=Inglese";
+                        break;
+                    }
+                    case 2 : {
+                        choice+="span=English";
+                        break;
+                    }
+                    case 3 : {
+                        choice+="span=Inglés";
+                        break;
+                    }
+                    default : {
+                        console.log("Undefined language!" + language);
+                        break;
+                    }
+                }
+                await app.client.click(choice).then(function(){
+                    language = 2;
+                });
+                //controlla che la lingua corrente sia inglese
+                assert.equal(language,2);
             });
         })
-        
     }
 })
