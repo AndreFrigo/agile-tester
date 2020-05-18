@@ -11,7 +11,8 @@ var language = 0;
 //apre l'applicazione prima di iniziare il test
 before(function(done) {
     app = new Application({
-        path: 'C:\\Program Files (x86)\\Praim\\Agile\\AgileConfigurator\\AgileConfigurator.exe'
+        path: 'C:\\Program Files (x86)\\Praim\\Agile\\AgileConfigurator\\AgileConfigurator.exe',
+        waitTimeout: 10000
     });
     console.log("Applicazione caricata");
     app.start();
@@ -44,14 +45,7 @@ describe('Test', function(){
         });
     };
 
-    it('Checking language', async () => {
-        const lang = app.client.$('#menu-link-1');
-        await lang.getText().then(function(lan){
-            if(lan == "Impostazioni di Sistema") language = 1;
-            if(lan == "System Settings") language = 2;
-            if(lan == "Ajustes del Sistema") language = 3;
-        })
-    })
+    
     
 
     //Controlla che sia aperta una singola finestra dell'applicazione
@@ -62,36 +56,53 @@ describe('Test', function(){
         assert.equal(count, 1);
         });
     };
-    if(testList.englishLanguage){
-        //Va nella sezione impostazioni, nessun controllo
-        it('Navigates to settings', async () => {
-            await app.client.click('#menu-link-1');
-            app.client.waitUntilWindowLoaded();
-            assert.equal(1,1);
-        });
-        
-        //Dalla sezione impostazioni va a quella della lingua, nessun controllo
-        it('Navigates to language', async () => {
-            const lingua = app.client.$('#language-tab.tab > a');
-            await lingua.click();
-            app.client.waitUntilWindowLoaded();
-            assert.equal(1,1);
-        });
 
-        //Dalla sezione lingua in italiano, imposta la lingua inglese, nessun controllo
-        it('Select english as language', async () => {
-            const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
-            await sbe.click();
-
-            app.client.pause(5000);
-            //TODO: qua crasha perchè non aspetta!!
-
-            await app.client.click("span=Inglese");
-            //TODO: farlo funzionare per qualsiasi lingua di partenza e aggiornare lingua una volta selezionata 
-
-            assert.equal(1,1);
-            //TODO: implementare controllo
-        });
-    }
     
+    //Controlla la lingua del sistema
+    it('Checking language', async () => {
+        const lang = app.client.$('#menu-link-1');
+        await lang.getText().then(function(lan){
+            if(lan == "Impostazioni di Sistema") language = 1;
+            if(lan == "System Settings") language = 2;
+            if(lan == "Ajustes del Sistema") language = 3;
+        })
+    });
+    
+    if(testList.englishLanguage){
+        describe("Choose english as language", function(){
+            //Va nella sezione impostazioni, nessun controllo
+            it('Navigates to settings', async () => {
+                await app.client.click('#menu-link-1');
+                app.client.waitUntilWindowLoaded();
+                assert.equal(1,1);
+            });
+            
+            //Dalla sezione impostazioni va a quella della lingua, nessun controllo
+            it('Navigates to language', async () => {
+                const lingua = app.client.$('#language-tab.tab > a');
+                await lingua.click();
+                app.client.waitUntilWindowLoaded();
+                assert.equal(1,1);
+            });
+
+            //Dalla sezione lingua in italiano, apri la scelta della lingua, nessun controllo
+            it('Open language list', async () => {
+                const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
+                await sbe.click();
+                //TODO: farlo funzionare per qualsiasi lingua di partenza e aggiornare lingua una volta selezionata 
+
+                assert.equal(1,1);
+                //TODO: implementare controllo
+            });
+
+            //Sceglie la lingua inglese
+            it('Select english as language', async () => {
+                
+                await app.client.click("span=Inglese");
+                assert.equal(1,1);
+                //TODO: implementare controllo
+            });
+        })
+        
+    }
 })
