@@ -8,7 +8,10 @@ const testList={
     onlyOneWindow: false,
 
     //Cambia lingua in inglese
-    englishLanguage: true
+    englishLanguage: false,
+
+    //Avvia anteprima modalità Agile
+    previewAgile: true 
 };
 
 module.exports = {testList};

@@ -120,4 +120,25 @@ describe('Test', function(){
             });
         })
     }
+
+    if(testList.previewAgile){
+        describe("Show Agile preview", function(){
+            //Va nella sezione Modalità d'uso
+            it("Navigates to Agile/Browser/Desktop Mode ", async () => {
+                const click = await app.client.click('#menu-link-12');
+                app.client.waitUntilWindowLoaded();
+                assert.ok(click);
+            })
+
+            //Dalla sezione modalità d'uso attiva la simulazione con i parametri settati
+            it('Start Agile preview', async () => {
+                const preview = app.client.$('#agile > div > div > a');
+                const click = await preview.click();
+                app.client.waitUntilWindowLoaded();
+                assert.ok(click);
+            });
+        })
+    }
+
+    
 })
