@@ -2,6 +2,8 @@ var Application = require('spectron').Application;
 var assert = require('assert');
 const {testList} = require ("./test-list.js");
 var app = null;
+var agilePreview = null;
+const agilePath = "C:\\Program Files (x86)\\Praim\\Agile"
 
 // Italiano:1, Inglese:2, Spagnolo:3
 var language = 0;
@@ -11,7 +13,7 @@ var language = 0;
 //apre l'applicazione prima di iniziare il test
 before(function(done) {
     app = new Application({
-        path: 'C:\\Program Files (x86)\\Praim\\Agile\\AgileConfigurator\\AgileConfigurator.exe',
+        path: agilePath + '\\AgileConfigurator\\AgileConfigurator.exe',
         waitTimeout: 10000
     });
     app.start();
@@ -130,12 +132,14 @@ describe('Test', function(){
                 assert.ok(click);
             })
 
-            //Dalla sezione modalità d'uso attiva la simulazione con i parametri settati
+            //Mostra la Agile preview come nuova app 
             it('Start Agile preview', async () => {
-                const preview = app.client.$('#agile > div > div > a');
-                const click = await preview.click();
-                app.client.waitUntilWindowLoaded();
-                assert.ok(click);
+                agilePreview = new Application({
+                    path: agilePath + '\\Agile\\Agile.exe',
+                    waitTimeout: 10000
+                });
+                const start = agilePreview.start();
+                assert.ok(start)
             });
         })
     }
