@@ -3,8 +3,14 @@ var assert = require('assert');
 const {testList} = require ("./test-list.js");
 var app = null;
 var agilePreview = null;
-const agilePath = "C:\\Program Files (x86)\\Praim\\Agile"
 
+//da impostare prima di eseguire
+//path per la cartella Praim/Agile
+const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
+
+
+// about:0, system settings:1, .....
+var leftMenu = 0;
 // Italiano:1, Inglese:2, Spagnolo:3
 var language = 0;
 
@@ -13,7 +19,7 @@ var language = 0;
 //apre l'applicazione prima di iniziare il test
 before(function(done) {
     app = new Application({
-        path: agilePath + '\\AgileConfigurator\\AgileConfigurator.exe',
+        path: AGILE_PATH + '\\AgileConfigurator\\AgileConfigurator.exe',
         waitTimeout: 10000
     });
     app.start();
@@ -71,12 +77,15 @@ describe('Test', function(){
     
     if(testList.englishLanguage){
         describe("Choose english as language", function(){
-            //Va nella sezione impostazioni
-            it('Navigates to settings', async () => {
-                const click = await app.client.click('#menu-link-1');
-                app.client.waitUntilWindowLoaded();
-                assert.ok(click);
-            });
+            if(leftMenu != 1){
+                //Va nella sezione impostazioni
+                it('Navigates to settings', async () => {
+                    const click = await app.client.click('#menu-link-1');
+                    app.client.waitUntilWindowLoaded();
+                    leftMenu = 1;
+                    assert.ok(click);
+                });
+            }
             
             //Dalla sezione impostazioni va a quella della lingua
             it('Navigates to language', async () => {
@@ -125,17 +134,20 @@ describe('Test', function(){
 
     if(testList.previewAgile){
         describe("Show Agile preview", function(){
-            //Va nella sezione Modalità d'uso
-            it("Navigates to Agile/Browser/Desktop Mode ", async () => {
-                const click = await app.client.click('#menu-link-12');
-                app.client.waitUntilWindowLoaded();
-                assert.ok(click);
-            })
-
+            if(leftMenu != 10){
+                //Va nella sezione Modalità d'uso
+                it("Navigates to Agile/Browser/Desktop Mode ", async () => {
+                    const click = await app.client.click('#menu-link-12');
+                    app.client.waitUntilWindowLoaded();
+                    leftMenu = 10;
+                    assert.ok(click);
+                })
+            }
+            
             //Mostra la Agile preview come nuova app 
             it('Start Agile preview', async () => {
                 agilePreview = new Application({
-                    path: agilePath + '\\Agile\\Agile.exe',
+                    path: AGILE_PATH + '\\Agile\\Agile.exe',
                     waitTimeout: 10000
                 });
                 const start = agilePreview.start();

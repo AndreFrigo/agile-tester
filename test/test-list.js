@@ -11,7 +11,7 @@ const testList={
     englishLanguage: false,
 
     //Avvia anteprima modalità Agile
-    previewAgile: true 
+    previewAgile: false
 };
 
 module.exports = {testList};
