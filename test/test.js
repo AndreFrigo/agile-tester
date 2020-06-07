@@ -20,7 +20,6 @@ var language = 0;
 before(function(done) {
     app = new Application({
         path: AGILE_PATH + '\\AgileConfigurator\\AgileConfigurator.exe',
-        waitTimeout: 10000
     });
     app.start();
     done();
@@ -75,8 +74,10 @@ describe('Test', function(){
         }
     });
     
+    //Imposta la lingua di sistema in english
     if(testList.englishLanguage){
         describe("Choose english as language", function(){
+            //controlla se si è gia nel menù corretto
             if(leftMenu != 1){
                 //Va nella sezione impostazioni
                 it('Navigates to settings', async () => {
@@ -95,7 +96,7 @@ describe('Test', function(){
                 assert.ok(click);
             });
 
-            //Dalla sezione lingua in italiano, apri la scelta della lingua
+            //Dalla sezione lingua, apre la scelta della lingua
             it('Open language list', async () => {
                 const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
                 const click = await sbe.click();
@@ -124,6 +125,7 @@ describe('Test', function(){
                     }
                 }
                 await app.client.click(choice).then(function(){
+                    //aggiorna la lingua corrente
                     language = 2;
                 });
                 //controlla che la lingua corrente sia inglese
@@ -133,7 +135,9 @@ describe('Test', function(){
     }
 
     if(testList.previewAgile){
+        //Avvia anteprima modalità Agile
         describe("Show Agile preview", function(){
+            //controlla se si è gia nel menù corretto
             if(leftMenu != 10){
                 //Va nella sezione Modalità d'uso
                 it("Navigates to Agile/Browser/Desktop Mode ", async () => {
@@ -144,17 +148,15 @@ describe('Test', function(){
                 })
             }
             
-            //Mostra la Agile preview come nuova app 
+            //Mostra la Agile preview aprendola come nuova applicazione della path e non dall'interfaccia
             it('Start Agile preview', async () => {
                 agilePreview = new Application({
                     path: AGILE_PATH + '\\Agile\\Agile.exe',
-                    waitTimeout: 10000
                 });
                 const start = agilePreview.start();
                 assert.ok(start)
             });
         })
     }
-
     
 })
