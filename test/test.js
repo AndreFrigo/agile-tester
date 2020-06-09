@@ -141,6 +141,14 @@ describe('Test', function(){
                 //controlla che la lingua corrente sia inglese
                 assert.equal(language,2);
             });
+
+            it('Check if language is english', async () => {
+                await conn.get("config_locale", function(err, res){
+                    //controlla che la lingua settata nel database sia en-GB
+                    var lan = JSON.parse(res).current_locale_agile;
+                    assert(lan, "en-GB");
+                });
+            })
         })
     }
 
