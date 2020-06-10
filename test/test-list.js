@@ -11,7 +11,10 @@ const testList={
     englishLanguage: false,
 
     //Avvia anteprima modalità Agile
-    previewAgile: false
+    previewAgile: false,
+
+    //Aggiunge un address all'elenco dei ThinMan
+    addThinManAddress: true
 };
 
 module.exports = {testList};

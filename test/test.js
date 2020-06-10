@@ -9,8 +9,8 @@ const redis = require('redis')
 //da impostare prima di eseguire
 //path per la cartella Praim/Agile
 const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
-
-
+//dati per la creazione di un nuovo indirizzo agile (test: addThinManAddress), perchè il test funzioni non deve esistere nessun indirizzo con llo stesso hostname
+const newAddress = {address: "agile_test", timeout: 15, port: 443};
 // about:0, system settings:1, .....
 var leftMenu = 0;
 // Italiano:1, Inglese:2, Spagnolo:3
@@ -143,12 +143,71 @@ describe('Test', function(){
             });
 
             it('Check if language is english', async () => {
+                conn.select(1);
                 await conn.get("config_locale", function(err, res){
                     //controlla che la lingua settata nel database sia en-GB
                     var lan = JSON.parse(res).current_locale_agile;
                     assert(lan, "en-GB");
                 });
             })
+        })
+    }
+
+    if(testList.addThinManAddress){
+        //Aggiunge un address all'elenco dei ThinMan
+        describe("Add a new address of ThinMan", function(){
+            //get thinman nel db 1 per avere l'info
+            //controlla se è già nel menù corretto
+            if(leftMenu != 2){
+                //Va nella sezione ThinMan Setting
+                it("Navigates to ThinMan Settings", async () => {
+                    const click = await app.client.click('#menu-link-2');
+                    app.client.waitUntilWindowLoaded();
+                    leftMenu = 2;
+                    assert.ok(click);
+                })
+                //Preme su add address
+                it("Press Add Address", async () => {
+                    const addAddress = app.client.$('h5 > a');
+                    const click = await addAddress.click();
+                    app.client.waitUntilWindowLoaded();
+                    assert.ok(click);
+                })
+                //inserisce le info per la creazione di un nuovo indirizzo, inserendo come hostname: test_agile, porta e timeout di default
+                it("Insert info", async () => {
+                    //set hostname value 
+                    const hostname = app.client.$("#new-address");
+                    hostname.setValue(newAddress.address);
+                    hostname.getValue().then(function(v){
+                        assert.equal(newAddress.address, v);
+                    })
+                })
+                //preme ok creando così il nuovo indirizzo
+                it("Create the new address", async () => {
+                    const ok = app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a");
+                    const click = await ok.click();
+                    assert.ok(click);
+                })
+                //controlla se è stato creato l'indirizzo correttamente 
+                it("Check if the new address has been created successfully", async () => {
+                    var ok = false;
+                    var address = null;
+                    conn.select(1);
+                    conn.get("thinman", function(err,res){
+                        var ok = false;
+                        address = JSON.parse(res).address;
+                        address.forEach(element => {
+                            if(element.address == newAddress.address){
+                                if(element.port == newAddress.port && element.timeout == newAddress.timeout){
+                                    ok = true;
+                                } 
+                            }
+                        });
+                        assert.ok(ok,"the new address has not been created successfully");
+                    })
+                })
+            }
+            
         })
     }
 
