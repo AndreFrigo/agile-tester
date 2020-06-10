@@ -10,7 +10,7 @@ const redis = require('redis')
 //path per la cartella Praim/Agile
 const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
 //dati per la creazione di un nuovo indirizzo agile (test: addThinManAddress), perchè il test funzioni non deve esistere nessun indirizzo con llo stesso hostname
-const newAddress = {address: "agile_test", timeout: 15, port: 443};
+const newAddress = {address: "agile_test", timeout: 23, port: 378};
 // about:0, system settings:1, .....
 var leftMenu = 0;
 // Italiano:1, Inglese:2, Spagnolo:3
@@ -156,7 +156,6 @@ describe('Test', function(){
     if(testList.addThinManAddress){
         //Aggiunge un address all'elenco dei ThinMan
         describe("Add a new address of ThinMan", function(){
-            //get thinman nel db 1 per avere l'info
             //controlla se è già nel menù corretto
             if(leftMenu != 2){
                 //Va nella sezione ThinMan Setting
@@ -173,13 +172,40 @@ describe('Test', function(){
                     app.client.waitUntilWindowLoaded();
                     assert.ok(click);
                 })
-                //inserisce le info per la creazione di un nuovo indirizzo, inserendo come hostname: test_agile, porta e timeout di default
-                it("Insert info", async () => {
-                    //set hostname value 
+                //inserisce l'hostname settato in newAddress
+                it("Insert hostname", async () => { 
                     const hostname = app.client.$("#new-address");
                     hostname.setValue(newAddress.address);
                     hostname.getValue().then(function(v){
                         assert.equal(newAddress.address, v);
+                    })
+                })
+                //inserisce la porta settata in newAddress
+                it("Insert port", async () => {
+                    const port = app.client.$("#new-port");
+                    port.click();
+                    port.getValue().then(function(result){
+                        for(i=0;i<result.length;i++){
+                            app.client.keys("Backspace");
+                        }
+                    });
+                    port.setValue(newAddress.port);
+                    port.getValue().then(function(v){
+                        assert.equal(v, newAddress.port);
+                    })
+                })
+                //inserisce il timeout settato in newAddress
+                it("Insert timeout", async () => {
+                    const timeout = app.client.$("#new-timeout");
+                    timeout.click();
+                    timeout.getValue().then(function(result){
+                        for(i=0;i<result.length;i++){
+                            app.client.keys("Backspace");
+                        }
+                    });
+                    timeout.setValue(newAddress.timeout);
+                    timeout.getValue().then(function(v){
+                        assert.equal(v, newAddress.timeout);
                     })
                 })
                 //preme ok creando così il nuovo indirizzo
