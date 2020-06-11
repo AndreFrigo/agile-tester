@@ -155,7 +155,7 @@ describe('Test', function(){
     }
 
     if(testList.addThinManAddress){
-        //Aggiunge un address all'elenco dei ThinMan
+        //Aggiunge un address all'elenco dei ThinMan (info in agileAddress)
         describe("Add a new address of ThinMan", function(){
             //controlla se è già nel menù corretto
             if(leftMenu != 2){
@@ -219,12 +219,9 @@ describe('Test', function(){
                 })
                 //controlla se è stato creato l'indirizzo correttamente 
                 it("Check if the new address has been created successfully", async () => {
-                    var ok = false;
-                    var address = null;
                     conn.select(1);
                     conn.get("thinman", function(err,res){
-                        var ok = false;
-                        addressList = JSON.parse(res).address;
+                        var addressList = JSON.parse(res).address;
                         var address = utils.getThinManFromHostname(addressList, agileAddress.address)
                         if(address){
                             if(address.port == agileAddress.port && address.timeout == agileAddress.timeout){
