@@ -1,6 +1,7 @@
 var Application = require('spectron').Application;
 var assert = require('assert');
 const {testList} = require ("./test-list.js");
+const {utils} = require ("./utils.js");
 var app = null;
 var agilePreview = null;
 var conn = null;
@@ -10,7 +11,7 @@ const redis = require('redis')
 //path per la cartella Praim/Agile
 const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
 //dati per la creazione di un nuovo indirizzo agile (test: addThinManAddress), perchè il test funzioni non deve esistere nessun indirizzo con llo stesso hostname
-const newAddress = {address: "agile_test", timeout: 23, port: 378};
+const agileAddress = {address: "agile_test", timeout: 23, port: 378};
 // about:0, system settings:1, .....
 var leftMenu = 0;
 // Italiano:1, Inglese:2, Spagnolo:3
@@ -172,15 +173,15 @@ describe('Test', function(){
                     app.client.waitUntilWindowLoaded();
                     assert.ok(click);
                 })
-                //inserisce l'hostname settato in newAddress
+                //inserisce l'hostname settato in agileAddress
                 it("Insert hostname", async () => { 
                     const hostname = app.client.$("#new-address");
-                    hostname.setValue(newAddress.address);
+                    hostname.setValue(agileAddress.address);
                     hostname.getValue().then(function(v){
-                        assert.equal(newAddress.address, v);
+                        assert.equal(agileAddress.address, v);
                     })
                 })
-                //inserisce la porta settata in newAddress
+                //inserisce la porta settata in agileAddress
                 it("Insert port", async () => {
                     const port = app.client.$("#new-port");
                     port.click();
@@ -189,12 +190,13 @@ describe('Test', function(){
                             app.client.keys("Backspace");
                         }
                     });
-                    port.setValue(newAddress.port);
+                    //TODO: need to insert a pause
+                    port.setValue(agileAddress.port);
                     port.getValue().then(function(v){
-                        assert.equal(v, newAddress.port);
+                        assert.equal(v, agileAddress.port);
                     })
                 })
-                //inserisce il timeout settato in newAddress
+                //inserisce il timeout settato in agileAddress
                 it("Insert timeout", async () => {
                     const timeout = app.client.$("#new-timeout");
                     timeout.click();
@@ -203,9 +205,10 @@ describe('Test', function(){
                             app.client.keys("Backspace");
                         }
                     });
-                    timeout.setValue(newAddress.timeout);
+                    //TODO: need to insert a pause
+                    timeout.setValue(agileAddress.timeout);
                     timeout.getValue().then(function(v){
-                        assert.equal(v, newAddress.timeout);
+                        assert.equal(v, agileAddress.timeout);
                     })
                 })
                 //preme ok creando così il nuovo indirizzo
@@ -221,15 +224,17 @@ describe('Test', function(){
                     conn.select(1);
                     conn.get("thinman", function(err,res){
                         var ok = false;
-                        address = JSON.parse(res).address;
-                        address.forEach(element => {
-                            if(element.address == newAddress.address){
-                                if(element.port == newAddress.port && element.timeout == newAddress.timeout){
-                                    ok = true;
-                                } 
+                        addressList = JSON.parse(res).address;
+                        var address = utils.getThinManFromHostname(addressList, agileAddress.address)
+                        if(address){
+                            if(address.port == agileAddress.port && address.timeout == agileAddress.timeout){
+                                assert.ok(true,"the new address has not been created successfully");
+                            }else{
+                                assert.ok(false, "port or timeout are different from the given values")
                             }
-                        });
-                        assert.ok(ok,"the new address has not been created successfully");
+                        }else{
+                            assert.ok(false, "can't find an address with the given hostname")
+                        }
                     })
                 })
             }
