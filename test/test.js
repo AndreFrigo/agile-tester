@@ -11,7 +11,7 @@ const redis = require('redis')
 //path per la cartella Praim/Agile
 const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
 //dati per la creazione di un nuovo indirizzo agile (test: addThinManAddress), perchè il test funzioni non deve esistere nessun indirizzo con llo stesso hostname
-const agileAddress = {address: "bbbbb", timeout: 23, port: 378};
+const agileAddress = {address: "agile_test", timeout: 23, port: 378};
 // about:0, system settings:1, .....
 var leftMenu = 0;
 // Italiano:1, Inglese:2, Spagnolo:3
@@ -70,7 +70,7 @@ describe('Test', function(){
         conn = redis.createClient(1681);
         conn.auth("9C81F1AAC9769BF2824B8F139BE38B87E7BFE0F14BA8DD4E2CA685A36277DE8EACEA38665F5F64C14B07009AB36762FBD5C735EDEE38F6E74A5730417825C3BEAD4E92C3DB3B372FAA9ADC83C5432895EE5925E5907C1E197AC92673FF57642463529C795629060B1E2E7A7349C6A330826BFC552556FB546F7643CA164514870F5A30BE6991F2DCACBF0551B58CDE00BE583C2B9ED938A4A22A6AB86E0EA963A24B649DB9FD29A8348266DB72B4CBA0A0DAA3790291B39C2B7F613C64DCA04E4266C046A8D53172FECE4372805C57905B98C86922A73204C9EF6EC44585E8624FC8C65C3FD5076E364C6DD0A61FBE39667EB7C37558D66A0284");
         
-        //controllo lingua di agile
+        //controllo lingua di agile dal database
         conn.select(1);
         conn.get("config_locale", function(err, res){
             var lan = JSON.parse(res).current_locale_agile;
@@ -80,6 +80,7 @@ describe('Test', function(){
             else console.log("Error on checking agile language");
         });
 
+        //controllo lingua di agile dall'interfaccia
         const lang = app.client.$('#menu-link-1');
         await lang.getText().then(function(l){
             if(l == "Impostazioni di Sistema") assert.equal(language, 1);
@@ -109,6 +110,16 @@ describe('Test', function(){
                 app.client.waitUntilWindowLoaded();
                 assert.ok(click);
             });
+
+            //Controllo che la lingua selezionata sia quella attuale 
+            it('Control that displayed current language is correct', async () => {
+                const lan = app.client.$('#language > span > div > div > div > input.select-dropdown');
+                lan.getValue().then(function(l){
+                    if(l == "Italiano") assert.equal(language, 1);
+                    if(l == "English") assert.equal(language, 2);
+                    if(l == "Español") assert.equal(language, 3);
+                })
+            })
 
             //Dalla sezione lingua, apre la scelta della lingua
             it('Open language list', async () => {
