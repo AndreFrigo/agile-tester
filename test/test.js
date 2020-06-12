@@ -11,7 +11,7 @@ const redis = require('redis')
 //path per la cartella Praim/Agile
 const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
 //dati per la creazione di un nuovo indirizzo agile (test: addThinManAddress), perchè il test funzioni non deve esistere nessun indirizzo con llo stesso hostname
-const agileAddress = {address: "agile_test", timeout: 23, port: 378};
+const agileAddress = {address: "bbbbb", timeout: 23, port: 378};
 // about:0, system settings:1, .....
 var leftMenu = 0;
 // Italiano:1, Inglese:2, Spagnolo:3
@@ -78,11 +78,14 @@ describe('Test', function(){
             else if(lan == "en-GB") language = 2;
             else if(lan == "es-ES") language = 3;
             else console.log("Error on checking agile language");
-            //console.log("Agile language: " + lan);
         });
-        if(language > 0 &&  language < 4){
-            assert.ok(language);
-        }
+
+        const lang = app.client.$('#menu-link-1');
+        await lang.getText().then(function(l){
+            if(l == "Impostazioni di Sistema") assert.equal(language, 1);
+            if(l == "System Settings") assert.equal(language, 2);
+            if(l == "Ajustes del Sistema") assert.equal(language, 3);
+        })
     });
     
     //Imposta la lingua di sistema in english
