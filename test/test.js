@@ -70,15 +70,8 @@ describe('Test', function(){
         //connessione al database
         db.dbConnection();
 
-        //controllo lingua di agile dal database
-        db.conn.select(1);
-        db.conn.get("config_locale", function(err, res){
-            var lan = JSON.parse(res).current_locale_agile;
-            if(lan == "it-IT") language = 1;
-            else if(lan == "en-GB") language = 2;
-            else if(lan == "es-ES") language = 3;
-            else console.log("Error on checking agile language");
-        });
+        //aggiorno la lingua in base a quella del db
+        language = await db.dbLanguage();
 
         //controllo lingua di agile dall'interfaccia
         const lang = app.client.$('#menu-link-1');
@@ -158,12 +151,8 @@ describe('Test', function(){
             });
 
             it('Check if db language is english', async () => {
-                db.conn.select(1);
-                await db.conn.get("config_locale", function(err, res){
-                    //controlla che la lingua settata nel database sia en-GB
-                    var lan = JSON.parse(res).current_locale_agile;
-                    assert(lan, "en-GB");
-                });
+                var lan = await db.dbLanguage();
+                assert(lan, "en-GB");
             });
 
             //Controllo che la lingua selezionata sia english
