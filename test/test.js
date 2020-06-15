@@ -157,13 +157,23 @@ describe('Test', function(){
                 assert.equal(language,2);
             });
 
-            it('Check if language is english', async () => {
+            it('Check if db language is english', async () => {
                 conn.select(1);
                 await conn.get("config_locale", function(err, res){
                     //controlla che la lingua settata nel database sia en-GB
                     var lan = JSON.parse(res).current_locale_agile;
                     assert(lan, "en-GB");
                 });
+            });
+
+            //Controllo che la lingua selezionata sia english
+            it('Control that displayed current language is english', async () => {
+                const lan = app.client.$('#language > span > div > div > div > input.select-dropdown');
+                lan.getValue().then(function(l){
+                    if(l == "Italiano") assert.equal(language, 1);
+                    if(l == "English") assert.equal(language, 2);
+                    if(l == "Español") assert.equal(language, 3);
+                })
             })
         })
     }
