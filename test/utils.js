@@ -12,13 +12,6 @@ const utils={
             }
         });
         return elem;
-    },
-    getJsonFromDb: function(conn, par1, par2){
-        conn.select(1);
-        conn.get(par1, function(err,res){
-            var r = JSON.parse(res).par2;
-            return r;
-        })
     }
 }
 module.exports = {utils};
