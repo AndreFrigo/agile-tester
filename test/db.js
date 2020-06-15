@@ -41,6 +41,16 @@ const db={
             }
         });
         return elem;
+    },
+    getThinManListLength: async function(){
+        db.conn.select(1);
+        //numero di address agile 
+        const length = await new Promise(function(resolve, reject){
+            db.conn.get("thinman", function(err,res){
+                resolve(JSON.parse(res).address.length);
+            });
+        })
+        return length;
     }
 }
 
