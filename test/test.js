@@ -253,7 +253,7 @@ describe('Test', function(){
         //Elimina un address dall'elenco dei ThinMan (info in agileAddress)
         describe("Delete agile address", function(){
             //Controlla che ci sia un indirizzo con l'hostname dato
-            it("Check if there is an address with the given hostname", async () => {
+            it("Check if there is an address with the given hostname in the db", async () => {
                 const address = await db.getThinManFromHostname(agileAddress.address);
                 assert.ok(address, "there isn't any address with the given hostname");
             })
@@ -269,15 +269,9 @@ describe('Test', function(){
             }
             
             it("Delete the selected address", async () => {
-                db.conn.select(1);
                 //numero di address agile 
-                const length = await new Promise(function(resolve, reject){
-                    db.conn.get("thinman", function(err,res){
-                        resolve(JSON.parse(res).address.length);
-                    });
-                })
+                const length = await db.getThinManListLength();
 
-                //numero di address agile 
                 var thinman = app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
                 var child = null;
                 //selector per il bottone da premere
@@ -301,6 +295,38 @@ describe('Test', function(){
                 const elim = await app.client.$(elimina).click();
                 assert.ok(elim);
             })
+            //Controlla che non ci sia più l'indirizzo con l'hostname dato
+            it("Check if the address with the given hostname is not in the list of address anymore", async () => {
+                //numero di address agile 
+                const length = await db.getThinManListLength();
+
+                var thinman = app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
+                var child = null;
+                //indica se ho trovato un'address con quell'hostname
+                var found = null;
+                for(i=1;i<=length;i++){
+                    //cerco l'address
+                    child = thinman.$("li:nth-child("+i+") > div > div");
+                    //string per html che dipende dalla lingua in uso
+                    var indirizzo = null;
+                    if(language == 1) indirizzo = "Indirizzo"
+                    else if(language == 2) indirizzo = "Address"
+                    else if(language == 3) indirizzo = "Dirección"
+                    //guardo se gli address corrispondono
+                    const x = await child.$("div.address-info > div").getHTML();
+                    if(x == "<div><b>"+indirizzo+":</b> "+ agileAddress.address +"</div>"){
+                        //aggiorno found
+                        found = true;
+                    }
+                } 
+                assert.ok(!found, "l'elemento si trova ancora nella lista")
+            })
+            //Controlla che non ci sia più l'indirizzo con l'hostname dato nel database
+            it("Check if the address with the given hostname is not in the db anymore", async () => {
+                const address = await db.getThinManFromHostname(agileAddress.address);
+                assert.ok(address==null, "the address with the given hostname is still in the database");
+            })
+
         })
     }
 
