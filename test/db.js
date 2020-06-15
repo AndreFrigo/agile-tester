@@ -22,6 +22,25 @@ const db={
             });
         }) 
         return r;
+    },
+    //input: 
+        //address: hostname dell'elemento da cercare
+    //output: 
+        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    getThinManFromHostname: async function(address){
+        var elem = null;
+        db.conn.select(1);
+        const addressList = await new Promise(function(resolve, reject){
+            db.conn.get("thinman", function(err,res){
+                resolve(JSON.parse(res).address);
+            })
+        })
+        addressList.forEach(element => {
+            if(element.address == address){
+                elem = element;
+            }
+        });
+        return elem;
     }
 }
 
