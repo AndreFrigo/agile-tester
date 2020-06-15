@@ -174,7 +174,7 @@ describe('Test', function(){
             if(leftMenu != 2){
                 //Va nella sezione ThinMan Setting
                 it("Navigates to ThinMan Settings", async () => {
-                    const click = await app.client.click('#menu-link-2');
+                    const click = await app.client.click('#menu-link-3');
                     app.client.waitUntilWindowLoaded();
                     leftMenu = 2;
                     assert.ok(click);
@@ -232,23 +232,75 @@ describe('Test', function(){
                 })
                 //controlla se è stato creato l'indirizzo correttamente 
                 it("Check if the new address has been created successfully", async () => {
-                    db.conn.select(1);
-                    db.conn.get("thinman", function(err,res){
-                        var addressList = JSON.parse(res).address;
-                        var address = utils.getThinManFromHostname(addressList, agileAddress.address)
-                        if(address){
-                            if(address.port == agileAddress.port && address.timeout == agileAddress.timeout){
-                                assert.ok(true,"the new address has not been created successfully");
-                            }else{
-                                assert.ok(false, "port or timeout are different from the given values")
-                            }
+                    //indirizzo con lo stesso hostname di quello desiderato
+                    const address = await db.getThinManFromHostname(agileAddress.address);
+                    if(address){
+                        if(address.port == agileAddress.port && address.timeout == agileAddress.timeout){
+                            assert.ok(true,"the new address has not been created successfully");
                         }else{
-                            assert.ok(false, "can't find an address with the given hostname")
+                            assert.ok(false, "port or timeout are different from the given values")
                         }
-                    })
+                    }else{
+                        assert.ok(false, "can't find an address with the given hostname")
+                    }
                 })
             }
             
+        })
+    }
+
+    if(testList.deleteThinManAddress){
+        //Elimina un address dall'elenco dei ThinMan (info in agileAddress)
+        describe("Delete agile address", function(){
+            //Controlla che ci sia un indirizzo con l'hostname dato
+            it("Check if there is an address with the given hostname", async () => {
+                const address = await db.getThinManFromHostname(agileAddress.address);
+                assert.ok(address, "there isn't any address with the given hostname");
+            })
+            //controlla se è già nel menù corretto
+            if(leftMenu != 2){
+                //Va nella sezione ThinMan Setting
+                it("Navigates to ThinMan Settings", async () => {
+                    const click = await app.client.click('#menu-link-3');
+                    app.client.waitUntilWindowLoaded();
+                    leftMenu = 2;
+                    assert.ok(click);
+                })
+            }
+            
+            it("Delete the selected address", async () => {
+                db.conn.select(1);
+                //numero di address agile 
+                const length = await new Promise(function(resolve, reject){
+                    db.conn.get("thinman", function(err,res){
+                        resolve(JSON.parse(res).address.length);
+                    });
+                })
+
+                //numero di address agile 
+                var thinman = app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
+                var child = null;
+                //selector per il bottone da premere
+                var elimina = null;
+                for(i=1;i<=length;i++){
+                    //cerco l'address che voglio eliminare
+                    child = thinman.$("li:nth-child("+i+") > div > div");
+                    //string per html che dipende dalla lingua in uso
+                    var indirizzo = null;
+                    if(language == 1) indirizzo = "Indirizzo"
+                    else if(language == 2) indirizzo = "Address"
+                    else if(language == 3) indirizzo = "Dirección"
+                    //guardo se gli address corrispondono
+                    const x = await child.$("div.address-info > div").getHTML();
+                    if(x == "<div><b>"+indirizzo+":</b> "+ agileAddress.address +"</div>"){
+                        //salvo elemento da eliminare per eliminarlo in seguito
+                        elimina = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div.address-item-delete > i";
+                    }
+                } 
+                //bottone da premere per eliminare l'elemento
+                const elim = await app.client.$(elimina).click();
+                assert.ok(elim);
+            })
         })
     }
 
