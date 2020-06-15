@@ -2,6 +2,7 @@ var Application = require('spectron').Application;
 var assert = require('assert');
 const {testList} = require ("./test-list.js");
 const {utils} = require ("./utils.js");
+const {db} = require ("./db.js");
 var app = null;
 var agilePreview = null;
 var conn = null;
@@ -67,12 +68,11 @@ describe('Test', function(){
     //Controlla la lingua del sistema
     it('Checking language', async () => {
         //connessione al database
-        conn = redis.createClient(1681);
-        conn.auth("9C81F1AAC9769BF2824B8F139BE38B87E7BFE0F14BA8DD4E2CA685A36277DE8EACEA38665F5F64C14B07009AB36762FBD5C735EDEE38F6E74A5730417825C3BEAD4E92C3DB3B372FAA9ADC83C5432895EE5925E5907C1E197AC92673FF57642463529C795629060B1E2E7A7349C6A330826BFC552556FB546F7643CA164514870F5A30BE6991F2DCACBF0551B58CDE00BE583C2B9ED938A4A22A6AB86E0EA963A24B649DB9FD29A8348266DB72B4CBA0A0DAA3790291B39C2B7F613C64DCA04E4266C046A8D53172FECE4372805C57905B98C86922A73204C9EF6EC44585E8624FC8C65C3FD5076E364C6DD0A61FBE39667EB7C37558D66A0284");
-        
+        db.dbConnection();
+
         //controllo lingua di agile dal database
-        conn.select(1);
-        conn.get("config_locale", function(err, res){
+        db.conn.select(1);
+        db.conn.get("config_locale", function(err, res){
             var lan = JSON.parse(res).current_locale_agile;
             if(lan == "it-IT") language = 1;
             else if(lan == "en-GB") language = 2;
@@ -158,8 +158,8 @@ describe('Test', function(){
             });
 
             it('Check if db language is english', async () => {
-                conn.select(1);
-                await conn.get("config_locale", function(err, res){
+                db.conn.select(1);
+                await db.conn.get("config_locale", function(err, res){
                     //controlla che la lingua settata nel database sia en-GB
                     var lan = JSON.parse(res).current_locale_agile;
                     assert(lan, "en-GB");
@@ -243,8 +243,8 @@ describe('Test', function(){
                 })
                 //controlla se è stato creato l'indirizzo correttamente 
                 it("Check if the new address has been created successfully", async () => {
-                    conn.select(1);
-                    conn.get("thinman", function(err,res){
+                    db.conn.select(1);
+                    db.conn.get("thinman", function(err,res){
                         var addressList = JSON.parse(res).address;
                         var address = utils.getThinManFromHostname(addressList, agileAddress.address)
                         if(address){
