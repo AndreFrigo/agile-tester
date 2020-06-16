@@ -420,7 +420,25 @@ describe('Test', function(){
             })
 
             //controlla che la regola sia presente nella lista di agile 
-            //TODO
+            it("Check if the new rule is in the list of agile", async () => {
+                //numero di address agile 
+                const length = await db.getUSBRedirectionListLength();
+
+                //indica se ho trovato un'address con quell'hostname
+                var found = null;
+                var description = null;
+                var vidPid = null;
+
+                for(i = 1; i <= length; i++){
+                    description = await app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
+                    vidPid = await app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > p > span").getText();
+                    if(description == agileUSB.description && vidPid == "Vid: "+agileUSB.vid+", Pid: "+agileUSB.pid){
+                        console.log("ciclo "+i+" description: "+description+" e vidpid: "+vidPid);
+                        found = true;
+                    }
+                } 
+                assert.ok(found, "l'elemento non si trova ancora nella lista")
+            })
 
         })
     }

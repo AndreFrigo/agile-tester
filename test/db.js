@@ -77,7 +77,7 @@ const db={
     //output: list of address length
     getUSBRedirectionListLength: async function(){
         db.conn.select(1);
-        //numero di address agile 
+        //numero di rules 
         const length = await new Promise(function(resolve, reject){
             db.conn.get("config_citrix", function(err,res){
                 resolve(JSON.parse(res).usb_redirection.rules.length);
