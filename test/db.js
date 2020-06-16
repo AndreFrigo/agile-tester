@@ -52,6 +52,27 @@ const db={
             });
         })
         return length;
+    },
+    //input: 
+        //vid: vid dell'elemento da cercare
+        //pid: pid dell'elemento da cercare
+    //output: 
+        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    getUSBFromVidPid: async function(vid,pid){
+        var elem = null;
+        db.conn.select(1);
+        //lista di usb redirection
+        const list = await new Promise(function(resolve, reject){
+            db.conn.get("config_citrix", function(err,res){
+                resolve(JSON.parse(res).usb_redirection.rules);
+            })
+        })
+        list.forEach(element => {
+            if(element.pid == pid && element.vid == vid){
+                elem = element;
+            }
+        });
+        return elem;
     }
 }
 

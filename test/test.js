@@ -13,6 +13,8 @@ const redis = require('redis')
 const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
 //dati per la creazione di un nuovo indirizzo agile (test: addThinManAddress), perchè il test funzioni non deve esistere nessun indirizzo con llo stesso hostname
 const agileAddress = {address: "agile_test", timeout: 23, port: 378};
+//dati per creazione USB redirection (test: addUsbRedirection)
+const agileUSB = {description: "agile_usb_test", vid: 2323, pid: 3232}
 // about:0, system settings:1, .....
 var leftMenu = 0;
 // Italiano:1, Inglese:2, Spagnolo:3
@@ -345,6 +347,80 @@ describe('Test', function(){
                 const address = await db.getThinManFromHostname(agileAddress.address);
                 assert.ok(address==null, "the address with the given hostname is still in the database");
             })
+
+        })
+    }
+
+    if(testList.addUsbRedirection){
+        describe("Add USB redirection rule", function(){
+
+            //Controlla che non ci sia già una regola con vid e pid stabiliti
+            it("Check if there is already a rule with the given vid and pid in the db", async () => {
+                const usb = await db.getUSBFromVidPid(agileUSB.vid, agileUSB.pid);
+                assert.ok(usb == null, "there is already a rule with the given vid and pid");
+            })
+
+            //Apre menù USB Redirection
+            it("Navigates to USB Redirection ", async () => {
+                const click = await app.client.click('#menu-link-10');
+                app.client.waitUntilWindowLoaded();
+                assert.ok(click);
+            })
+
+            //Clicca nel link Add redirection rule
+            it("Click on Add redirection rule", async () => {
+                const click = await app.client.click("#citrix > div > div > div > a");
+                app.client.waitUntilWindowLoaded();
+                assert.ok(click);
+            })
+
+            //inserisce la descrizione da agileUSB
+            it("Insert description", async () => {
+                const description = app.client.$("#description");
+                description.click();
+                description.setValue(agileUSB.description);
+                description.getValue().then(function(v){
+                    assert.equal(v, agileUSB.description);
+                })
+            })
+
+            //inserisce il vid da agileUSB
+            it("Insert vid", async () => {
+                const vid = app.client.$("#vid");
+                vid.click();
+                vid.setValue(agileUSB.vid);
+                vid.getValue().then(function(v){
+                    assert.equal(v, agileUSB.vid);
+                })
+            })
+
+            //inserisce il pid da agileUSB
+            it("Insert pid", async () => {
+                const pid = app.client.$("#pid");
+                pid.click();
+                pid.setValue(agileUSB.pid);
+                pid.getValue().then(function(v){
+                    assert.equal(v, agileUSB.pid);
+                })
+            })
+
+            //preme ok creando così la nuova regola
+            it("Create the rule", async () => {
+                const ok = app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
+                const click = await ok.click();
+                assert.ok(click, "Impossibile confermare");
+            })
+
+            //controlla che la regola sia ora presente nel db
+            it("Check if the rule with the given data is now in the db", async () => {
+                const usb = await db.getUSBFromVidPid(agileUSB.vid, agileUSB.pid);
+                if(usb.description == agileUSB.description){
+                    assert.ok(true);
+                }else assert.ok(false, "the new rule is not been inserted in the db");
+            })
+
+            //controlla che la regola sia presente nella lista di agile 
+            //TODO
 
         })
     }

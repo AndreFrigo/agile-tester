@@ -14,10 +14,13 @@ const testList={
     previewAgile: false,
 
     //Aggiunge un address all'elenco dei ThinMan
-    addThinManAddress: false,
+    addThinManAddress: true,
 
     //Elimina un address dall'elenco dei ThinMan (info in agileAddress)
-    deleteThinManAddress: true
+    deleteThinManAddress: true,
+
+    //Aggiunge una redirection rule per usb
+    addUsbRedirection: false
 };
 
 module.exports = {testList};
