@@ -222,8 +222,8 @@ describe('Test', function(){
                     const click = await ok.click();
                     assert.ok(click);
                 })
-                //controlla se è stato creato l'indirizzo correttamente 
-                it("Check if the new address has been created successfully", async () => {
+                //controlla se l'indirizzo è stato inserito nel db 
+                it("Check if the new address is in the db ", async () => {
                     //indirizzo con lo stesso hostname di quello desiderato
                     const address = await db.getThinManFromHostname(agileAddress.address);
                     if(address){
@@ -235,6 +235,33 @@ describe('Test', function(){
                     }else{
                         assert.ok(false, "can't find an address with the given hostname")
                     }
+                })
+
+                //controlla se l'indirizzo è ora presente nella lista di agile
+                it("Check if the new address is in the list of agile", async () => {
+                    //numero di address agile 
+                    const length = await db.getThinManListLength();
+
+                    var thinman = app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
+                    var child = null;
+                    //indica se ho trovato un'address con quell'hostname
+                    var found = null;
+                    for(i=1;i<=length;i++){
+                        //cerco l'address
+                        child = thinman.$("li:nth-child("+i+") > div > div");
+                        //string per html che dipende dalla lingua in uso
+                        var indirizzo = null;
+                        if(language == 1) indirizzo = "Indirizzo"
+                        else if(language == 2) indirizzo = "Address"
+                        else if(language == 3) indirizzo = "Dirección"
+                        //guardo se gli address corrispondono
+                        const x = await child.$("div.address-info > div").getHTML();
+                        if(x == "<div><b>"+indirizzo+":</b> "+ agileAddress.address +"</div>"){
+                            //aggiorno found
+                            found = true;
+                        }
+                    } 
+                    assert.ok(found, "l'elemento non si trova ancora nella lista")
                 })
             }
             
@@ -288,7 +315,7 @@ describe('Test', function(){
                 assert.ok(elim);
             })
             //Controlla che non ci sia più l'indirizzo con l'hostname dato
-            it("Check if the address with the given hostname is not in the list of address anymore", async () => {
+            it("Check if the address is not in the list of address anymore", async () => {
                 //numero di address agile 
                 const length = await db.getThinManListLength();
 
@@ -314,7 +341,7 @@ describe('Test', function(){
                 assert.ok(!found, "l'elemento si trova ancora nella lista")
             })
             //Controlla che non ci sia più l'indirizzo con l'hostname dato nel database
-            it("Check if the address with the given hostname is not in the db anymore", async () => {
+            it("Check if the address is not in the db anymore", async () => {
                 const address = await db.getThinManFromHostname(agileAddress.address);
                 assert.ok(address==null, "the address with the given hostname is still in the database");
             })
