@@ -42,6 +42,7 @@ const db={
         });
         return elem;
     },
+    //output: list of address length
     getThinManListLength: async function(){
         db.conn.select(1);
         //numero di address agile 

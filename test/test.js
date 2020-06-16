@@ -198,11 +198,7 @@ describe('Test', function(){
                 it("Insert port", async () => {
                     const port = app.client.$("#new-port");
                     port.click();
-                    port.getValue().then(function(result){
-                        for(i=0;i<result.length;i++){
-                            app.client.keys("Backspace");
-                        }
-                    });
+                    port.clearElement();
                     //TODO: need to insert a pause
                     port.setValue(agileAddress.port);
                     port.getValue().then(function(v){
@@ -213,11 +209,7 @@ describe('Test', function(){
                 it("Insert timeout", async () => {
                     const timeout = app.client.$("#new-timeout");
                     timeout.click();
-                    timeout.getValue().then(function(result){
-                        for(i=0;i<result.length;i++){
-                            app.client.keys("Backspace");
-                        }
-                    });
+                    timeout.clearElement();
                     //TODO: need to insert a pause
                     timeout.setValue(agileAddress.timeout);
                     timeout.getValue().then(function(v){
