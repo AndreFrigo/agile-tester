@@ -45,6 +45,8 @@ describe("TEST", function () {
 
 
     //INSERIRE QUI I TEST
+    //TODO: posso ripetere un test un'unica volta così!
+
     global.agileAddress.address= "test"
     test(testList.addThinmanAddress)
     test(testList.checkLanguage)

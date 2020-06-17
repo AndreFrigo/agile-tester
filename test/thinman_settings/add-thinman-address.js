@@ -30,8 +30,18 @@ describe("Add a new address of ThinMan", function(){
     it("Insert port", async () => {
         const port = global.app.client.$("#new-port");
         port.click();
-        port.clearElement();
-        //TODO: need to insert a pause
+        var done = false;
+        done = async () => {
+            const x = new Promise(function(resolve, reject){
+                port.clearElement();
+                resolve(true);
+            })
+            return x;
+        }
+        while (!done){
+
+        }
+        //TODO: controlla che funzioni!
         port.setValue(global.agileAddress.port);
         port.getValue().then(function(v){
             assert.equal(v, global.agileAddress.port, "error while inserting the port");
@@ -41,8 +51,18 @@ describe("Add a new address of ThinMan", function(){
     it("Insert timeout", async () => {
         const timeout = global.app.client.$("#new-timeout");
         timeout.click();
-        timeout.clearElement();
-        //TODO: need to insert a pause
+        var done = false;
+        done = async () => {
+            const x = new Promise(function(resolve, reject){
+                timeout.clearElement();
+                resolve(true);
+            })
+            return x;
+        }
+        while (!done){
+            
+        }
+        //TODO: controlla che funzioni!
         timeout.setValue(global.agileAddress.timeout);
         timeout.getValue().then(function(v){
             assert.equal(v, global.agileAddress.timeout, "error while inserting the timeout");
