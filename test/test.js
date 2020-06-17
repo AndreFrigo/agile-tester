@@ -62,7 +62,7 @@ describe('Test', function(){
         it('Shows an initial window', async () => {
         app.client.waitUntilWindowLoaded();
         const count = await app.client.getWindowCount();
-        assert.equal(count, 1);
+        assert.equal(count, 1,"there are more windows");
         });
     };
 
@@ -78,9 +78,10 @@ describe('Test', function(){
         //controllo lingua di agile dall'interfaccia
         const lang = app.client.$('#menu-link-1');
         await lang.getText().then(function(l){
-            if(l == "Impostazioni di Sistema") assert.equal(language, 1);
-            if(l == "System Settings") assert.equal(language, 2);
-            if(l == "Ajustes del Sistema") assert.equal(language, 3);
+            if(l == "Impostazioni di Sistema") assert.equal(language, 1)
+            else if(l == "System Settings") assert.equal(language, 2)
+            else if(l == "Ajustes del Sistema") assert.equal(language, 3)
+            else assert.ok(false, "error while checking the language")
         })
     });
     
@@ -94,7 +95,7 @@ describe('Test', function(){
                     const click = await app.client.click('#menu-link-1');
                     app.client.waitUntilWindowLoaded();
                     leftMenu = 1;
-                    assert.ok(click);
+                    assert.ok(click, "error while opening the settings menù");
                 });
             }
             
@@ -103,16 +104,17 @@ describe('Test', function(){
                 const lingua = app.client.$('#language-tab.tab > a');
                 const click = await lingua.click();
                 app.client.waitUntilWindowLoaded();
-                assert.ok(click);
+                assert.ok(click, "error while opening the language tab");
             });
 
             //Controllo che la lingua selezionata sia quella attuale 
             it('Control that displayed current language is correct', async () => {
                 const lan = app.client.$('#language > span > div > div > div > input.select-dropdown');
                 lan.getValue().then(function(l){
-                    if(l == "Italiano") assert.equal(language, 1);
-                    if(l == "English") assert.equal(language, 2);
-                    if(l == "Español") assert.equal(language, 3);
+                    if(l == "Italiano") assert.equal(language, 1)
+                    else if(l == "English") assert.equal(language, 2)
+                    else if(l == "Español") assert.equal(language, 3)
+                    else assert.ok(false, "error while checking language")
                 })
             })
 
@@ -120,7 +122,7 @@ describe('Test', function(){
             it('Open language list', async () => {
                 const sbe = app.client.$('#language > span > div > div > div > input.select-dropdown');
                 const click = await sbe.click();
-                assert.ok(click);
+                assert.ok(click, "error while clicking the button");
             });
 
             //Sceglie la lingua inglese
@@ -149,21 +151,22 @@ describe('Test', function(){
                     language = 2;
                 });
                 //controlla che la lingua corrente sia inglese
-                assert.equal(language,2);
+                assert.equal(language,2, "error, the current language is not english");
             });
 
             it('Check if db language is english', async () => {
                 var lan = await db.dbLanguage();
-                assert(lan, "en-GB");
+                assert(lan, "en-GB", "error, the db language is not english");
             });
 
             //Controllo che la lingua selezionata sia english
             it('Control that displayed current language is english', async () => {
                 const lan = app.client.$('#language > span > div > div > div > input.select-dropdown');
                 lan.getValue().then(function(l){
-                    if(l == "Italiano") assert.equal(language, 1);
-                    if(l == "English") assert.equal(language, 2);
-                    if(l == "Español") assert.equal(language, 3);
+                    if(l == "Italiano") assert.equal(language, 1)
+                    else if(l == "English") assert.equal(language, 2)
+                    else if(l == "Español") assert.equal(language, 3)
+                    else assert.ok(false, "error while checking language")
                 })
             })
         })
@@ -179,21 +182,21 @@ describe('Test', function(){
                     const click = await app.client.click('#menu-link-3');
                     app.client.waitUntilWindowLoaded();
                     leftMenu = 2;
-                    assert.ok(click);
+                    assert.ok(click, "error while opening the thinman settings menù");
                 })
                 //Preme su add address
                 it("Press Add Address", async () => {
                     const addAddress = app.client.$('h5 > a');
                     const click = await addAddress.click();
                     app.client.waitUntilWindowLoaded();
-                    assert.ok(click);
+                    assert.ok(click, "error while clicking the button");
                 })
                 //inserisce l'hostname settato in agileAddress
                 it("Insert hostname", async () => { 
                     const hostname = app.client.$("#new-address");
                     hostname.setValue(agileAddress.address);
                     hostname.getValue().then(function(v){
-                        assert.equal(agileAddress.address, v);
+                        assert.equal(agileAddress.address, v, "error while inserting the hostname");
                     })
                 })
                 //inserisce la porta settata in agileAddress
@@ -204,7 +207,7 @@ describe('Test', function(){
                     //TODO: need to insert a pause
                     port.setValue(agileAddress.port);
                     port.getValue().then(function(v){
-                        assert.equal(v, agileAddress.port);
+                        assert.equal(v, agileAddress.port, "error while inserting the port");
                     })
                 })
                 //inserisce il timeout settato in agileAddress
@@ -215,14 +218,14 @@ describe('Test', function(){
                     //TODO: need to insert a pause
                     timeout.setValue(agileAddress.timeout);
                     timeout.getValue().then(function(v){
-                        assert.equal(v, agileAddress.timeout);
+                        assert.equal(v, agileAddress.timeout, "error while inserting the timeout");
                     })
                 })
                 //preme ok creando così il nuovo indirizzo
                 it("Create the new address", async () => {
                     const ok = app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a");
                     const click = await ok.click();
-                    assert.ok(click);
+                    assert.ok(click, "error while clicking the button");
                 })
                 //controlla se l'indirizzo è stato inserito nel db 
                 it("Check if the new address is in the db ", async () => {
@@ -352,6 +355,9 @@ describe('Test', function(){
     }
 
     if(testList.addUsbRedirection){
+
+        //TODO: da decidere come valutare errori, per esempio input vid e pid devono essere numeri di 4 cifre
+
         describe("Add USB redirection rule", function(){
 
             //Controlla che non ci sia già una regola con vid e pid stabiliti
@@ -364,14 +370,14 @@ describe('Test', function(){
             it("Navigates to USB Redirection ", async () => {
                 const click = await app.client.click('#menu-link-10');
                 app.client.waitUntilWindowLoaded();
-                assert.ok(click);
+                assert.ok(click, "Error while opening the usb redirection menù");
             })
 
             //Clicca nel link Add redirection rule
             it("Click on Add redirection rule", async () => {
                 const click = await app.client.click("#citrix > div > div > div > a");
                 app.client.waitUntilWindowLoaded();
-                assert.ok(click);
+                assert.ok(click, "error while clicking the botton");
             })
 
             //inserisce la descrizione da agileUSB
@@ -380,7 +386,7 @@ describe('Test', function(){
                 description.click();
                 description.setValue(agileUSB.description);
                 description.getValue().then(function(v){
-                    assert.equal(v, agileUSB.description);
+                    assert.equal(v, agileUSB.description, "error while inserting the description");
                 })
             })
 
@@ -390,7 +396,7 @@ describe('Test', function(){
                 vid.click();
                 vid.setValue(agileUSB.vid);
                 vid.getValue().then(function(v){
-                    assert.equal(v, agileUSB.vid);
+                    assert.equal(v, agileUSB.vid, "error while inserting vid");
                 })
             })
 
@@ -400,7 +406,7 @@ describe('Test', function(){
                 pid.click();
                 pid.setValue(agileUSB.pid);
                 pid.getValue().then(function(v){
-                    assert.equal(v, agileUSB.pid);
+                    assert.equal(v, agileUSB.pid, "error while inserting pid");
                 })
             })
 
@@ -408,7 +414,7 @@ describe('Test', function(){
             it("Create the rule", async () => {
                 const ok = app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
                 const click = await ok.click();
-                assert.ok(click, "Impossibile confermare");
+                assert.ok(click, "error while clicking the button");
             })
 
             //controlla che la regola sia ora presente nel db
@@ -437,7 +443,7 @@ describe('Test', function(){
                         found = true;
                     }
                 } 
-                assert.ok(found, "l'elemento non si trova ancora nella lista")
+                assert.ok(found, "the element is not in the list")
             })
 
         })
@@ -453,7 +459,7 @@ describe('Test', function(){
                     const click = await app.client.click('#menu-link-12');
                     app.client.waitUntilWindowLoaded();
                     leftMenu = 10;
-                    assert.ok(click);
+                    assert.ok(click, "error while opening the agile preview menù");
                 })
             }
             
@@ -463,7 +469,7 @@ describe('Test', function(){
                     path: AGILE_PATH + '\\Agile\\Agile.exe',
                 });
                 const start = agilePreview.start();
-                assert.ok(start)
+                assert.ok(start, "error while starting the preview")
             });
         })
     }
