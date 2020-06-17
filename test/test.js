@@ -45,6 +45,17 @@ describe("TEST", function () {
 
 
     //INSERIRE QUI I TEST
-    test(testList.checkLanguage);
+    global.agileAddress.address= "test"
+    test(testList.addThinmanAddress)
+    test(testList.checkLanguage)
+    test(testList.appIsRunning)
+    test(testList.deleteThinmanAddress)
+    global.agileAddress.address = "test"
+    global.agileAddress.port = 1117
+    test(testList.addThinmanAddress)
+    global.agileUSB.pid = 9996
+    test(testList.addUsbRedirection)
+    test(testList.setEnglishLanguage)
+
     
 });

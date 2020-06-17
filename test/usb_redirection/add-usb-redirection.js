@@ -9,7 +9,7 @@ describe("Add USB redirection rule", function(){
 
     //Controlla che non ci sia già una regola con vid e pid stabiliti
     it("Check if there is already a rule with the given vid and pid in the db", async () => {
-        const usb = await db.getUSBFromVidPid(agileUSB.vid, agileUSB.pid);
+        const usb = await db.getUSBFromVidPid(global.agileUSB.vid, global.agileUSB.pid);
         assert.ok(usb == null, "there is already a rule with the given vid and pid");
     })
 
@@ -66,7 +66,7 @@ describe("Add USB redirection rule", function(){
 
     //controlla che la regola sia ora presente nel db
     it("Check if the rule with the given data is now in the db", async () => {
-        const usb = await db.getUSBFromVidPid(agileUSB.vid, agileUSB.pid);
+        const usb = await db.getUSBFromVidPid(global.agileUSB.vid, global.agileUSB.pid);
         if(usb.description == global.agileUSB.description){
             assert.ok(true);
         }else assert.ok(false, "the new rule is not been inserted in the db");
