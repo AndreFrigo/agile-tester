@@ -26,7 +26,7 @@ function addResource(resourceName, resourceUrl){
         })
 
         //setta local browser come resource type
-        it("Select local application as Resource Type", async () => {
+        it("Select local browser as Resource Type", async () => {
             const click = await global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(4) > label").click();
             assert.ok(click, "error while selecting local application");
         })
@@ -54,6 +54,8 @@ function addResource(resourceName, resourceUrl){
             const click = await global.app.client.$(".a=Ok").click();
             assert.ok(click, "Error while clicking ok to confirm")
         })
+
+        //TODO: controlla il pop-up
 
         //controlla che la risorsa si trovi nel db
         it("Check if the resource is in the db", async () => {
