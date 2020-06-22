@@ -145,6 +145,36 @@ const db={
             });
         })
         return length;
+    },
+    //input: 
+        //ssid: ssid della WiFi da cercare 
+    //output: 
+        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    getWifi: async function(ssid){
+        var elem = null;
+        db.conn.select(1);
+        //lista di connections
+        const list = await new Promise(function(resolve, reject){
+            db.conn.get("config_network", function(err,res){
+                resolve(JSON.parse(res).wifi);
+            })
+        })
+        list.forEach(element => {
+            if(element.ssid == ssid){
+                elem = element;
+            }
+        })
+        return elem;
+    },
+    //output: length of the list of device locked  
+    getWifiListLength: async function(){
+        db.conn.select(1);
+        const length = await new Promise(function(resolve, reject){
+            db.conn.get("config_network", function(err,res){
+                resolve(JSON.parse(res).wifi.length);
+            });
+        })
+        return length;
     }
 }
 
