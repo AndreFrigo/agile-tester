@@ -6,6 +6,7 @@ const general = require("./test-list/general.js")
 const systemSettings = require("./test-list/system-settings.js")
 const usbRedirection = require ("./test-list/usb-redirection.js")
 const resources = require ("./test-list/resources.js")
+const deviceLock = require("./test-list/device-lock.js")
 
 //da impostare prima di eseguire
 //path per la cartella Praim/Agile
@@ -46,11 +47,6 @@ describe("TEST", function () {
 
 
     //INSERIRE QUI I TEST
-    general.onlyOneWindow()
-    systemSettings.setEnglishLanguage()
-    general.checkLanguage()
-    thinmanSettings.addThinmanAddress("address",123,23)
-    general.appIsRunning()
-    usbRedirection.addUsbRedirection("bnn",2222,1111)
-    thinmanSettings.deleteThinmanAddress("address")
+    
+    
 });
