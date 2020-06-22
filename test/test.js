@@ -5,6 +5,7 @@ const thinmanSettings = require ("./test-list/thinman-settings.js")
 const general = require("./test-list/general.js")
 const systemSettings = require("./test-list/system-settings.js")
 const usbRedirection = require ("./test-list/usb-redirection.js")
+const resources = require ("./test-list/resources.js")
 
 //da impostare prima di eseguire
 //path per la cartella Praim/Agile
