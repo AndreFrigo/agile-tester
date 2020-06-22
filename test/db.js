@@ -84,6 +84,26 @@ const db={
             });
         })
         return length;
+    },
+    //input: 
+        //name: nome dell'elemento da cercare
+    //output: 
+        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    getResourceFromName: async function(name){
+        var elem = null;
+        db.conn.select(1);
+        //lista di connections
+        const list = await new Promise(function(resolve, reject){
+            db.conn.get("connections", function(err,res){
+                resolve(JSON.parse(res));
+            })
+        })
+        list.forEach(element => {
+            if(element.name == name){
+                elem = element;
+            }
+        })
+        return elem;
     }
 }
 
