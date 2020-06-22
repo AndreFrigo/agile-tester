@@ -14,14 +14,26 @@ function addRule(vid, pid){
 
         //va nella sezione device lock
         it("Navigates to Device Lock", async () => {
-            const click = await global.app.client.click('#menu-link-11');
+            const menu = global.app.client.$('#menu-link-11');
+            var click = null;
+            try{
+                click = await menu.click();
+            }catch{
+                assert.ok(false, "Impossible to find the device lock link")
+            }
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "error while opening the device lock menù");
         })
 
         //Preme sul link add rule
         it("Click on add rule", async () => {
-            const click = global.app.client.$("#main-div > div.main-content > main > section > div.fixed-header > div > div > a").click();
+            const button = global.app.client.$("#main-div > div.main-content > main > section > div.fixed-header > div > div > a");
+            var click = null;
+            try{
+                click = await button.click();
+            }catch{
+                assert.ok(false, "Impossible to find the add rule link")
+            }
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "error while clicking on add rule");
         })
@@ -29,8 +41,15 @@ function addRule(vid, pid){
         //inserisce il vid 
         it("Insert vid", async () => {
             const v = global.app.client.$("#vid");
-            v.click();
-            v.setValue(vid);
+            try{
+                v.click();
+                var x = await v.setValue(vid);
+                while(!x){
+                    
+                }
+            }catch{
+                assert.ok(false, "Impossible to find vid field")
+            }
             v.getValue().then(function(val){
                 assert.equal(val, vid, "error while inserting vid");
             })
@@ -38,17 +57,30 @@ function addRule(vid, pid){
     
         //inserisce il pid 
         it("Insert pid", async () => {
-            const p = global.app.client.$("#pid");
-            p.click();
-            p.setValue(pid);
-            p.getValue().then(function(v){
-                assert.equal(v, pid, "error while inserting pid");
+            const v = global.app.client.$("#pid");
+            try{
+                v.click();
+                var x = await v.setValue(pid);
+                while(!x){
+                    
+                }
+            }catch{
+                assert.ok(false, "Impossible to find pid field")
+            }
+            v.getValue().then(function(val){
+                assert.equal(val, vid, "error while inserting vid");
             })
         })
 
         //Conferma premendo su ok 
         it("Create the new rule", async () => {
-            const click = global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(1)").click();
+            const ok = global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(1)");
+            var click = null;
+            try{
+                click = await ok.click();
+            }catch{
+                assert.ok(false, "Impossible to find ok button")
+            }
             assert.ok(click, "Error while clicking to ok to confirm the creation of the role");
         })
 
@@ -64,8 +96,13 @@ function addRule(vid, pid){
             const length = await db.getDeviceLockListLength();
             const base = "#main-div > div.main-content > main > section > div.section-wrapper.with-header.scrollable > div > div"
             var found = false;
+            var vidPid = null;
             for(i = 1; i <= length; i++){
-                const vidPid = await global.app.client.$(base + " > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
+                try{
+                    vidPid = await global.app.client.$(base + " > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
+                }catch{
+                    assert.ok(false, "Impossible to find the list elements")
+                }
                 if(vidPid == "Vid: " + vid + ", Pid: " + pid){
                     found = true;
                 }
