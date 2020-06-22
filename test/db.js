@@ -74,7 +74,7 @@ const db={
         });
         return elem;
     },
-    //output: list of address length
+    //output: length of the list of address 
     getUSBRedirectionListLength: async function(){
         db.conn.select(1);
         //numero di rules 
@@ -105,6 +105,7 @@ const db={
         })
         return elem;
     },
+    //output: length of the list of resources 
     getResourceListLength: async function(){
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
@@ -114,6 +115,11 @@ const db={
         })
         return length;
     },
+    //input: 
+        //vid: vid dell'elemento da cercare
+        //pid: pid dell'elemento da cercare
+    //output: 
+        //elem: elemento da cercare, null se nessun elemento è stato trovato
     getDeviceLock: async function(vid,pid){
         var elem = null;
         db.conn.select(1);
@@ -129,6 +135,16 @@ const db={
             }
         })
         return elem;
+    },
+    //output: length of the list of device locked  
+    getDeviceLockListLength: async function(){
+        db.conn.select(1);
+        const length = await new Promise(function(resolve, reject){
+            db.conn.get("config_usb_lock", function(err,res){
+                resolve(JSON.parse(res).lock_specific.length);
+            });
+        })
+        return length;
     }
 }
 
