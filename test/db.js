@@ -113,6 +113,22 @@ const db={
             });
         })
         return length;
+    },
+    getDeviceLock: async function(vid,pid){
+        var elem = null;
+        db.conn.select(1);
+        //lista di device 
+        const list = await new Promise(function(resolve, reject){
+            db.conn.get("config_usb_lock", function(err,res){
+                resolve(JSON.parse(res).lock_specific);
+            })
+        })
+        list.forEach(element => {
+            if(element.vid == vid && element.pid == pid){
+                elem = element;
+            }
+        })
+        return elem;
     }
 }
 
