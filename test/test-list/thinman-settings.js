@@ -3,14 +3,17 @@ const {global} = require ("../global.js");
 var assert = require('assert');
 
 function addThinmanAddress(address, port, timeout){
+    
     //Aggiunge un address all'elenco dei ThinMan (info in agileAddress)
     describe("Add a new address of ThinMan", function(){
+
         //Va nella sezione ThinMan Setting
         it("Navigates to ThinMan Settings", async () => {
             const click = await global.app.client.click('#menu-link-3');
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "error while opening the thinman settings menù");
         })
+
         //Preme su add address
         it("Press Add Address", async () => {
             const addAddress = global.app.client.$('h5 > a');
@@ -18,7 +21,8 @@ function addThinmanAddress(address, port, timeout){
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "error while clicking the button");
         })
-        //inserisce l'hostname settato in agileAddress
+
+        //inserisce l'hostname 
         it("Insert hostname", async () => { 
             const hostname = global.app.client.$("#new-address");
             hostname.setValue(address);
@@ -26,7 +30,8 @@ function addThinmanAddress(address, port, timeout){
                 assert.equal(address, v, "error while inserting the hostname");
             })
         })
-        //inserisce la porta settata in agileAddress
+
+        //inserisce la porta 
         it("Insert port", async () => {
             const p = global.app.client.$("#new-port");
             p.click();
@@ -41,13 +46,13 @@ function addThinmanAddress(address, port, timeout){
             while (!done){
 
             }
-            //TODO: controlla che funzioni!
             p.setValue(port);
             p.getValue().then(function(v){
                 assert.equal(v, port, "error while inserting the port");
             })
         })
-        //inserisce il timeout settato in agileAddress
+
+        //inserisce il timeout
         it("Insert timeout", async () => {
             const t = global.app.client.$("#new-timeout");
             t.click();
@@ -62,18 +67,19 @@ function addThinmanAddress(address, port, timeout){
             while (!done){
                 
             }
-            //TODO: controlla che funzioni!
             t.setValue(timeout);
             t.getValue().then(function(v){
                 assert.equal(v, timeout, "error while inserting the timeout");
             })
         })
+
         //preme ok creando così il nuovo indirizzo
         it("Create the new address", async () => {
             const ok = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a");
             const click = await ok.click();
             assert.ok(click, "error while clicking the button");
         })
+
         //controlla se l'indirizzo è stato inserito nel db 
         it("Check if the new address is in the db ", async () => {
             //indirizzo con lo stesso hostname di quello desiderato
@@ -119,7 +125,7 @@ function addThinmanAddress(address, port, timeout){
 }
 
 function deleteThinmanAddress(address){
-    //Elimina un address dall'elenco dei ThinMan (info in agileAddress)
+    //Elimina un address dall'elenco dei ThinMan
     describe("Delete agile address", function(){
 
         //Controlla che ci sia un indirizzo con l'hostname dato
@@ -135,7 +141,7 @@ function deleteThinmanAddress(address){
             assert.ok(click);
         })
         
-
+        //Elimina l'address
         it("Delete the selected address", async () => {
             //numero di address agile 
             const length = await db.getThinManListLength();
@@ -163,6 +169,7 @@ function deleteThinmanAddress(address){
             const elim = await global.app.client.$(elimina).click();
             assert.ok(elim);
         })
+
         //Controlla che non ci sia più l'indirizzo con l'hostname dato
         it("Check if the address is not in the list of address anymore", async () => {
             //numero di address agile 
@@ -189,6 +196,7 @@ function deleteThinmanAddress(address){
             } 
             assert.ok(!found, "l'elemento si trova ancora nella lista")
         })
+
         //Controlla che non ci sia più l'indirizzo con l'hostname dato nel database
         it("Check if the address is not in the db anymore", async () => {
             const a = await db.getThinManFromHostname(address);
