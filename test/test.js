@@ -1,7 +1,10 @@
 var Application = require('spectron').Application;
-const {testList} = require ("./test-list.js");
 const {global} = require ("./global.js");
 const {db} = require ("./db.js");
+const thinmanSettings = require ("./test-list/thinman-settings.js")
+const general = require("./test-list/general.js")
+const systemSettings = require("./test-list/system-settings.js")
+const usbRedirection = require ("./test-list/usb-redirection.js")
 
 //da impostare prima di eseguire
 //path per la cartella Praim/Agile
@@ -24,9 +27,6 @@ before(function(done) {
 //     done();
 // });
 
-var test = function(test){
-    require(test);
-}
 
 describe("TEST", function () {
     
@@ -45,19 +45,11 @@ describe("TEST", function () {
 
 
     //INSERIRE QUI I TEST
-    //TODO: posso ripetere un test un'unica volta così!
-
-    global.agileAddress.address= "test"
-    test(testList.addThinmanAddress)
-    test(testList.checkLanguage)
-    test(testList.appIsRunning)
-    test(testList.deleteThinmanAddress)
-    global.agileAddress.address = "test"
-    global.agileAddress.port = 1117
-    test(testList.addThinmanAddress)
-    global.agileUSB.pid = 9996
-    test(testList.addUsbRedirection)
-    test(testList.setEnglishLanguage)
-
-    
+    general.onlyOneWindow()
+    systemSettings.setEnglishLanguage()
+    general.checkLanguage()
+    thinmanSettings.addThinmanAddress("address",123,23)
+    general.appIsRunning()
+    usbRedirection.addUsbRedirection("bnn",2222,1111)
+    thinmanSettings.deleteThinmanAddress("address")
 });
