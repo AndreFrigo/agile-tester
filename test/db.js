@@ -104,6 +104,15 @@ const db={
             }
         })
         return elem;
+    },
+    getResourceListLength: async function(){
+        db.conn.select(1);
+        const length = await new Promise(function(resolve, reject){
+            db.conn.get("connections", function(err,res){
+                resolve(JSON.parse(res).length);
+            });
+        })
+        return length;
     }
 }
 
