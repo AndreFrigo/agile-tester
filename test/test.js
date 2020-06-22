@@ -7,6 +7,7 @@ const systemSettings = require("./test-list/system-settings.js")
 const usbRedirection = require ("./test-list/usb-redirection.js")
 const resources = require ("./test-list/resources.js")
 const deviceLock = require("./test-list/device-lock.js")
+const networkSettings = require("./test-list/network-settings.js");
 
 //da impostare prima di eseguire
 //path per la cartella Praim/Agile
