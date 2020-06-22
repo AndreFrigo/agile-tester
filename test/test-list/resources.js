@@ -51,7 +51,6 @@ function addResource(resourceName, resourceUrl){
 
         //conferma
         it("Click on Ok to confirm", async () => {
-            // const click = global.app.client.$("#add-connection-modal > div > div.modal-footer > div > ")
             const click = await global.app.client.$(".a=Ok").click();
             assert.ok(click, "Error while clicking ok to confirm")
         })
@@ -70,7 +69,20 @@ function addResource(resourceName, resourceUrl){
             }
         })
 
-        //controlla che sia nell'elenco
+        //controlla che sia nell'elenco delle risorse di agile
+        it("Check if the resource is in the agile list", async () => {
+            const length = await db.getResourceListLength();
+            var found = false;
+            for(i = 0; i < length; i++){
+                const base = "#connection"+i+" > div > div.connection-item-properties > div";
+                const n = await global.app.client.$(base + " > div").getText();
+                const u = await global.app.client.$(base + " > p > span").getText(); 
+                if(n == "agile_local "+ resourceName && u == "subdirectory_arrow_right" + resourceUrl){
+                    found = true;
+                }
+            }
+            assert.ok(found, "The resource is not in the agile list")
+        })
     })
 }
 
