@@ -3,7 +3,6 @@ const {global} = require ("../global.js");
 var assert = require('assert');
 
 
-//TODO: da decidere come valutare errori, per esempio input vid e pid devono essere numeri di 4 cifre
 
 function addUsbRedirection(description, vid, pid){
     describe("Add USB redirection rule", function(){
@@ -28,7 +27,7 @@ function addUsbRedirection(description, vid, pid){
             assert.ok(click, "error while clicking the botton");
         })
     
-        //inserisce la descrizione da agileUSB
+        //inserisce la descrizione
         it("Insert description", async () => {
             const d = global.app.client.$("#description");
             d.click();
@@ -38,7 +37,7 @@ function addUsbRedirection(description, vid, pid){
             })
         })
     
-        //inserisce il vid da agileUSB
+        //inserisce il vid 
         it("Insert vid", async () => {
             const v = global.app.client.$("#vid");
             v.click();
@@ -48,7 +47,7 @@ function addUsbRedirection(description, vid, pid){
             })
         })
     
-        //inserisce il pid da agileUSB
+        //inserisce il pid
         it("Insert pid", async () => {
             const p = global.app.client.$("#pid");
             p.click();
