@@ -15,14 +15,26 @@ function addUsbRedirection(description, vid, pid){
     
         //Apre menù USB Redirection
         it("Navigates to USB Redirection ", async () => {
-            const click = await global.app.client.click('#menu-link-10');
+            const menu = global.app.client.$('#menu-link-10');
+            var click = null;
+            try{
+                click = await menu.click();
+            }catch{
+                assert.ok(false, "Impossible to find the usb redirection menù")
+            }
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "Error while opening the usb redirection menù");
         })
     
         //Clicca nel link Add redirection rule
         it("Click on Add redirection rule", async () => {
-            const click = await global.app.client.click("#citrix > div > div > div > a");
+            const button = global.app.client.$('#citrix > div > div > div > a');
+            var click = null;
+            try{
+                click = await button.click();
+            }catch{
+                assert.ok(false, "Impossible to find the button")
+            }
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "error while clicking the botton");
         })
@@ -30,8 +42,15 @@ function addUsbRedirection(description, vid, pid){
         //inserisce la descrizione
         it("Insert description", async () => {
             const d = global.app.client.$("#description");
-            d.click();
-            d.setValue(description);
+            try{
+                d.click();
+                var x = await d.setValue(description);
+                while(!x){
+                    
+                }
+            }catch{
+                assert.ok(false, "Impossible to find description field")
+            }
             d.getValue().then(function(v){
                 assert.equal(v, description, "error while inserting the description");
             })
@@ -40,8 +59,15 @@ function addUsbRedirection(description, vid, pid){
         //inserisce il vid 
         it("Insert vid", async () => {
             const v = global.app.client.$("#vid");
-            v.click();
-            v.setValue(vid);
+            try{
+                v.click();
+                var x = await v.setValue(vid);
+                while(!x){
+                    
+                }
+            }catch{
+                assert.ok(false, "Impossible to find vid field")
+            }
             v.getValue().then(function(val){
                 assert.equal(val, vid, "error while inserting vid");
             })
@@ -50,8 +76,15 @@ function addUsbRedirection(description, vid, pid){
         //inserisce il pid
         it("Insert pid", async () => {
             const p = global.app.client.$("#pid");
-            p.click();
-            p.setValue(pid);
+            try{
+                p.click();
+                var x = await p.setValue(pid);
+                while(!x){
+                    
+                }
+            }catch{
+                assert.ok(false, "Impossible to find pid field")
+            }
             p.getValue().then(function(v){
                 assert.equal(v, pid, "error while inserting pid");
             })
@@ -59,8 +92,13 @@ function addUsbRedirection(description, vid, pid){
     
         //preme ok creando così la nuova regola
         it("Create the rule", async () => {
-            const ok = global.app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
-            const click = await ok.click();
+            const button = global.app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
+            var click = null;
+            try{
+                click = await button.click();
+            }catch{
+                assert.ok(false, "Impossible to find the button")
+            }
             assert.ok(click, "error while clicking the button");
         })
     
@@ -83,8 +121,12 @@ function addUsbRedirection(description, vid, pid){
             var vidPid = null;
     
             for(i = 1; i <= length; i++){
-                d = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
-                vidPid = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > p > span").getText();
+                try{
+                    d = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
+                    vidPid = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > p > span").getText();
+                }catch{
+                    assert.ok(false, "Impossible to find list element")
+                }
                 if(d == description && vidPid == "Vid: "+ vid + ", Pid: " + pid){
                     found = true;
                 }
