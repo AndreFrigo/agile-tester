@@ -9,15 +9,26 @@ function addThinmanAddress(address, port, timeout){
 
         //Va nella sezione ThinMan Setting
         it("Navigates to ThinMan Settings", async () => {
-            const click = await global.app.client.click('#menu-link-3');
+            const menu = global.app.client.$('#menu-link-3');
+            var click = null;
+            try{
+                click = await menu.click();
+            }catch{
+                assert.ok(false, "Impossible to find the thinman settings link")
+            }
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "error while opening the thinman settings menù");
         })
 
         //Preme su add address
         it("Press Add Address", async () => {
-            const addAddress = global.app.client.$('h5 > a');
-            const click = await addAddress.click();
+            const button = global.app.client.$('h5 > a');
+            var click = null;
+            try{
+                click = await button.click();
+            }catch{
+                assert.ok(false, "Impossible to find the button")
+            }
             global.app.client.waitUntilWindowLoaded();
             assert.ok(click, "error while clicking the button");
         })
@@ -25,7 +36,15 @@ function addThinmanAddress(address, port, timeout){
         //inserisce l'hostname 
         it("Insert hostname", async () => { 
             const hostname = global.app.client.$("#new-address");
-            hostname.setValue(address);
+            try{
+                hostname.click();
+                var x = await hostname.setValue(address);
+                while(!x){
+                    
+                }
+            }catch{
+                assert.ok(false, "Impossible to find hostname field")
+            }
             hostname.getValue().then(function(v){
                 assert.equal(address, v, "error while inserting the hostname");
             })
@@ -34,19 +53,23 @@ function addThinmanAddress(address, port, timeout){
         //inserisce la porta 
         it("Insert port", async () => {
             const p = global.app.client.$("#new-port");
-            p.click();
-            var done = false;
-            done = async () => {
-                const x = new Promise(function(resolve, reject){
-                    p.clearElement();
-                    resolve(true);
-                })
-                return x;
-            }
-            while (!done){
+            try{
+                p.click();
+                var done = false;
+                done = async () => {
+                    const x = new Promise(function(resolve, reject){
+                        p.clearElement();
+                        resolve(true);
+                    })
+                    return x;
+                }
+                while (!done){
 
+                }
+                p.setValue(port);
+            }catch{
+                assert.ok(false, "Impossible to find port field")
             }
-            p.setValue(port);
             p.getValue().then(function(v){
                 assert.equal(v, port, "error while inserting the port");
             })
@@ -55,19 +78,23 @@ function addThinmanAddress(address, port, timeout){
         //inserisce il timeout
         it("Insert timeout", async () => {
             const t = global.app.client.$("#new-timeout");
-            t.click();
-            var done = false;
-            done = async () => {
-                const x = new Promise(function(resolve, reject){
-                    t.clearElement();
-                    resolve(true);
-                })
-                return x;
+            try{
+                t.click();
+                var done = false;
+                done = async () => {
+                    const x = new Promise(function(resolve, reject){
+                        t.clearElement();
+                        resolve(true);
+                    })
+                    return x;
+                }
+                while (!done){
+
+                }
+                t.setValue(timeout);
+            }catch{
+                assert.ok(false, "Impossible to find timeout field")
             }
-            while (!done){
-                
-            }
-            t.setValue(timeout);
             t.getValue().then(function(v){
                 assert.equal(v, timeout, "error while inserting the timeout");
             })
@@ -75,8 +102,13 @@ function addThinmanAddress(address, port, timeout){
 
         //preme ok creando così il nuovo indirizzo
         it("Create the new address", async () => {
-            const ok = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a");
-            const click = await ok.click();
+            const button = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a");
+            var click = null;
+            try{
+                click = await button.click();
+            }catch{
+                assert.ok(false, "Impossible to find the ok button")
+            }
             assert.ok(click, "error while clicking the button");
         })
 
@@ -113,13 +145,18 @@ function addThinmanAddress(address, port, timeout){
                 else if(global.language == 2) indirizzo = "Address"
                 else if(global.language == 3) indirizzo = "Dirección"
                 //guardo se gli address corrispondono
-                const x = await child.$("div.address-info > div").getHTML();
+                var x = null;
+                try{
+                    x = await child.$("div.address-info > div").getHTML();
+                }catch{
+                    assert.ok(false, "Impossible to find the list element")
+                }
                 if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
                     //aggiorno found
                     found = true;
                 }
             } 
-            assert.ok(found, "l'elemento non si trova ancora nella lista")
+            assert.ok(found, "The element is not in the list")
         })
     })
 }
@@ -136,9 +173,15 @@ function deleteThinmanAddress(address){
 
         //Va nella sezione ThinMan Setting
         it("Navigates to ThinMan Settings", async () => {
-            const click = await global.app.client.click('#menu-link-3');
+            const menu = global.app.client.$('#menu-link-3');
+            var click = null;
+            try{
+                click = await menu.click();
+            }catch{
+                assert.ok(false, "Impossible to find the thinman settings link")
+            }
             global.app.client.waitUntilWindowLoaded();
-            assert.ok(click);
+            assert.ok(click, "error while opening the thinman settings menù");
         })
         
         //Elimina l'address
@@ -159,15 +202,25 @@ function deleteThinmanAddress(address){
                 else if(global.language == 2) indirizzo = "Address"
                 else if(global.language == 3) indirizzo = "Dirección"
                 //guardo se gli address corrispondono
-                const x = await child.$("div.address-info > div").getHTML();
+                var x = null;
+                try{
+                    x = await child.$("div.address-info > div").getHTML();
+                }catch{
+                    assert.ok(false, "Impossible to find the list element")
+                }
                 if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
                     //salvo elemento da eliminare per eliminarlo in seguito
                     elimina = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div.address-item-delete > i";
                 }
             } 
             //bottone da premere per eliminare l'elemento
-            const elim = await global.app.client.$(elimina).click();
-            assert.ok(elim);
+            var elim = null;
+            try{
+                elim = await global.app.client.$(elimina).click();
+            }catch{
+                assert.ok(false, "Impossible to click the delete button")
+            }
+            assert.ok(elim, "Impossible to delete the element");
         })
 
         //Controlla che non ci sia più l'indirizzo con l'hostname dato
@@ -188,13 +241,18 @@ function deleteThinmanAddress(address){
                 else if(global.language == 2) indirizzo = "Address"
                 else if(global.language == 3) indirizzo = "Dirección"
                 //guardo se gli address corrispondono
-                const x = await child.$("div.address-info > div").getHTML();
+                var x = null;
+                try{
+                    x = await child.$("div.address-info > div").getHTML();
+                }catch{
+                    assert.ok(false, "Impossible to find the list element")
+                }
                 if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
                     //aggiorno found
                     found = true;
                 }
             } 
-            assert.ok(!found, "l'elemento si trova ancora nella lista")
+            assert.ok(!found, "The element is in the list")
         })
 
         //Controlla che non ci sia più l'indirizzo con l'hostname dato nel database
