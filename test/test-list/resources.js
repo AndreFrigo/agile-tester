@@ -85,7 +85,13 @@ function addResource(resourceName, resourceUrl){
 
         //conferma
         it("Click on Ok to confirm", async () => {
-            const ok = global.app.client.$(".a=Ok");
+            var text = null;
+            if(global.language < 3){
+                text = ".a=Ok"
+            }else{
+                text = ".a=Aceptar"
+            }
+            const ok = global.app.client.$(text);
             var click = null;
             try{
                 click = await ok.click();
@@ -95,7 +101,13 @@ function addResource(resourceName, resourceUrl){
             assert.ok(click, "Error while clicking ok to confirm")
         })
 
-        //TODO: controlla il pop-up
+        // //TODO: controlla il pop-up
+        // it("Check notification", async () => {
+        //     const notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+        //     console.log(notification);
+        //     //valori possibili del pop up Successo Success Exito
+        //     assert.ok(true);
+        // })
 
         //controlla che la risorsa si trovi nel db
         it("Check if the resource is in the db", async () => {

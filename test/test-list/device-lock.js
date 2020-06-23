@@ -114,5 +114,5 @@ function addRule(vid, pid){
 }
 
 module.exports = {
-    addRule: addRule
+    addRule
 }
