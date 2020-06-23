@@ -32,6 +32,7 @@ const db={
         db.conn.select(1);
         const addressList = await new Promise(function(resolve, reject){
             db.conn.get("thinman", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).address);
             })
         })
@@ -48,6 +49,7 @@ const db={
         //numero di address agile 
         const length = await new Promise(function(resolve, reject){
             db.conn.get("thinman", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).address.length);
             });
         })
@@ -64,6 +66,7 @@ const db={
         //lista di usb redirection
         const list = await new Promise(function(resolve, reject){
             db.conn.get("config_citrix", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).usb_redirection.rules);
             })
         })
@@ -80,6 +83,7 @@ const db={
         //numero di rules 
         const length = await new Promise(function(resolve, reject){
             db.conn.get("config_citrix", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).usb_redirection.rules.length);
             });
         })
@@ -95,6 +99,7 @@ const db={
         //lista di connections
         const list = await new Promise(function(resolve, reject){
             db.conn.get("connections", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res));
             })
         })
@@ -110,6 +115,7 @@ const db={
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
             db.conn.get("connections", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).length);
             });
         })
@@ -126,6 +132,7 @@ const db={
         //lista di device 
         const list = await new Promise(function(resolve, reject){
             db.conn.get("config_usb_lock", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).lock_specific);
             })
         })
@@ -141,6 +148,7 @@ const db={
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
             db.conn.get("config_usb_lock", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).lock_specific.length);
             });
         })
@@ -156,6 +164,7 @@ const db={
         //lista di connections
         const list = await new Promise(function(resolve, reject){
             db.conn.get("config_network", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).wifi);
             })
         })
@@ -171,6 +180,7 @@ const db={
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
             db.conn.get("config_network", function(err,res){
+                if(err) reject(err); 
                 resolve(JSON.parse(res).wifi.length);
             });
         })
