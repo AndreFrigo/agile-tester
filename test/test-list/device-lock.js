@@ -1,6 +1,5 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
-var assert = require('assert');
 const { expect } = require("chai");
 
 //funzione per testare, crea una nuova regola con i parametri dati, se non riesce a confermare annulla
