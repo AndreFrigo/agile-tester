@@ -18,7 +18,7 @@ before(function(done) {
     global.app = new Application({
         path: AGILE_PATH + '\\AgileConfigurator\\AgileConfigurator.exe',
     });
-    global.app.start();
+    //global.app.start();
     done();
 });
 
@@ -32,7 +32,7 @@ before(function(done) {
 
 
 describe("TEST", function () {
-    
+    this.timeout(3000000)
     //pausetta tra i vari test
     beforeEach(function(done){
         this.timeout(5000);
@@ -48,6 +48,7 @@ describe("TEST", function () {
 
 
     //INSERIRE QUI I TEST
-    
-    
+resources.addResource()
+
+
 });

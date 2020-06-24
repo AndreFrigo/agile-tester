@@ -78,6 +78,13 @@ function addRule(){
     //Aggiunge una nuova regola per il blocco di un device
     describe("Add a device lock new rule", function(){
 
+        before(async function(){
+            await global.app.start()
+        })
+        after(async function(){
+            await global.app.stop()
+        })
+        
         describe("Database tests", function(){
             before(async function(){    
                 //Aggiungi un device con stessi vid e pid nel db

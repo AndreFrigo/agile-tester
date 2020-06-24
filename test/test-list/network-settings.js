@@ -1,6 +1,5 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
-var assert = require('assert');
 const { expect } = require("chai");
 
 //ritorna click, se è nullo allora la rete non è presente nell'elenco
@@ -110,6 +109,13 @@ const checkPsw = async function (ssid, psw){
 //FUNZIONA SOLO CON WIFI CHE RICHIEDONO SSID E PASSWORD
 function addWifiNetwork(){
     describe("Add WiFi Network", function(){
+
+        before(async function(){
+            await global.app.start()
+        })
+        after(async function(){
+            await global.app.stop()
+        })
 
         this.timeout(30000)
 

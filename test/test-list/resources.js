@@ -86,7 +86,16 @@ const checkResource = async function (resourceName, resourceUrl) {
 }
 function addResource(){
     describe("Add a new resource", function(){
+
+        before(async function(){
+            await global.app.start()
+        })
+        after(async function(){
+            await global.app.stop()
+        })
+
         this.timeout(30000)
+        
         describe("Database tests", function(){
 
             before(async function(){    
