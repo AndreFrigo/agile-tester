@@ -148,70 +148,101 @@ function addThinmanAddress(){
 
         this.timeout(30000)
 
+        describe("Database tests", function(){
+
+            before(async function(){    
+                //Aggiungi un thinman nel db
+                db.conn.select(1)
+                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+            }) 
+
+            it("should return true if the address is in the database", async () => {
+                var found = false
+                const elem = await db.getThinManFromHostname("prova_thinman")
+                if(elem.address == "prova_thinman" && elem.port == 443 && elem.timeout == 15){
+                    found = true
+                }
+                expect(found).to.be.true
+            })
+
+            it("should return null if there is already an address with the same hostname", async () => {
+                expect(await checkAddress("prova_thinman", 443, 15)).to.be.null
+            })
+
+            it("should return true if the thinman address is in the list", async () => {
+
+                //va in thinman settings
+                const menu = global.app.client.$('#menu-link-3');
+                var click = null;
+                try{
+                    click = await menu.click();
+                }catch{
+                }
+                global.app.client.waitUntilWindowLoaded();
+
+
+                await global.sleep(1000)
+
+
+                //aggiorno lingua da database
+                global.language = await db.dbLanguage()
+                //numero di address agile 
+                const length = await db.getThinManListLength();
+
+                var thinman = global.app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
+                var child = null;
+                //indica se ho trovato un'address con quell'hostname
+                var found = null;
+                for(i=1;i<=length;i++){
+                    //cerco l'address
+                    child = thinman.$("li:nth-child("+i+") > div > div");
+                    //string per html che dipende dalla lingua in uso
+                    var indirizzo = null;
+                    if(global.language == 1) indirizzo = "Indirizzo"
+                    else if(global.language == 2) indirizzo = "Address"
+                    else if(global.language == 3) indirizzo = "Dirección"
+                    //guardo se gli address corrispondono
+                    var x = null;
+                    try{
+                        x = await child.$("div.address-info > div").getHTML();
+                    }catch{
+                    }
+                    if(x == "<div><b>"+indirizzo+":</b> "+ "prova_thinman" +"</div>"){
+                        //aggiorno found
+                        found = true;
+                    }
+                } 
+                expect(found).to.be.true
+            })
+        })
+
         describe("Add thinman address tests", async () => {
             const wrongValues = [
-                {adddress:"", port:123, timeout:123},
-                {adddress:"prova", port:"", timeout:123},
-                {adddress:"aaaaaa", port:123, timeout:""},
-                {adddress:"sss", port:"aaa", timeout:123},
-                {adddress:"ddd", port:"1.5", timeout:1000},
-                {adddress:"fff", port:335, timeout:"abc"},
-                {adddress:"1234", port:"1a1", timeout:123},
-                {adddress:"ggg", port:123, timeout:0}
+                {address:"", port:123, timeout:123},
+                {address:"prova", port:"", timeout:123},
+                {address:"aaaaaa", port:123, timeout:""},
+                {address:"sss", port:"aaa", timeout:123},
+                {address:"ddd", port:"1.5", timeout:1000},
+                {address:"fff", port:335, timeout:"abc"},
+                {address:"1234", port:"1a1", timeout:123},
+                {address:"ggg", port:123, timeout:0}
             ]
             wrongValues.forEach(elem => {
                 it("should return null for invalid address, port or timeout", async () => {
-                    expect(await checkAddress(elem.adddress, elem.port, elem.timeout)).to.be.null
+                    expect(await checkAddress(elem.address, elem.port, elem.timeout)).to.be.null
+                })
+            })
+
+            const rightValues = [
+                {address:"test", port:123, timeout:123}
+            ]
+            rightValues.forEach(elem => {
+                it("should return not null if the address has been added", async () => {
+                    expect(await checkAddress(elem.address, elem.port, elem.timeout)).to.not.be.null
                 })
             })
         })
 
-        // //controlla se l'indirizzo è stato inserito nel db 
-        // it("Check if the new address is in the db ", async () => {
-        //     //indirizzo con lo stesso hostname di quello desiderato
-        //     const a = await db.getThinManFromHostname(address);
-        //     if(a){
-        //         if(a.port == port && a.timeout == timeout){
-        //             assert.ok(true,"the new address has not been created successfully");
-        //         }else{
-        //             assert.ok(false, "port or timeout are different from the given values")
-        //         }
-        //     }else{
-        //         assert.ok(false, "can't find an address with the given hostname")
-        //     }
-        // })
-
-        // //controlla se l'indirizzo è ora presente nella lista di agile
-        // it("Check if the new address is in the list of agile", async () => {
-        //     //numero di address agile 
-        //     const length = await db.getThinManListLength();
-
-        //     var thinman = global.app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
-        //     var child = null;
-        //     //indica se ho trovato un'address con quell'hostname
-        //     var found = null;
-        //     for(i=1;i<=length;i++){
-        //         //cerco l'address
-        //         child = thinman.$("li:nth-child("+i+") > div > div");
-        //         //string per html che dipende dalla lingua in uso
-        //         var indirizzo = null;
-        //         if(global.language == 1) indirizzo = "Indirizzo"
-        //         else if(global.language == 2) indirizzo = "Address"
-        //         else if(global.language == 3) indirizzo = "Dirección"
-        //         //guardo se gli address corrispondono
-        //         var x = null;
-        //         try{
-        //             x = await child.$("div.address-info > div").getHTML();
-        //         }catch{
-        //             assert.ok(false, "Impossible to find the list element")
-        //         }
-        //         if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
-        //             //aggiorno found
-        //             found = true;
-        //         }
-        //     } 
-        //     assert.ok(found, "The element is not in the list")
-        // })
     })
 }
 
