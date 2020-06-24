@@ -1,11 +1,10 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 var assert = require('assert');
-const should = require('should');
 const { expect } = require("chai");
 
 //funzione per testare, crea una nuova regola con i parametri dati, se non riesce a confermare annulla
-const addrule = async function (vid, pid, control){
+const addrule = async function (vid, pid){
 
     const menu = global.app.client.$('#menu-link-11');
     var click = null;
