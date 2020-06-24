@@ -1,148 +1,186 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
-var assert = require('assert');
+const { expect } = require("chai");
 
-function addResource(resourceName, resourceUrl){
+
+const checkResource = async function (resourceName, resourceUrl) {
+
+    //va in risorse
+    const menu = global.app.client.$("#menu-link-6");
+    var click = null;
+    try{
+        click = await menu.click();
+    }catch{
+    }
+    global.app.client.waitUntilWindowLoaded();
+
+
+    await global.sleep(1000)
+
+
+    //clicca su add resource
+    const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
+    click = null;
+    try{
+        click = await addResource.click();
+    }catch{
+    }
+    global.app.client.waitUntilWindowLoaded();
+
+
+    await global.sleep(1000)
+
+
+    //seleziona local browser
+    const localBrowser = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(4) > label");
+    click = null;
+    try{
+        click = await localBrowser.click();
+    }catch{
+    }
+
+
+    await global.sleep(1000)
+
+
+    //inserisce il nome 
+    const text = global.app.client.$("#add-connection-name");
+    try{
+        text.click();
+        await text.setValue(resourceName);
+    }catch{
+    }
+
+
+    await global.sleep(1000)
+
+
+    //inserisce l'url
+    const url = global.app.client.$("#add-connection-server");
+    try{
+        url.click();
+        await url.setValue(resourceUrl);
+    }catch{
+    }
+
+
+    await global.sleep(1000)
+
+
+    //preme ok per confermare, se non è disponibile preme annulla 
+    const ok = global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
+    var ret = null;
+    try{
+        ret = await ok.click();
+    }catch{
+        ret = null
+    }
+    await global.sleep(1000)
+    if(ret == null){
+        try{
+            await global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(2)").click();
+        }catch{
+        }
+    }
+    return ret
+}
+function addResource(){
     describe("Add a new resource", function(){
+        this.timeout(30000)
+        describe("Database tests", function(){
 
-        //controlla che non ci sia gia una risorsa con lo stesso nome nel db
-        it("Check if there is already a resource with the given name", async () => {
-            const resource = await db.getResourceFromName(resourceName);
-            assert.ok(resource==null, "There is already a resource with the given name!")
-        })
+            before(async function(){    
+                //Aggiungi una risorsa nel db
+                db.conn.select(1)
+                db.conn.set("connections", "[{\"name\":\"test\",\"type\":\"URL\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"url\":\"https://prova.it\",\"kiosk\":false,\"fullscreen\":false,\"browser\":\"iexplore\"},\"id\":\"afe39343-6643-49a5-a684-572ead42d3ee\"}]")
+            }) 
 
-        //va nelle risorse
-        it("Navigates to resources", async () => {
-            const menu = global.app.client.$("#menu-link-6");
-            var click = null;
-            try{
-                click = await menu.click();
-            }catch{
-                assert.ok(false, "Impossible to find the resources menù")
-            }
-            global.app.client.waitUntilWindowLoaded();
-            assert.ok(click, "error while opening the resources menù");
-        })
-
-        //clicca su add resource
-        it("Clicks on Add Resource", async () => {
-            const button = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            var click = null;
-            try{
-                click = await button.click();
-            }catch{
-                assert.ok(false, "Impossible to find the add resource button")
-            }
-            global.app.client.waitUntilWindowLoaded();
-            assert.ok(click, "error while clicking Add Resource");
-        })
-
-        //setta local browser come resource type
-        it("Select local browser as Resource Type", async () => {
-            const button = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(4) > label");
-            var click = null;
-            try{
-                click = await button.click();
-            }catch{
-                assert.ok(false, "Impossible to find the local browser checkbox")
-            }
-            assert.ok(click, "error while selecting local browser");
-        })
-
-        //inserisce il nome della risorsa da creare 
-        it("Insert resource name", async () => {
-            const text = global.app.client.$("#add-connection-name");
-            try{
-                text.click();
-                var x = await text.setValue(resourceName);
-                while(!x){
-                    
+            it("should return true if the resource is in the database", async () => {
+                var found = false
+                const resource = await db.getResourceFromName("test");
+                if(resource && resource.options.url == "https://prova.it"){
+                    found = true
                 }
-            }catch{
-                assert.ok(false, "Impossible to find name field")
-            }
-            text.getValue().then(function(v){
-                assert.equal(resourceName, v, "error while inserting the resource name");
+                expect(found).to.be.true
             })
-        })
 
-        //inserisce l'url della pagina da visitare 
-        it("Insert URL", async () => {
-            const url = global.app.client.$("#add-connection-server");
-            try{
-                url.click();
-                var x = await url.setValue(resourceUrl);
-                while(!x){
-                    
-                }
-            }catch{
-                assert.ok(false, "Impossible to find url field")
-            }
-            url.getValue().then(function(v){
-                assert.equal(resourceUrl, v, "error while inserting the resource url");
+
+            it("should return null if there is already a resource with the same name", async () => {
+                expect(await checkResource("test", "https://prova.it")).to.be.null
             })
-        })
 
-        //conferma
-        it("Click on Ok to confirm", async () => {
-            var text = null;
-            if(global.language < 3){
-                text = ".a=Ok"
-            }else{
-                text = ".a=Aceptar"
-            }
-            const ok = global.app.client.$(text);
-            var click = null;
-            try{
-                click = await ok.click();
-            }catch{
-                assert.ok(false, "Impossible to find ok button")
-            }
-            assert.ok(click, "Error while clicking ok to confirm")
-        })
 
-        // //TODO: controlla il pop-up
-        // it("Check notification", async () => {
-        //     const notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
-        //     console.log(notification);
-        //     //valori possibili del pop up Successo Success Exito
-        //     assert.ok(true);
-        // })
-
-        //controlla che la risorsa si trovi nel db
-        it("Check if the resource is in the db", async () => {
-            const resource = await db.getResourceFromName(resourceName);
-            if(resource){
-                if(resource.options.url == resourceUrl){
-                    assert.ok(true);
-                }else{
-                    assert.ok(false, "There is a resource with the given name, but with different url")
-                }
-            }else{
-                assert.ok(false, "The resource with the given name is not in the db")
-            }
-        })
-
-        //controlla che sia nell'elenco delle risorse di agile
-        it("Check if the resource is in the agile list", async () => {
-            const length = await db.getResourceListLength();
-            var found = false;
-            var n = null;
-            var u = null;
-            for(i = 0; i < length; i++){
-                const base = "#connection"+i+" > div > div.connection-item-properties > div";
+            it("should return true if the resource is in the list", async() => {
+                //va in risorse
+                const menu = global.app.client.$("#menu-link-6");
+                var click = null;
                 try{
-                    n = await global.app.client.$(base + " > div").getText();
-                    u = await global.app.client.$(base + " > p > span").getText();
+                    click = await menu.click();
                 }catch{
-                    assert.ok(false, "Impossible to find the list elements")
-                } 
-                if(n == "agile_local "+ resourceName && u == "subdirectory_arrow_right" + resourceUrl){
-                    found = true;
                 }
-            }
-            assert.ok(found, "The resource is not in the agile list")
+                global.app.client.waitUntilWindowLoaded();
+
+
+                await global.sleep(1000)
+
+
+                const length = await db.getResourceListLength();
+                var found = false;
+                var n = null;
+                var u = null;
+                for(i = 0; i < length; i++){
+                    const base = "#connection"+i+" > div > div.connection-item-properties > div";
+                    try{
+                        n = await global.app.client.$(base + " > div").getText();
+                        u = await global.app.client.$(base + " > p > span").getText();
+                    }catch{
+                    } 
+                    if(n == "agile_local "+ "test" && u == "subdirectory_arrow_right" + "https://prova.it"){
+                        found = true;
+                    }
+                }
+                expect(found).to.be.true
+            })
+
         })
+
+        describe("Resource tests", function(){
+
+            const wrongValues = [
+                {name:"" ,url:"" },
+                {name:"prova" ,url:"" },
+                {name:"" ,url:"google.com" },
+                {name:"prova" ,url:"prova" },
+                {name:"123" ,url:"123" },
+                {name:"!!!" ,url:"google.com.i" },
+                {name:"aaa" ,url:"aaa" },
+                {name:"aaa" ,url:"google" }
+            ]
+            wrongValues.forEach(elem => {
+                it("should return null if name or url are wrong", async () => {
+                    expect(await checkResource(elem.name, elem.url)).to.be.null
+                })
+            })
+
+            const rightValues = [
+                {name:"name1" ,url:"https://www.google.com" },
+                {name:"name2" ,url:"google.com" }
+            ]
+            rightValues.forEach(elem => {
+                it("should return not null if name and url are correct", async () => {
+                    expect(await checkResource(elem.name, elem.url)).to.not.be.null
+                })
+
+                 // //TODO: controlla il pop-up
+                // it("Check notification", async () => {
+                //     const notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+                //     console.log(notification);
+                //     //valori possibili del pop up Successo Success Exito
+                //     assert.ok(true);
+                // })
+            })
+        })
+
     })
 }
 
