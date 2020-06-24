@@ -110,70 +110,109 @@ const checkPsw = async function (ssid, psw){
 //FUNZIONA SOLO CON WIFI CHE RICHIEDONO SSID E PASSWORD
 function addWifiNetwork(){
     describe("Add WiFi Network", function(){
+
         this.timeout(30000)
-        const wrongSsid = [
-            {ssid:"", psw:1234},
-            {ssid:"allagriglia", psw:1234},
-            {ssid:"bsn", psw:1234},
-            {ssid:123345, psw:1234}
-        ]
-        wrongSsid.forEach(elem => {
-            it("should return null if there is not a wifi with the given ssid in the list", async () => {
-                const isNull = await checkSsid(elem.ssid)
-                //preme su annulla
+
+        describe("Database tests", function(){
+
+            before(async function(){    
+                //Aggiungi una rete wifi
+                db.conn.select(1)
+                db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[{\"ssid\":\"prova_wifi\",\"authentication\":\"WPA2-PSK\",\"encryption\":\"AES\",\"hidden\":false,\"psk\":\"cHJhaW0tYWVzLTEyOC1jYmM6wRyVyCSItEALI2T4eKVZv1Wf5tKVgxW/ALd0sseL5F3vS/UV85EkrpLv0Prels4J\"}],\"hosts\":null}")
+            })  
+
+            //Controlla che la nuova wifi sia stata inserita nel db
+            it("should return not null if the wifi is in the database", async () => {
+                expect(await db.getWifi("prova_wifi")).to.not.be.null
+            })
+
+            //Controlla che la nuova wifi sia nella lista di agile 
+            it("should return true if the wifi is in the list", async () => {
+
+                //Va nella sezione impostazioni di rete
+                const menu = global.app.client.$('#menu-link-2');
+                var click = null;
                 try{
-                    await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(2)").click();
+                    click = await menu.click();
                 }catch{
                 }
-                expect(isNull).to.be.null
+                global.app.client.waitUntilWindowLoaded();
+
+
+                await global.sleep(1000)
+
+
+                //Va nella sezione wifi
+                const wifi = global.app.client.$("#ab > a");
+                click = null;
+                try{
+                    click = await wifi.click();
+                }catch{
+                }
+                global.app.client.waitUntilWindowLoaded();
+
+
+                await global.sleep(1500)
+
+
+                const length = await db.getWifiListLength();
+                const base = "#wifiTab > div > div > div.section-wrapper.scrollable > div"
+                var found = false; 
+                var name = null;
+                for(i = 1; i<= length; i++){
+                    try{
+                        name = await global.app.client.$(base + " > div:nth-child(" + i + ") > div > div.block-item-properties-wrapper > div").getText();
+                    }catch{
+                    }
+                    if(name.slice(14) == "prova_wifi"){
+                        found = true;
+                    }
+                }
+                expect(found).to.be.true
             })
+
         })
 
-        const wrongPsw = [
-            {ssid:"PRAIM_WIFI_N", psw:1234},
-            {ssid:"PRAIM_WIFI_N", psw:"asdfghj"},
-            {ssid:"PRAIM_WIFI_N", psw:""}
-        ]
-        wrongPsw.forEach(elem => {
-            it("should return null if the password is wrong or there is not a wifi with the given ssid in the list", async () => {
-                expect(await checkPsw(elem.ssid, elem.psw)).to.be.null
+        describe("WiFi tests", function(){
+            const wrongSsid = [
+                {ssid:"", psw:1234},
+                {ssid:"allagriglia", psw:1234},
+                {ssid:"bsn", psw:1234},
+                {ssid:123345, psw:1234}
+            ]
+            wrongSsid.forEach(elem => {
+                it("should return null if there is not a wifi with the given ssid in the list", async () => {
+                    const isNull = await checkSsid(elem.ssid)
+                    //preme su annulla
+                    try{
+                        await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(2)").click();
+                    }catch{
+                    }
+                    expect(isNull).to.be.null
+                })
             })
-        })
 
-        const rightValues = [
-            {ssid:"PRAIM_WIFI_N", psw:"asd123!!"}
-        ]
-        rightValues.forEach(elem => {
-            it("should return not null if the wifi has been added correctly", async () => {
-                expect(await checkPsw(elem.ssid, elem.psw)).to.be.not.null
+            const wrongPsw = [
+                {ssid:"PRAIM_WIFI_N", psw:1234},
+                {ssid:"PRAIM_WIFI_N", psw:"asdfghj"},
+                {ssid:"PRAIM_WIFI_N", psw:""}
+            ]
+            wrongPsw.forEach(elem => {
+                it("should return null if the password is wrong or there is not a wifi with the given ssid in the list", async () => {
+                    expect(await checkPsw(elem.ssid, elem.psw)).to.be.null
+                })
             })
+
+            const rightValues = [
+                {ssid:"PRAIM_WIFI_N", psw:"asd123!!"}
+            ]
+            rightValues.forEach(elem => {
+                it("should return not null if the wifi has been added correctly", async () => {
+                    expect(await checkPsw(elem.ssid, elem.psw)).to.be.not.null
+                })
+            })
+
         })
-
-        // //Controlla che la nuova wifi sia stata inserita nel db
-        // it("Check if the new WiFi is in the db", async () => {
-        //     const wifi = await db.getWifi(ssid);
-        //     assert.ok(wifi, "Error, the new WiFi is not in the db")
-        // })
-
-        // //Controlla che la nuova wifi sia nella lista di agile 
-        // it("Check if the new WiFi is in the list of agile", async () => {
-        //     const length = await db.getWifiListLength();
-        //     const base = "#wifiTab > div > div > div.section-wrapper.scrollable > div"
-        //     var found = false; 
-        //     var name = null;
-        //     for(i = 1; i<= length; i++){
-        //         try{
-        //             name = await global.app.client.$(base + " > div:nth-child(" + i + ") > div > div.block-item-properties-wrapper > div").getText();
-        //         }catch{
-        //             assert.ok(false, "Impossible to find the list elements")
-        //         }
-        //         if(name.slice(14) == ssid){
-        //             found = true;
-        //         }
-        //     }
-        //     assert.ok(found, "Error, the new WiFi is not in the list of agile")
-        // })
-
     })
 }
 
