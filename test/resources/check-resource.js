@@ -6,7 +6,7 @@ var localDB = null
 
 describe("Check that a resource created in available", function(){
 
-    this.timeout(300000)
+    this.timeout(30000)
 
     before(async function(){
         await global.app.start()
@@ -38,7 +38,7 @@ describe("Check that a resource created in available", function(){
 
 
     it("should return null if it tries to add a resource with the same name", async () => {
-        expect(await addResource("test", "https://prova.it")).to.be.null
+        expect(await utils.addResource("test", "https://prova.it")).to.be.null
     })
 
 
