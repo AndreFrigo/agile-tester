@@ -2,7 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const { expect } = require("chai");
 
-
+//return not null se la risorsa è stata creata con successo ed è apparsa la notifica di successo, null altrimenti
 const checkResource = async function (resourceName, resourceUrl) {
 
     //va in risorse
@@ -70,6 +70,7 @@ const checkResource = async function (resourceName, resourceUrl) {
     //preme ok per confermare, se non è disponibile preme annulla 
     const ok = global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
     var ret = null;
+    var notification = null
     try{
         ret = await ok.click();
     }catch{
@@ -81,6 +82,27 @@ const checkResource = async function (resourceName, resourceUrl) {
             await global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(2)").click();
         }catch{
         }
+    }else{
+        //titolo del pop-up
+        notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+        //aggiorna lingua
+        global.language = await db.dbLanguage()
+        var succ = null
+        switch(global.language){
+            case 1: {
+                succ = "Successo"
+                break
+            }
+            case 2: {
+                succ = "Success"
+                break
+            }
+            case 3: {
+                succ = "Exito"
+                break
+            }
+        }
+        if(notification != succ) ret = null
     }
     return ret
 }
@@ -175,17 +197,10 @@ function addResource(){
                 {name:"name2" ,url:"google.com" }
             ]
             rightValues.forEach(elem => {
-                it("should return not null if name and url are correct", async () => {
+                //TODO: spezzare in due test? 1 risorsa aggiunta, 2 risorsa aggiunta e pop up apparso ???
+                it("should return not null if the resource has been added and the success notification appeared", async () => {
                     expect(await checkResource(elem.name, elem.url)).to.not.be.null
                 })
-
-                 // //TODO: controlla il pop-up
-                // it("Check notification", async () => {
-                //     const notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
-                //     console.log(notification);
-                //     //valori possibili del pop up Successo Success Exito
-                //     assert.ok(true);
-                // })
             })
         })
 
