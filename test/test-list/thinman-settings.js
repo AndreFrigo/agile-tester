@@ -4,7 +4,7 @@ const { expect } = require("chai");
 
 
 //ritorna null se non ha potuto confermare, altrimenti not null
-const checkAddress = async function(address, port, timeout){
+const addAddress = async function(address, port, timeout){
 
     //va in thinman settings
     const menu = global.app.client.$('#menu-link-3');
@@ -20,10 +20,10 @@ const checkAddress = async function(address, port, timeout){
 
 
     //preme su add address
-    const addAddress = global.app.client.$('h5 > a');
+    const add = global.app.client.$('h5 > a');
     var click = null;
     try{
-        click = await addAddress.click();
+        click = await add.click();
     }catch{
     }
     global.app.client.waitUntilWindowLoaded();
@@ -134,6 +134,111 @@ const checkAddress = async function(address, port, timeout){
     return ret
 }
 
+//return not null se ha premuto sul bottone elimina
+const deleteAddress = async function(address){
+
+    //va in thinman settings
+    const menu = global.app.client.$('#menu-link-3');
+    var click = null;
+    try{
+        click = await menu.click();
+    }catch{
+    }
+    global.app.client.waitUntilWindowLoaded();
+
+
+    await global.sleep(1000)
+
+
+    //numero di address agile 
+    const length = await db.getThinManListLength();
+    var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
+    var child = null;
+    //selector per il bottone da premere
+    var elimina = null;
+    //aggiorno lingua
+    global.language = await db.dbLanguage()
+    //string per html che dipende dalla lingua in uso
+    var indirizzo = null;
+    if(global.language == 1) indirizzo = "Indirizzo"
+    else if(global.language == 2) indirizzo = "Address"
+    else if(global.language == 3) indirizzo = "Dirección"
+    
+    for(i=1;i<=length;i++){
+        //cerco l'address che voglio eliminare
+        child = thinman + " > li:nth-child("+i+") > div > div"
+        //guardo se gli address corrispondono
+        var x = null;
+        try{
+            x = await global.app.client.$(child + " > div.address-info > div").getHTML();
+        }catch{
+        }
+        if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
+            //salvo elemento da eliminare per eliminarlo in seguito
+            elimina = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div.address-item-delete > i";
+        }
+    } 
+    //bottone da premere per eliminare l'elemento
+    var elim = null;
+    try{
+        elim = await global.app.client.$(elimina).click();
+    }catch{
+        elim = null
+    }
+    return elim
+}
+
+//return true se non c'è un address con l'hostname dato, altrimenti false
+const checkDelete = async function(address){
+
+    //va in thinman settings
+    const menu = global.app.client.$('#menu-link-3');
+    var click = null;
+    try{
+        click = await menu.click();
+    }catch{
+    }
+    global.app.client.waitUntilWindowLoaded();
+
+
+    await global.sleep(1000)
+
+
+    //numero di address agile 
+    const length = await db.getThinManListLength();
+
+    var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
+    var child = null;
+    //indica se ho trovato un'address con quell'hostname
+    var found = null;
+    //aggiorno lingua
+    global.language = await db.dbLanguage()
+    //string per html che dipende dalla lingua in uso
+    var indirizzo = null;
+    if(global.language == 1) indirizzo = "Indirizzo"
+    else if(global.language == 2) indirizzo = "Address"
+    else if(global.language == 3) indirizzo = "Dirección"
+
+    for(i=1;i<=length;i++){
+        //cerco l'address
+        child = thinman + " > li:nth-child("+i+") > div > div"
+        //guardo se gli address corrispondono
+        var x = null;
+        try{
+            x = await global.app.client.$(child + " > div.address-info > div").getHTML();
+        }catch{
+        }
+        if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
+            //aggiorno found
+            found = true;
+        }
+    } 
+    return !found
+}
+
+
+
+
 function addThinmanAddress(){
     
     //Aggiunge un address all'elenco dei ThinMan (info in agileAddress)
@@ -166,7 +271,7 @@ function addThinmanAddress(){
             })
 
             it("should return null if there is already an address with the same hostname", async () => {
-                expect(await checkAddress("prova_thinman", 443, 15)).to.be.null
+                expect(await addAddress("prova_thinman", 443, 15)).to.be.null
             })
 
             it("should return true if the thinman address is in the list", async () => {
@@ -189,22 +294,25 @@ function addThinmanAddress(){
                 //numero di address agile 
                 const length = await db.getThinManListLength();
 
-                var thinman = global.app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
+                var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
                 var child = null;
                 //indica se ho trovato un'address con quell'hostname
                 var found = null;
+                //aggiorno lingua
+                global.language = await db.dbLanguage()
+                //string per html che dipende dalla lingua in uso
+                var indirizzo = null;
+                if(global.language == 1) indirizzo = "Indirizzo"
+                else if(global.language == 2) indirizzo = "Address"
+                else if(global.language == 3) indirizzo = "Dirección"
+
                 for(i=1;i<=length;i++){
                     //cerco l'address
-                    child = thinman.$("li:nth-child("+i+") > div > div");
-                    //string per html che dipende dalla lingua in uso
-                    var indirizzo = null;
-                    if(global.language == 1) indirizzo = "Indirizzo"
-                    else if(global.language == 2) indirizzo = "Address"
-                    else if(global.language == 3) indirizzo = "Dirección"
+                    child = thinman + " > li:nth-child("+i+") > div > div"
                     //guardo se gli address corrispondono
                     var x = null;
                     try{
-                        x = await child.$("div.address-info > div").getHTML();
+                        x = await global.app.client.$(child + " > div.address-info > div").getHTML();
                     }catch{
                     }
                     if(x == "<div><b>"+indirizzo+":</b> "+ "prova_thinman" +"</div>"){
@@ -229,7 +337,7 @@ function addThinmanAddress(){
             ]
             wrongValues.forEach(elem => {
                 it("should return null for invalid address, port or timeout", async () => {
-                    expect(await checkAddress(elem.address, elem.port, elem.timeout)).to.be.null
+                    expect(await addAddress(elem.address, elem.port, elem.timeout)).to.be.null
                 })
             })
 
@@ -238,7 +346,7 @@ function addThinmanAddress(){
             ]
             rightValues.forEach(elem => {
                 it("should return not null if the address has been added", async () => {
-                    expect(await checkAddress(elem.address, elem.port, elem.timeout)).to.not.be.null
+                    expect(await addAddress(elem.address, elem.port, elem.timeout)).to.not.be.null
                 })
             })
         })
@@ -250,100 +358,113 @@ function deleteThinmanAddress(address){
     //Elimina un address dall'elenco dei ThinMan
     describe("Delete agile address", function(){
 
-        //Controlla che ci sia un indirizzo con l'hostname dato
-        it("Check if there is an address with the given hostname in the db", async () => {
-            const a = await db.getThinManFromHostname(address);
-            assert.ok(a, "there isn't any address with the given hostname");
+        before(async function(){    
+           //Aggiungi address
+           db.conn.select(1)
+           db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+        })  
+
+
+        this.timeout(30000)
+
+        describe("Database tests", function(){
+
+            beforeEach(async function(){
+                await global.app.start()
+            })
+            afterEach(async function(){
+                await global.app.stop()
+            })
+
+
+            it("Should return true if the address has been deleted", async () => {
+                //Aggiungi address
+                db.conn.select(1)
+                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+                
+                //Elimina address
+                expect(await deleteAddress("prova_thinman")).to.not.be.null
+            })
+
+            it("Should return true if the address has been deleted and is not in the list anymore", async () => {
+                //Aggiungi address
+                db.conn.select(1)
+                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+                
+                //Elimina address
+                await deleteAddress("prova_thinman")
+                await global.sleep(1000)
+                expect(await checkDelete("prova_thinman")).to.be.true
+            })
+
+            it("should return null if the address has been deleted and is not in the database anymore", async () => {
+                //Aggiungi address
+                db.conn.select(1)
+                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+                
+                //Elimina address
+                await deleteAddress("prova_thinman")
+                await global.sleep(1500)
+                const res = await db.getThinManFromHostname("prova_thinman");
+                expect(res).to.be.null
+            })
+
+            it("should return null if there is not any address with the given hostname", async () => {
+                //Setta database address non contenente un address "prova"
+                db.conn.select(1)
+                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+                
+                expect(await deleteAddress("prova")).to.be.null
+            })
+
         })
 
-        //Va nella sezione ThinMan Setting
-        it("Navigates to ThinMan Settings", async () => {
-            const menu = global.app.client.$('#menu-link-3');
-            var click = null;
-            try{
-                click = await menu.click();
-            }catch{
-                assert.ok(false, "Impossible to find the thinman settings link")
-            }
-            global.app.client.waitUntilWindowLoaded();
-            assert.ok(click, "error while opening the thinman settings menù");
-        })
-        
-        //Elimina l'address
-        it("Delete the selected address", async () => {
-            //numero di address agile 
-            const length = await db.getThinManListLength();
+        describe("Delete thinman address tests", async () => {
 
-            var thinman = global.app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
-            var child = null;
-            //selector per il bottone da premere
-            var elimina = null;
-            for(i=1;i<=length;i++){
-                //cerco l'address che voglio eliminare
-                child = thinman.$("li:nth-child("+i+") > div > div");
-                //string per html che dipende dalla lingua in uso
-                var indirizzo = null;
-                if(global.language == 1) indirizzo = "Indirizzo"
-                else if(global.language == 2) indirizzo = "Address"
-                else if(global.language == 3) indirizzo = "Dirección"
-                //guardo se gli address corrispondono
-                var x = null;
-                try{
-                    x = await child.$("div.address-info > div").getHTML();
-                }catch{
-                    assert.ok(false, "Impossible to find the list element")
-                }
-                if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
-                    //salvo elemento da eliminare per eliminarlo in seguito
-                    elimina = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div.address-item-delete > i";
-                }
-            } 
-            //bottone da premere per eliminare l'elemento
-            var elim = null;
-            try{
-                elim = await global.app.client.$(elimina).click();
-            }catch{
-                assert.ok(false, "Impossible to click the delete button")
-            }
-            assert.ok(elim, "Impossible to delete the element");
-        })
+            beforeEach(async function(){
+                await global.app.start()
+            })
+            afterEach(async function(){
+                await global.app.stop()
+            })
+            
+            const rightValues = [
+                {address:"test", port:123, timeout:123}
+            ]
+            rightValues.forEach(elem => {
+                it("should return true if an address has been created and then deleted successfully", async () => {
 
-        //Controlla che non ci sia più l'indirizzo con l'hostname dato
-        it("Check if the address is not in the list of address anymore", async () => {
-            //numero di address agile 
-            const length = await db.getThinManListLength();
+                    //crea l'address
+                    const add = await addAddress(elem.address, elem.port, elem.timeout)
 
-            var thinman = global.app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul");
-            var child = null;
-            //indica se ho trovato un'address con quell'hostname
-            var found = null;
-            for(i=1;i<=length;i++){
-                //cerco l'address
-                child = thinman.$("li:nth-child("+i+") > div > div");
-                //string per html che dipende dalla lingua in uso
-                var indirizzo = null;
-                if(global.language == 1) indirizzo = "Indirizzo"
-                else if(global.language == 2) indirizzo = "Address"
-                else if(global.language == 3) indirizzo = "Dirección"
-                //guardo se gli address corrispondono
-                var x = null;
-                try{
-                    x = await child.$("div.address-info > div").getHTML();
-                }catch{
-                    assert.ok(false, "Impossible to find the list element")
-                }
-                if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
-                    //aggiorno found
-                    found = true;
-                }
-            } 
-            assert.ok(!found, "The element is in the list")
-        })
+                    await global.sleep(1500)
 
-        //Controlla che non ci sia più l'indirizzo con l'hostname dato nel database
-        it("Check if the address is not in the db anymore", async () => {
-            const a = await db.getThinManFromHostname(address);
-            assert.ok(a==null, "the address with the given hostname is still in the database");
+                    //elimina l'address creato
+                    const del = await deleteAddress(elem.address)
+
+                    //controlla che entrambe siano andate a buon fine
+                    expect(add != null && del != null).to.be.true
+                })
+
+                it("should return true if an address has been created, deleted and is not in the list anymore", async () => {
+                    
+                    //crea l'address
+                    const add = await addAddress(elem.address, elem.port, elem.timeout)
+
+                    await global.sleep(1000)
+
+                    //elimina l'address creato
+                    const del = await deleteAddress(elem.address)
+
+                    await global.sleep(1000)
+
+                    //controlla che non sia nella lista
+                    const list = await checkDelete(elem.address)
+
+                    //controlla che entrambe siano andate a buon fine
+                    expect(add != null && del != null && list == true).to.be.true
+                })
+            })          
         })
 
     })
