@@ -1,6 +1,8 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
-const {utils} = require("../utils.js);const { expect } = require("chai");
+const {utils} = require("../utils.js");
+const { expect } = require("chai");
+var localDB = null
 
 //input lan indica la lingua corrente 
 const chooseEnglish = async function(lan){
@@ -79,6 +81,17 @@ describe("Choose english as language", function(){
 
     this.timeout(30000)
 
+    before(async function(){
+        //salva database locale
+        db.conn.select(1)
+        localDB = await new Promise(function (resolve, reject){
+            db.conn.get("config_locale", function(err, res){
+                if(err) reject(err)
+                resolve(res)
+            });
+        })
+    })
+
     describe("Test from spanish", async () => {
 
         before(async function(){    
@@ -89,6 +102,7 @@ describe("Choose english as language", function(){
         }) 
 
         after(async function(){
+            db.conn.set("config_locale", localDB)
             await global.app.stop()
         })
 
@@ -129,6 +143,7 @@ describe("Choose english as language", function(){
         }) 
 
         after(async function(){
+            db.conn.set("config_locale", localDB)
             await global.app.stop()
         })
 
@@ -169,6 +184,7 @@ describe("Choose english as language", function(){
         }) 
 
         after(async function(){
+            db.conn.set("config_locale", localDB)
             await global.app.stop()
         })
 
