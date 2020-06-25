@@ -501,6 +501,101 @@ const utils={
             }
         } 
         return !found
+    },
+
+
+    //return not null se ha confermato la creazione della regola
+    addUsbRule: async function(description, vid, pid){
+
+        //Apre menù USB Redirection
+        const menu = global.app.client.$('#menu-link-10');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //clicca add redirection rule
+        const button = global.app.client.$('#citrix > div > div > div > a');
+        click = null;
+        try{
+            click = await button.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //inserisce descrizione 
+        const d = global.app.client.$("#description");
+        try{
+            d.click();
+            var x = await d.setValue(description);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        //inserisce il vid
+        const v = global.app.client.$("#vid");
+        try{
+            v.click();
+            var x = await v.setValue(vid);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        //inserisce il pid
+        const p = global.app.client.$("#pid");
+        try{
+            p.click();
+            x = await p.setValue(pid);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        //conferma
+        const ok = global.app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
+        var click = null;
+        try{
+            click = await ok.click();
+        }catch{
+            click = null
+        }
+
+        if(click == null){
+            //preme su annulla
+            try{
+                global.app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(2)").click()
+            }catch{
+            }
+        }
+
+        return click
     }
     
 
