@@ -90,6 +90,11 @@ function addResource(){
         before(async function(){
             await global.app.start()
         })
+        before(async function(){    
+            //Aggiungi una risorsa nel db
+            db.conn.select(1)
+            db.conn.set("connections", "[{\"name\":\"test\",\"type\":\"URL\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"url\":\"https://prova.it\",\"kiosk\":false,\"fullscreen\":false,\"browser\":\"iexplore\"},\"id\":\"afe39343-6643-49a5-a684-572ead42d3ee\"}]")
+        }) 
         after(async function(){
             await global.app.stop()
         })
@@ -97,12 +102,6 @@ function addResource(){
         this.timeout(30000)
         
         describe("Database tests", function(){
-
-            before(async function(){    
-                //Aggiungi una risorsa nel db
-                db.conn.select(1)
-                db.conn.set("connections", "[{\"name\":\"test\",\"type\":\"URL\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"url\":\"https://prova.it\",\"kiosk\":false,\"fullscreen\":false,\"browser\":\"iexplore\"},\"id\":\"afe39343-6643-49a5-a684-572ead42d3ee\"}]")
-            }) 
 
             it("should return true if the resource is in the database", async () => {
                 var found = false

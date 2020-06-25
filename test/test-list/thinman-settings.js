@@ -247,6 +247,11 @@ function addThinmanAddress(){
         before(async function(){
             await global.app.start()
         })
+        before(async function(){    
+            //Aggiungi un thinman nel db
+            db.conn.select(1)
+            db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+        }) 
         after(async function(){
             await global.app.stop()
         })
@@ -254,12 +259,6 @@ function addThinmanAddress(){
         this.timeout(30000)
 
         describe("Database tests", function(){
-
-            before(async function(){    
-                //Aggiungi un thinman nel db
-                db.conn.select(1)
-                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
-            }) 
 
             it("should return true if the address is in the database", async () => {
                 var found = false
@@ -370,6 +369,10 @@ function deleteThinmanAddress(address){
         describe("Database tests", function(){
 
             beforeEach(async function(){
+                //Aggiungi address
+                db.conn.select(1)
+                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+                
                 await global.app.start()
             })
             afterEach(async function(){
@@ -378,19 +381,11 @@ function deleteThinmanAddress(address){
 
 
             it("Should return true if the address has been deleted", async () => {
-                //Aggiungi address
-                db.conn.select(1)
-                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
-                
                 //Elimina address
                 expect(await deleteAddress("prova_thinman")).to.not.be.null
             })
 
             it("Should return true if the address has been deleted and is not in the list anymore", async () => {
-                //Aggiungi address
-                db.conn.select(1)
-                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
-                
                 //Elimina address
                 await deleteAddress("prova_thinman")
                 await global.sleep(1000)
@@ -398,10 +393,6 @@ function deleteThinmanAddress(address){
             })
 
             it("should return null if the address has been deleted and is not in the database anymore", async () => {
-                //Aggiungi address
-                db.conn.select(1)
-                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
-                
                 //Elimina address
                 await deleteAddress("prova_thinman")
                 await global.sleep(1500)
@@ -410,10 +401,6 @@ function deleteThinmanAddress(address){
             })
 
             it("should return null if there is not any address with the given hostname", async () => {
-                //Setta database address non contenente un address "prova"
-                db.conn.select(1)
-                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
-                
                 expect(await deleteAddress("prova")).to.be.null
             })
 
@@ -422,6 +409,10 @@ function deleteThinmanAddress(address){
         describe("Delete thinman address tests", async () => {
 
             beforeEach(async function(){
+                //Aggiungi address
+                db.conn.select(1)
+                db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+                
                 await global.app.start()
             })
             afterEach(async function(){

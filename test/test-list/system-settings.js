@@ -83,7 +83,7 @@ function setEnglishLanguage(){
         describe("Test from spanish", async () => {
 
             before(async function(){    
-                //Setta italiano
+                //Setta spagnolo
                 db.conn.select(1)
                 db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"es-ES\"}")
                 await global.app.start()
@@ -163,7 +163,7 @@ function setEnglishLanguage(){
         describe("Test from english", async () => {
 
             before(async function(){    
-                //Setta italiano
+                //Setta inglese
                 db.conn.select(1)
                 db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"en-GB\"}")
                 await global.app.start()

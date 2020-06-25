@@ -81,16 +81,16 @@ function addRule(){
         before(async function(){
             await global.app.start()
         })
+        before(async function(){    
+            //Aggiungi un device con stessi vid e pid nel db
+            db.conn.select(1)
+            db.conn.set("config_usb_lock", "{\"lock_enabled\":false,\"lock_except\":[],\"lock_specific\":[{\"vid\":\"9999\",\"pid\":\"9999\"}]}")
+        }) 
         after(async function(){
             await global.app.stop()
         })
         
-        describe("Database tests", function(){
-            before(async function(){    
-                //Aggiungi un device con stessi vid e pid nel db
-                db.conn.select(1)
-                db.conn.set("config_usb_lock", "{\"lock_enabled\":false,\"lock_except\":[],\"lock_specific\":[{\"vid\":\"9999\",\"pid\":\"9999\"}]}")
-            })    
+        describe("Database tests", function(){   
     
             it("should return not null if the device is already in the db list", async () => {
                 var device = null;

@@ -113,6 +113,11 @@ function addWifiNetwork(){
         before(async function(){
             await global.app.start()
         })
+        before(async function(){    
+            //Aggiungi una rete wifi
+            db.conn.select(1)
+            db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[{\"ssid\":\"prova_wifi\",\"authentication\":\"WPA2-PSK\",\"encryption\":\"AES\",\"hidden\":false,\"psk\":\"cHJhaW0tYWVzLTEyOC1jYmM6wRyVyCSItEALI2T4eKVZv1Wf5tKVgxW/ALd0sseL5F3vS/UV85EkrpLv0Prels4J\"}],\"hosts\":null}")
+        })
         after(async function(){
             await global.app.stop()
         })
@@ -120,12 +125,6 @@ function addWifiNetwork(){
         this.timeout(30000)
 
         describe("Database tests", function(){
-
-            before(async function(){    
-                //Aggiungi una rete wifi
-                db.conn.select(1)
-                db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[{\"ssid\":\"prova_wifi\",\"authentication\":\"WPA2-PSK\",\"encryption\":\"AES\",\"hidden\":false,\"psk\":\"cHJhaW0tYWVzLTEyOC1jYmM6wRyVyCSItEALI2T4eKVZv1Wf5tKVgxW/ALd0sseL5F3vS/UV85EkrpLv0Prels4J\"}],\"hosts\":null}")
-            })  
 
             //Controlla che la nuova wifi sia stata inserita nel db
             it("should return not null if the wifi is in the database", async () => {
