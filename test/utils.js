@@ -192,6 +192,79 @@ const utils={
             }
         }
         return click
+    },
+
+
+    //ritorna not null se ha creato la regola, altrimenti null
+    addRule: async function (vid, pid){
+
+        const menu = global.app.client.$('#menu-link-11');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1500);
+        
+
+        click = null;                    
+        const addRule = global.app.client.$("#main-div > div.main-content > main > section > div.fixed-header > div > div > a");
+        try{
+            click = await addRule.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+        
+
+        var v = global.app.client.$("#vid");
+        try{
+            v.click();
+            var x = await v.setValue(vid);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        v = global.app.client.$("#pid");
+        try{
+            v.click();
+            var x = await v.setValue(pid);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        const ok = global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(1)")
+        click = null;
+        try{
+            click = await ok.click()
+        }catch{
+            click = null;
+        }
+        if(click == null){
+            //premi su annulla
+            try{
+                await global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(2)").click()
+            }catch{  
+            }
+        }
+        return click 
     }
 
 
