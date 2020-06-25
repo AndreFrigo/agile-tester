@@ -4,7 +4,7 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
 
-describe("Check if there is an available address", function(){
+describe("Check add address", function(){
 
     this.timeout(30000)
 

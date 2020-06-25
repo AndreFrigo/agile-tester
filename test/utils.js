@@ -397,6 +397,110 @@ const utils={
             }
         }
         return ret
+    },
+
+
+    //return not null se ha premuto sul bottone elimina
+    deleteAddress: async function(address){
+
+        //va in thinman settings
+        const menu = global.app.client.$('#menu-link-3');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //numero di address agile 
+        const length = await db.getThinManListLength();
+        var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
+        var child = null;
+        //selector per il bottone da premere
+        var elimina = null;
+        //aggiorno lingua
+        global.language = await db.dbLanguage()
+        //string per html che dipende dalla lingua in uso
+        var indirizzo = null;
+        if(global.language == 1) indirizzo = "Indirizzo"
+        else if(global.language == 2) indirizzo = "Address"
+        else if(global.language == 3) indirizzo = "Dirección"
+        
+        for(i=1;i<=length;i++){
+            //cerco l'address che voglio eliminare
+            child = thinman + " > li:nth-child("+i+") > div > div"
+            //guardo se gli address corrispondono
+            var x = null;
+            try{
+                x = await global.app.client.$(child + " > div.address-info > div").getHTML();
+            }catch{
+            }
+            if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
+                //salvo elemento da eliminare per eliminarlo in seguito
+                elimina = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div.address-item-delete > i";
+            }
+        } 
+        //bottone da premere per eliminare l'elemento
+        var elim = null;
+        try{
+            elim = await global.app.client.$(elimina).click();
+        }catch{
+            elim = null
+        }
+        return elim
+    },
+
+
+    //return true se non c'è un address con l'hostname dato, altrimenti false
+    checkDelete: async function(address){
+
+        //va in thinman settings
+        const menu = global.app.client.$('#menu-link-3');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //numero di address agile 
+        const length = await db.getThinManListLength();
+
+        var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
+        var child = null;
+        //indica se ho trovato un'address con quell'hostname
+        var found = null;
+        //aggiorno lingua
+        global.language = await db.dbLanguage()
+        //string per html che dipende dalla lingua in uso
+        var indirizzo = null;
+        if(global.language == 1) indirizzo = "Indirizzo"
+        else if(global.language == 2) indirizzo = "Address"
+        else if(global.language == 3) indirizzo = "Dirección"
+
+        for(i=1;i<=length;i++){
+            //cerco l'address
+            child = thinman + " > li:nth-child("+i+") > div > div"
+            //guardo se gli address corrispondono
+            var x = null;
+            try{
+                x = await global.app.client.$(child + " > div.address-info > div").getHTML();
+            }catch{
+            }
+            if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
+                //aggiorno found
+                found = true;
+            }
+        } 
+        return !found
     }
     
 
