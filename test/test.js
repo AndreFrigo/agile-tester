@@ -2,7 +2,6 @@ var Application = require('spectron').Application;
 const {global} = require ("./global.js");
 const {db} = require ("./db.js");
 const thinmanSettings = require ("./test-list/thinman-settings.js")
-const general = require("./test-list/general.js")
 const systemSettings = require("./test-list/system-settings.js")
 const usbRedirection = require ("./test-list/usb-redirection.js")
 const resources = require ("./test-list/resources.js")
