@@ -89,6 +89,112 @@ const utils={
     },
 
 
+    //ritorna not null se c'è una wifi disponibile con l'ssid dato, altrimenti null
+    checkSsid : async function (ssid) {
+        //Va nella sezione impostazioni di rete
+        const menu = global.app.client.$('#menu-link-2');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //Va nella sezione wifi
+        const wifi = global.app.client.$("#ab > a");
+        click = null;
+        try{
+            click = await wifi.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //Clicca su aggiungi rete wifi
+        const add = global.app.client.$("#wifiTab > div > div > div.header-inputs > a");
+        click = null;
+        try{
+            click = await add.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //apre la lista delle reti disponibili
+        const button = global.app.client.$("#wifi");
+        var click = null;
+        try{
+            click = await button.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        var ret = null
+        try{
+            ret = await global.app.client.$("span.network-ssid=" + ssid).click();
+        }catch{
+            ret = null
+        }
+        
+        await utils.sleep(1000)
+
+        return ret
+    },
+
+
+    //ritorna not null se ha confermato la wifi, null se la password non è corretta o la rete non è presente nell'elenco
+    saveWifi: async function (ssid, psw){
+        await utils.checkSsid(ssid)
+
+        //inserisce la password
+        const password = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(4) > div > div > input");
+        try{
+            password.click();
+            var x = await password.setValue(psw);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        //conferma premendo ok
+        const ok = global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)");
+        var click = null;
+        try{
+            click = await ok.click();
+        }catch{
+            click = null
+        }
+        await utils.sleep(1500)
+        if(click == null){
+            //preme su annulla
+            try{
+                await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(2)").click();
+            }catch{
+            }
+        }
+        return click
+    }
+
+
 
 
 }

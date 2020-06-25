@@ -4,7 +4,7 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
 
-describe("Check that a resource created in available", function(){
+describe("Check if a resource created is available", function(){
 
     this.timeout(30000)
 
