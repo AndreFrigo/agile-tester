@@ -1,5 +1,6 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
+const {utils} = require("../utils.js");
 const { expect } = require("chai");
 
 //return not null se ha confermato la creazione della regola
@@ -15,7 +16,7 @@ const addRule = async function(description, vid, pid){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //clicca add redirection rule
@@ -28,7 +29,7 @@ const addRule = async function(description, vid, pid){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //inserisce descrizione 
@@ -43,7 +44,7 @@ const addRule = async function(description, vid, pid){
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //inserisce il vid
@@ -58,7 +59,7 @@ const addRule = async function(description, vid, pid){
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //inserisce il pid
@@ -73,7 +74,7 @@ const addRule = async function(description, vid, pid){
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //conferma
@@ -134,7 +135,7 @@ describe("Add USB redirection rule", function(){
             global.app.client.waitUntilWindowLoaded();
 
 
-            await global.sleep(1000)
+            await utils.sleep(1000)
 
 
             //numero di address agile 

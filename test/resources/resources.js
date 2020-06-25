@@ -1,9 +1,11 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
+const {utils} = require("../utils.js");
 const { expect } = require("chai");
+var localDB = null
 
 //return not null se la risorsa è stata creata con successo ed è apparsa la notifica di successo, null altrimenti
-const checkResource = async function (resourceName, resourceUrl) {
+const addResource = async function (resourceName, resourceUrl) {
 
     //va in risorse
     const menu = global.app.client.$("#menu-link-6");
@@ -15,7 +17,7 @@ const checkResource = async function (resourceName, resourceUrl) {
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //clicca su add resource
@@ -28,7 +30,7 @@ const checkResource = async function (resourceName, resourceUrl) {
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //seleziona local browser
@@ -40,7 +42,7 @@ const checkResource = async function (resourceName, resourceUrl) {
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //inserisce il nome 
@@ -52,7 +54,7 @@ const checkResource = async function (resourceName, resourceUrl) {
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //inserisce l'url
@@ -64,7 +66,7 @@ const checkResource = async function (resourceName, resourceUrl) {
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //preme ok per confermare, se non è disponibile preme annulla 
@@ -76,7 +78,7 @@ const checkResource = async function (resourceName, resourceUrl) {
     }catch{
         ret = null
     }
-    await global.sleep(1000)
+    await utils.sleep(1000)
     if(ret == null){
         try{
             await global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(2)").click();
@@ -128,56 +130,7 @@ describe("Add a new resource", function(){
 
     this.timeout(30000)
     
-    describe("Database tests", function(){
-
-        it("should return true if the resource is in the database", async () => {
-            var found = false
-            const resource = await db.getResourceFromName("test");
-            if(resource && resource.options.url == "https://prova.it"){
-                found = true
-            }
-            expect(found).to.be.true
-        })
-
-
-        it("should return null if there is already a resource with the same name", async () => {
-            expect(await checkResource("test", "https://prova.it")).to.be.null
-        })
-
-
-        it("should return true if the resource is in the list", async() => {
-            //va in risorse
-            const menu = global.app.client.$("#menu-link-6");
-            var click = null;
-            try{
-                click = await menu.click();
-            }catch{
-            }
-            global.app.client.waitUntilWindowLoaded();
-
-
-            await global.sleep(1000)
-
-
-            const length = await db.getResourceListLength();
-            var found = false;
-            var n = null;
-            var u = null;
-            for(i = 0; i < length; i++){
-                const base = "#connection"+i+" > div > div.connection-item-properties > div";
-                try{
-                    n = await global.app.client.$(base + " > div").getText();
-                    u = await global.app.client.$(base + " > p > span").getText();
-                }catch{
-                } 
-                if(n == "agile_local "+ "test" && u == "subdirectory_arrow_right" + "https://prova.it"){
-                    found = true;
-                }
-            }
-            expect(found).to.be.true
-        })
-
-    })
+    
 
     describe("Resource tests", function(){
 
@@ -193,7 +146,7 @@ describe("Add a new resource", function(){
         ]
         wrongValues.forEach(elem => {
             it("should return null if name or url are wrong", async () => {
-                expect(await checkResource(elem.name, elem.url)).to.be.null
+                expect(await addResource(elem.name, elem.url)).to.be.null
             })
         })
 
@@ -204,7 +157,7 @@ describe("Add a new resource", function(){
         rightValues.forEach(elem => {
             //TODO: spezzare in due test? 1 risorsa aggiunta, 2 risorsa aggiunta e pop up apparso ???
             it("should return not null if the resource has been added and the success notification appeared", async () => {
-                expect(await checkResource(elem.name, elem.url)).to.not.be.null
+                expect(await addResource(elem.name, elem.url)).to.not.be.null
             })
         })
     })

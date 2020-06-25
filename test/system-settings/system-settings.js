@@ -1,6 +1,6 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
-const { expect } = require("chai");
+const {utils} = require("../utils.js);const { expect } = require("chai");
 
 //input lan indica la lingua corrente 
 const chooseEnglish = async function(lan){
@@ -15,7 +15,7 @@ const chooseEnglish = async function(lan){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //va nella sezione lingua
@@ -28,7 +28,7 @@ const chooseEnglish = async function(lan){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //apre la scelta della lingua
@@ -40,7 +40,7 @@ const chooseEnglish = async function(lan){
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //setta la lingua inglese 
@@ -95,7 +95,7 @@ describe("Choose english as language", function(){
         it("should return true if the language changed to english", async () => {
             await chooseEnglish(3)
             var ret = false
-            await global.sleep(1500)
+            await utils.sleep(1500)
             const lan = await db.dbLanguage()
             ret = (lan == 2)
             expect(ret).to.be.true
@@ -135,7 +135,7 @@ describe("Choose english as language", function(){
         it("should return true if the language changed to english", async () => {
             await chooseEnglish(1)
             var ret = false
-            await global.sleep(1500)
+            await utils.sleep(1500)
             const lan = await db.dbLanguage()
             ret = (lan == 2)
             expect(ret).to.be.true
@@ -175,7 +175,7 @@ describe("Choose english as language", function(){
         it("should return true if the language changed to english", async () => {
             await chooseEnglish(2)
             var ret = false
-            await global.sleep(1500)
+            await utils.sleep(1500)
             const lan = await db.dbLanguage()
             ret = (lan == 2)
             expect(ret).to.be.true

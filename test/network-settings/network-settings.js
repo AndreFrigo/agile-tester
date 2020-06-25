@@ -1,5 +1,6 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
+const {utils} = require("../utils.js");
 const { expect } = require("chai");
 
 //ritorna click, se è nullo allora la rete non è presente nell'elenco
@@ -14,7 +15,7 @@ const checkSsid = async function (ssid) {
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //Va nella sezione wifi
@@ -27,7 +28,7 @@ const checkSsid = async function (ssid) {
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //Clicca su aggiungi rete wifi
@@ -40,7 +41,7 @@ const checkSsid = async function (ssid) {
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //apre la lista delle reti disponibili
@@ -53,7 +54,7 @@ const checkSsid = async function (ssid) {
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     var ret = null
@@ -63,7 +64,7 @@ const checkSsid = async function (ssid) {
         ret = null
     }
     
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
     return ret
 }
@@ -84,7 +85,7 @@ const checkPsw = async function (ssid, psw){
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //conferma premendo ok
@@ -95,7 +96,7 @@ const checkPsw = async function (ssid, psw){
     }catch{
         click = null
     }
-    await global.sleep(1500)
+    await utils.sleep(1500)
     if(click == null){
         //preme su annulla
         try{
@@ -171,7 +172,7 @@ describe("Add WiFi Network", function(){
             global.app.client.waitUntilWindowLoaded();
 
 
-            await global.sleep(1000)
+            await utils.sleep(1000)
 
 
             //Va nella sezione wifi
@@ -184,7 +185,7 @@ describe("Add WiFi Network", function(){
             global.app.client.waitUntilWindowLoaded();
 
 
-            await global.sleep(1500)
+            await utils.sleep(1500)
 
 
             const length = await db.getWifiListLength();

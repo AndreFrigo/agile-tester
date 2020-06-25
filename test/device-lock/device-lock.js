@@ -1,5 +1,6 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
+const {utils} = require("../utils.js");
 const { expect } = require("chai");
 
 //funzione per testare, crea una nuova regola con i parametri dati, se non riesce a confermare annulla
@@ -14,7 +15,7 @@ const addrule = async function (vid, pid){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1500);
+    await utils.sleep(1500);
     
 
     click = null;                    
@@ -26,7 +27,7 @@ const addrule = async function (vid, pid){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
     
 
     var v = global.app.client.$("#vid");
@@ -40,7 +41,7 @@ const addrule = async function (vid, pid){
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     v = global.app.client.$("#pid");
@@ -54,7 +55,7 @@ const addrule = async function (vid, pid){
     }
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     const ok = global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(1)")
@@ -110,7 +111,7 @@ describe("Add a device lock new rule", function(){
             global.app.client.waitUntilWindowLoaded();
 
 
-            await global.sleep(1500);
+            await utils.sleep(1500);
 
 
             const length = await db.getDeviceLockListLength();

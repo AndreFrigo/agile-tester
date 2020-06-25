@@ -1,5 +1,6 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
+const {utils} = require("../utils.js");
 const { expect } = require("chai");
 
 
@@ -16,7 +17,7 @@ const addAddress = async function(address, port, timeout){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //preme su add address
@@ -29,7 +30,7 @@ const addAddress = async function(address, port, timeout){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //inserisce l'hostname
@@ -44,7 +45,7 @@ const addAddress = async function(address, port, timeout){
     }
 
 
-    await global.sleep(1500)
+    await utils.sleep(1500)
 
 
     //inserisce la porta
@@ -79,7 +80,7 @@ const addAddress = async function(address, port, timeout){
     }
 
 
-    await global.sleep(1500)
+    await utils.sleep(1500)
 
 
     //inserisce il timeout
@@ -114,7 +115,7 @@ const addAddress = async function(address, port, timeout){
     }
 
 
-    await global.sleep(2000)
+    await utils.sleep(2000)
 
 
     const confirm = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a:nth-child(1)");
@@ -147,7 +148,7 @@ const deleteAddress = async function(address){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //numero di address agile 
@@ -201,7 +202,7 @@ const checkDelete = async function(address){
     global.app.client.waitUntilWindowLoaded();
 
 
-    await global.sleep(1000)
+    await utils.sleep(1000)
 
 
     //numero di address agile 
@@ -283,7 +284,7 @@ describe("Add a new address of ThinMan", function(){
             global.app.client.waitUntilWindowLoaded();
 
 
-            await global.sleep(1000)
+            await utils.sleep(1000)
 
 
             //aggiorno lingua da database
@@ -385,14 +386,14 @@ describe("Delete agile address", function(){
         it("Should return true if the address has been deleted and is not in the list anymore", async () => {
             //Elimina address
             await deleteAddress("prova_thinman")
-            await global.sleep(1000)
+            await utils.sleep(1000)
             expect(await checkDelete("prova_thinman")).to.be.true
         })
 
         it("should return null if the address has been deleted and is not in the database anymore", async () => {
             //Elimina address
             await deleteAddress("prova_thinman")
-            await global.sleep(1500)
+            await utils.sleep(1500)
             const res = await db.getThinManFromHostname("prova_thinman");
             expect(res).to.be.null
         })
@@ -425,7 +426,7 @@ describe("Delete agile address", function(){
                 //crea l'address
                 const add = await addAddress(elem.address, elem.port, elem.timeout)
 
-                await global.sleep(1500)
+                await utils.sleep(1500)
 
                 //elimina l'address creato
                 const del = await deleteAddress(elem.address)
@@ -439,12 +440,12 @@ describe("Delete agile address", function(){
                 //crea l'address
                 const add = await addAddress(elem.address, elem.port, elem.timeout)
 
-                await global.sleep(1000)
+                await utils.sleep(1000)
 
                 //elimina l'address creato
                 const del = await deleteAddress(elem.address)
 
-                await global.sleep(1000)
+                await utils.sleep(1000)
 
                 //controlla che non sia nella lista
                 const list = await checkDelete(elem.address)
