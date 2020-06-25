@@ -265,7 +265,140 @@ const utils={
             }
         }
         return click 
+    },
+
+
+    //ritorna null se non ha potuto confermare, altrimenti not null
+    addAddress: async function(address, port, timeout){
+
+        //va in thinman settings
+        const menu = global.app.client.$('#menu-link-3');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+    
+    
+        await utils.sleep(1000)
+    
+    
+        //preme su add address
+        const add = global.app.client.$('h5 > a');
+        var click = null;
+        try{
+            click = await add.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+    
+    
+        await utils.sleep(1000)
+    
+    
+        //inserisce l'hostname
+        const hostname = global.app.client.$("#new-address");
+        try{
+            hostname.click();
+            var x = await hostname.setValue(address);
+            while(!x){
+                
+            }
+        }catch{
+        }
+    
+    
+        await utils.sleep(1000)
+    
+    
+        //inserisce la porta
+        const p = global.app.client.$("#new-port");
+        
+        try{
+            p.click();
+            
+            if(port == ""){
+                //cancellazione manuale, con clearElement non funziona in questo caso
+                var r = false
+                r = await new Promise(function (resolve, reject){
+                    p.getValue().then(function(result){
+                        for(i=0;i<result.length;i++){	
+                            global.app.client.keys("Backspace");	
+                        }
+                        resolve(true)
+                    })
+                }) 
+                while(!r){
+    
+                }
+            }else{
+                x = false
+                x = await p.setValue(port)
+                while(!x){
+    
+                }
+            }
+        }catch{
+    
+        }
+    
+    
+        await utils.sleep(1000)
+    
+    
+        //inserisce il timeout
+        const t = global.app.client.$("#new-timeout");
+    
+        try{
+            t.click();
+            //TODO: condizione particolare, sarebbe da evitare 
+            if(timeout == "" || isNaN(timeout)){
+                //cancellazione manuale, con clearElement non funziona in questo caso
+                var r = false
+                r = await new Promise(function (resolve, reject){
+                    t.getValue().then(function(result){
+                        for(i=0;i<result.length;i++){	
+                            global.app.client.keys("Backspace");	
+                        }
+                        resolve(true)
+                    })
+                }) 
+                while(!r){
+    
+                }
+            }else{
+                x = false
+                x = await t.setValue(timeout)
+                while(!x){
+    
+                }
+            }
+        }catch{
+            
+        }
+    
+    
+        await utils.sleep(1000)
+    
+    
+        const confirm = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a:nth-child(1)");
+        var ret = null;
+        try{
+            ret = await confirm.click();
+        }catch{
+            ret = null
+        }
+        if(ret == null){
+            //preme su annulla
+            try{
+                await global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a:nth-child(2)").click()
+            }catch{
+            }
+        }
+        return ret
     }
+    
 
 
 
