@@ -83,8 +83,12 @@ const checkResource = async function (resourceName, resourceUrl) {
         }catch{
         }
     }else{
-        //titolo del pop-up
-        notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+        try{
+            //titolo del pop-up
+            notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+        }catch{
+            notification = null
+        }
         //aggiorna lingua
         global.language = await db.dbLanguage()
         var succ = null

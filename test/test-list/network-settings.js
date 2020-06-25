@@ -95,6 +95,7 @@ const checkPsw = async function (ssid, psw){
     }catch{
         click = null
     }
+    await global.sleep(1500)
     if(click == null){
         //preme su annulla
         try{
@@ -102,6 +103,30 @@ const checkPsw = async function (ssid, psw){
         }catch{
         }
     }
+    try{
+        //titolo del pop-up
+        notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+    }catch{
+        notification = null
+    }
+    //aggiorna lingua
+    global.language = await db.dbLanguage()
+    var succ = null
+    switch(global.language){
+        case 1: {
+            succ = "Successo"
+            break
+        }
+        case 2: {
+            succ = "Success"
+            break
+        }
+        case 3: {
+            succ = "Exito"
+            break
+        }
+    }
+    if(notification != succ) click = null
 
     return click
 
@@ -212,7 +237,7 @@ function addWifiNetwork(){
                 {ssid:"PRAIM_WIFI_N", psw:"asd123!!"}
             ]
             rightValues.forEach(elem => {
-                it("should return not null if the wifi has been added correctly", async () => {
+                it("should return not null if the wifi has been added correctly and success notification appeared", async () => {
                     expect(await checkPsw(elem.ssid, elem.psw)).to.be.not.null
                 })
             })
