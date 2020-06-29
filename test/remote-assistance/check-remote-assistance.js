@@ -31,7 +31,10 @@ describe("check remote assistance settings", function(){
     })
 
     it("should return true if remote assistance is enabled", async () => {
-        expect(await utils.enableRemoteAssistance()).to.be.true
+        const raAgile = await utils.enableRemoteAssistance()
+        await utils.sleep(500)
+        const radb = await db.getRemoteAssistance()
+        expect(raAgile && radb.enabled).to.be.true
     })
 
 

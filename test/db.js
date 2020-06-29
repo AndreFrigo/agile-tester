@@ -216,6 +216,16 @@ const db={
             });
         })
         return length
+    },
+    getRemoteAssistance: async function(){
+        db.conn.select(1)
+        const remoteAssistance = await new Promise(function(resolve, reject){
+            db.conn.get("remote_assistance", function(err,res){
+                if(err) reject(err); 
+                resolve(JSON.parse(res));
+            })
+        })
+        return remoteAssistance
     }
 }
 
