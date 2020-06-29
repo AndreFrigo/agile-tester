@@ -776,8 +776,128 @@ const utils={
 
         const radb = await db.getRemoteAssistance()
         return (radb.enabled && radb.acceptance.allow_reject && radb.acceptance.auto_accept == v)
-    }
+    },
 
+    //input: 
+        //ssid: ssid della wifi da scegliere
+    //output: 
+        //not null se l'ssid è corretto, altrimenti null
+    checkWifiAuthenticationSsid: async function(ssid){
+        //va nella sezione agile authentication
+        const menu = global.app.client.$('#menu-link-12');
+        try{
+            await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        const dropdown = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.input-field > div > input")
+        var dataActivates = null
+        try{
+            dropdown.click()
+            dataActivates = await dropdown.getAttribute("data-activates")
+        }catch{
+        }
+
+
+        await utils.sleep(500)
+
+
+        const wifi = global.app.client.$("#"+dataActivates+" > li:nth-child(2)")
+        try{
+            wifi.click()
+        }catch{
+        }
+
+        await utils.sleep(500)
+
+
+        try{
+            global.app.client.$("#wifi").click()
+        }catch{
+        }
+
+
+        await utils.sleep(500)
+
+
+        var ret = null
+        try{
+            ret = await global.app.client.$("span.network-ssid=" + ssid).click();
+        }catch{
+            ret = null
+        }
+        return ret
+    },
+
+    //input: 
+        //ssid: ssid della wifi da scegliere
+        //password: password della wifi da scegliere
+    //output: 
+        //true se tutto è andato a buon fine, altrimenti false
+    addWifiAuthentication: async function(ssid, password){
+
+        var classe = null
+
+        await this.checkWifiAuthenticationSsid(ssid)
+
+        await utils.sleep(500)
+
+        const auth = global.app.client.$("#main-div > div > main > section > div > ul > li > div.collapsible-body > div.row:nth-child(2) > div > div > input")
+        var dataActivates = null
+        try{
+            auth.click()
+            dataActivates = await auth.getAttribute("data-activates")
+        }catch{
+        }
+
+
+        await utils.sleep(500)
+
+
+        try{
+            global.app.client.$("#"+dataActivates+" > li:nth-child(4)").click()
+        }catch{
+        }
+
+
+        await utils.sleep(500)
+
+
+        const base = "#main-div > div > main > section > div > ul > li > div.collapsible-body > div.row:nth-child(4) > div > div"
+        const psw = global.app.client.$(base+" > input")
+
+        try{
+            psw.click()
+            await psw.setValue(password)
+        }catch{
+        }
+
+
+        await utils.sleep(500)
+
+
+        //clicca altrove per confermare 
+        try{
+            global.app.client.$('#menu-link-12').click()
+        }catch{
+        }
+
+
+        await utils.sleep(500)
+
+
+        try{
+            classe = await global.app.client.$(base).getAttribute("class")
+        }catch{
+        }
+
+        return classe == "password-element"
+    }
 
 }
 
