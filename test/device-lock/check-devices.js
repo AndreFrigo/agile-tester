@@ -9,7 +9,6 @@ describe("Check if a device saved is available", function () {
     this.timeout(30000)
 
     before(async function(){
-        await global.app.start()
         //salva database locale
         db.conn.select(1)
         localDB = await new Promise(function (resolve, reject){
@@ -18,11 +17,15 @@ describe("Check if a device saved is available", function () {
                 resolve(res)
             });
         })
+    })
+
+    beforeEach(async function(){
+        await global.app.start()
         //cambia database locale
         db.conn.set("config_usb_lock", "{\"lock_enabled\":false,\"lock_except\":[],\"lock_specific\":[{\"vid\":\"9999\",\"pid\":\"9999\"}]}")
     }) 
 
-    after(async function(){
+    afterEach(async function(){
         db.conn.set("config_usb_lock", localDB)
         await global.app.stop()
     })
