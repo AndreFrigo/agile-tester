@@ -702,6 +702,80 @@ const utils={
             isEnable = true
         }
         return isEnable
+    },
+
+
+    //input: valore da inserire
+    //output: true se enable remote assistance e require user authorization sono spuntate e auto-accept after ... seconds ha il valore corretto, altrimenti false
+    setAutoAccept: async function(v){
+        await utils.enableRemoteAssistance()
+        await utils.sleep(500)
+        var checkbox = global.app.client.$("#allow-reject")
+        var val = null
+        try{
+            val = await checkbox.getValue()
+        }catch{
+        }
+        if(val == "false"){
+            const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row:nth-child(2) > div > div > label")
+            try{
+                label.click()
+            }catch{
+            }
+        }
+        await utils.sleep(500)
+        var isEnable = null
+        val = null
+        checkbox = global.app.client.$("#check-auto-accept")
+        try{
+            val = await checkbox.getValue()
+        }catch{
+        }
+        if(val == "false"){
+            const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row:nth-child(2) > div > div.col > div > label")
+            try{
+                click = label.click()
+            }catch{
+            }
+        }else if (val == "true"){
+            isEnable = true
+        }
+        if(click != null) isEnable = true
+        await utils.sleep(500)
+        const time = global.app.client.$("#auto-accept")
+        if(isEnable){
+            try{
+                time.click()
+                const val = v.toString()
+                await new Promise(function (resolve, reject){
+                    time.getValue().then(function(result){
+                        //cancella il valore predefinito
+                        for(i=0;i<result.length;i++){	
+                            global.app.client.keys("Backspace");	
+                        }
+                        //inserisce manualmente il valore da settare
+                        for(i=0;i<val.length;i++){
+                            global.app.client.keys(val[i])
+                        }
+                        resolve(true)
+                    })
+                })                    
+            }catch{
+            }
+        }
+        await utils.sleep(1000)
+        //preme sul menù per confermare 
+        const menu = global.app.client.$('#menu-link-4');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+
+        await utils.sleep(500)
+
+        const radb = await db.getRemoteAssistance()
+        return (radb.enabled && radb.acceptance.allow_reject && radb.acceptance.auto_accept == v)
     }
 
 
