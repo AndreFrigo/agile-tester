@@ -557,15 +557,6 @@ const utils={
         }catch{
             click = null
         }
-
-        if(click == null){
-            //preme su annulla
-            try{
-                global.app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(2)").click()
-            }catch{
-            }
-        }
-
         return click
     },
     
