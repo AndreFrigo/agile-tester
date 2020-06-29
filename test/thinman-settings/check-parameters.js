@@ -93,33 +93,3 @@ describe("Check address parameters", function(){
         })
     })
 })
-
-
-
-//Elimina un address dall'elenco dei ThinMan
-describe("Delete agile address", function(){
-
-    
-
-    describe("Delete thinman address tests", async () => {
-
-        beforeEach(async function(){
-            //Aggiungi address
-            db.conn.select(1)
-            db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
-            
-            await global.app.start()
-        })
-        afterEach(async function(){
-            await global.app.stop()
-        })
-        
-        const rightValues = [
-            {address:"test", port:123, timeout:123}
-        ]
-        rightValues.forEach(elem => {
-            
-        })          
-    })
-
-})

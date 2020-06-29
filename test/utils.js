@@ -242,13 +242,6 @@ const utils={
         }catch{
             click = null;
         }
-        if(click == null){
-            //premi su annulla
-            try{
-                await global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(2)").click()
-            }catch{  
-            }
-        }
         return click 
     },
 
@@ -373,13 +366,6 @@ const utils={
             ret = await confirm.click();
         }catch{
             ret = null
-        }
-        if(ret == null){
-            //preme su annulla
-            try{
-                await global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a:nth-child(2)").click()
-            }catch{
-            }
         }
         return ret
     },
