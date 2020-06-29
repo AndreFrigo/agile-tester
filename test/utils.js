@@ -596,10 +596,79 @@ const utils={
         }
 
         return click
-    }
+    },
     
 
+    //ritorna not null se ha creato la startup, altrimenti null
+    addStartup: async function(name, command){
 
+        //va in startup
+        const menu = global.app.client.$('#menu-link-7');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //preme su Add startup
+        const button = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a")
+        click = null
+        try{
+            click = await button.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+
+        //inserisce nome 
+        const n = global.app.client.$("#name");
+        try{
+            n.click();
+            var x = await n.setValue(name);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        //inserisce comando 
+        const c = global.app.client.$("#command");
+        try{
+            c.click();
+            var x = await c.setValue(command);
+            while(!x){
+                
+            }
+        }catch{
+        }
+
+
+        await utils.sleep(1000)
+
+
+        //conferma
+        const ok = global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
+        var ret = null;
+        try{
+            ret = await ok.click();
+        }catch{
+            ret = null
+        }
+
+        return ret
+    }
 
 
 }
