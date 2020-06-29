@@ -44,11 +44,6 @@ describe("Check WiFi parameters", function(){
     wrongSsid.forEach(elem => {
         it("should return null if there is not a wifi with the given ssid in the list", async () => {
             const isNull = await utils.checkSsid(elem.ssid)
-            //preme su annulla
-            try{
-                await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(2)").click();
-            }catch{
-            }
             expect(isNull).to.be.null
         })
     })
@@ -76,6 +71,7 @@ describe("Check WiFi parameters", function(){
         it("should return true if the wifi has been added correctly and success notification appeared", async () => {
             var notification = null
             const res = await utils.saveWifi(elem.ssid, elem.psw)
+            await utils.sleep(1000)
             try{
                 //titolo del pop-up
                 notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();

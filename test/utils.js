@@ -70,7 +70,7 @@ const utils={
         await utils.sleep(1000)
 
 
-        //preme ok per confermare, se non è disponibile preme annulla 
+        //preme ok per confermare
         const ok = global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
         var ret = null;
         try{
@@ -175,14 +175,6 @@ const utils={
             click = await ok.click();
         }catch{
             click = null
-        }
-        await utils.sleep(1500)
-        if(click == null){
-            //preme su annulla
-            try{
-                await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(2)").click();
-            }catch{
-            }
         }
         return click
     },
