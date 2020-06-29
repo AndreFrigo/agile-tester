@@ -185,6 +185,37 @@ const db={
             });
         })
         return length;
+    },
+    //input: 
+        //name: nome della startup da cercare
+    //output: 
+        //elem: elemento da cercare, null se nessun elemento è stato trovato 
+    getStartup: async function(name){
+        db.conn.select(1)
+        const list = await new Promise(function(resolve, reject){
+            db.conn.get("config_autorun", function(err,res){
+                if(err) reject(err); 
+                resolve(JSON.parse(res));
+            })
+        })
+        var elem = null
+        list.forEach(element => {
+            if(element.name == name){
+                elem = element
+            }
+        })
+        return elem
+    },
+    //output: length of the list of startup
+    getStartupListLength: async function(){
+        db.conn.select(1);
+        const length = await new Promise(function(resolve, reject){
+            db.conn.get("config_autorun", function(err,res){
+                if(err) reject(err)
+                resolve(JSON.parse(res).length)
+            });
+        })
+        return length
     }
 }
 
