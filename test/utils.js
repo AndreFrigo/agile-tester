@@ -660,6 +660,48 @@ const utils={
             }
         }
         return notification == succ
+    },
+
+    //ritorna true se remote assistance è enabled, altrimenti false. ritorna null se qualcosa non ha funzionato 
+    enableRemoteAssistance: async function(){
+        //va nella sezione remote assistance
+        const menu = global.app.client.$('#menu-link-4');
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(1000)
+
+        var checkbox = null
+        try{
+            checkbox = global.app.client.$("#enable-remote-assistance")
+        }catch{
+        }
+        var val = null
+        var isEnable = null
+        try{
+            val = await checkbox.getValue()
+        }catch{
+        }
+        // await utils.sleep(200)
+        if(val == "false"){
+            const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row > div > label")
+            click = null
+            try{
+                click = label.click()
+            }catch{
+            }
+        }else if(val == "true"){
+            isEnable = true
+        }
+        if(click != null){
+            isEnable = true
+        }
+        return isEnable
     }
 
 
