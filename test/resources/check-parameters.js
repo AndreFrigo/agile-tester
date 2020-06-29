@@ -62,6 +62,7 @@ describe("Check resource parameters", function(){
 
         it("should return true if the resource has been added and the success notification appeared", async () => {
             const res = await utils.addResource(elem.name, elem.url)
+            await utils.sleep(1000)
             var notification = null
             try{
                 //titolo del pop-up

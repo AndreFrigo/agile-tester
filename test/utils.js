@@ -78,13 +78,6 @@ const utils={
         }catch{
             ret = null
         }
-        await utils.sleep(1000)
-        if(ret == null){
-            try{
-                await global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(2)").click();
-            }catch{
-            }
-        }
         return ret
     },
 
