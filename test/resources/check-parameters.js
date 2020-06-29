@@ -63,31 +63,8 @@ describe("Check resource parameters", function(){
         it("should return true if the resource has been added and the success notification appeared", async () => {
             const res = await utils.addResource(elem.name, elem.url)
             await utils.sleep(1000)
-            var notification = null
-            try{
-                //titolo del pop-up
-                notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
-            }catch{
-                notification = null
-            }
-            //aggiorna lingua
-            global.language = await db.dbLanguage()
-            var succ = null
-            switch(global.language){
-                case 1: {
-                    succ = "Successo"
-                    break
-                }
-                case 2: {
-                    succ = "Success"
-                    break
-                }
-                case 3: {
-                    succ = "Exito"
-                    break
-                }
-            }
-            expect(res != null && notification == succ).to.be.true
+            const notification = await utils.checkSuccessNotification()
+            expect(res != null && notification).to.be.true
         })
     })
 

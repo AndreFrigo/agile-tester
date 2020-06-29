@@ -630,6 +630,36 @@ const utils={
         }
 
         return ret
+    },
+
+
+    //return true se è apparso un pop up di successo, altrimenti false 
+    checkSuccessNotification: async function(){
+        var notification = null
+        try{
+            //titolo del pop-up
+            notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+        }catch{
+            notification = null
+        }
+        //aggiorna lingua
+        global.language = await db.dbLanguage()
+        var succ = null
+        switch(global.language){
+            case 1: {
+                succ = "Successo"
+                break
+            }
+            case 2: {
+                succ = "Success"
+                break
+            }
+            case 3: {
+                succ = "Exito"
+                break
+            }
+        }
+        return notification == succ
     }
 
 
