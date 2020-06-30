@@ -5,15 +5,17 @@ const utils={
     //funzione di wait
     sleep : time => new Promise(r => setTimeout(r, time)),
 
-    //return not null se la risorsa è stata creata con successo, null altrimenti
+    //return true se la risorsa è stata creata con successo, false se non è stata creata e null se qualche passo intermedio non è andato a buon fine
     addResource : async function (resourceName, resourceUrl) {
 
+        var done = true
         //va in risorse
         const menu = global.app.client.$("#menu-link-6");
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -27,6 +29,7 @@ const utils={
         try{
             click = await addResource.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -40,6 +43,7 @@ const utils={
         try{
             click = await localBrowser.click();
         }catch{
+            done = false
         }
 
 
@@ -52,6 +56,7 @@ const utils={
             text.click();
             await text.setValue(resourceName);
         }catch{
+            done = false
         }
 
 
@@ -64,6 +69,7 @@ const utils={
             url.click();
             await url.setValue(resourceUrl);
         }catch{
+            done = false
         }
 
 
@@ -78,18 +84,24 @@ const utils={
         }catch{
             ret = null
         }
-        return ret
+        if(done){
+            return ret != null
+        }else{
+            return null
+        }
     },
 
 
-    //ritorna not null se c'è una wifi disponibile con l'ssid dato, altrimenti null
+    //ritorna true se c'è una wifi disponibile con l'ssid dato, altrimenti false, null se qualcosa non ha funzionato
     checkSsid : async function (ssid) {
+        var done = true
         //Va nella sezione impostazioni di rete
         const menu = global.app.client.$('#menu-link-2');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -103,6 +115,7 @@ const utils={
         try{
             click = await wifi.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -116,6 +129,7 @@ const utils={
         try{
             click = await add.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -129,6 +143,7 @@ const utils={
         try{
             click = await button.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -145,12 +160,17 @@ const utils={
         
         await utils.sleep(1000)
 
-        return ret
+        if(done){
+            return ret != null
+        }else{
+            return null
+        }
     },
 
 
-    //ritorna not null se ha confermato la wifi, null se la password non è corretta o la rete non è presente nell'elenco
+    //ritorna true se ha confermato la wifi, false se la password non è corretta o la rete non è presente nell'elenco, null se qualcosa non ha funzionato
     saveWifi: async function (ssid, psw){
+        var done = true
         await utils.checkSsid(ssid)
 
         //inserisce la password
@@ -162,6 +182,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -176,18 +197,23 @@ const utils={
         }catch{
             click = null
         }
-        return click
+        if(done){
+            return click != null
+        }else{
+            return null
+        }
     },
 
 
-    //ritorna not null se ha creato la regola, altrimenti null
+    //ritorna true se ha creato la regola, altrimenti false, null se qualcosa non ha funzionato
     addRule: async function (vid, pid){
-
+        var done = true
         const menu = global.app.client.$('#menu-link-11');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -200,6 +226,7 @@ const utils={
         try{
             click = await addRule.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -215,6 +242,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -229,6 +257,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -242,19 +271,24 @@ const utils={
         }catch{
             click = null;
         }
-        return click 
+        if(done){
+            return click != null
+        }else{
+            return null
+        }
     },
 
 
-    //ritorna null se non ha potuto confermare, altrimenti not null
+    //ritorna false se non ha potuto confermare, altrimenti true, null se qualcosa non ha funzionato
     addAddress: async function(address, port, timeout){
-
+        var done = true
         //va in thinman settings
         const menu = global.app.client.$('#menu-link-3');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
     
@@ -268,6 +302,7 @@ const utils={
         try{
             click = await add.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
     
@@ -284,6 +319,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
     
     
@@ -318,7 +354,7 @@ const utils={
                 }
             }
         }catch{
-    
+            done = false
         }
     
     
@@ -353,7 +389,7 @@ const utils={
                 }
             }
         }catch{
-            
+            done = false
         }
     
     
@@ -367,19 +403,24 @@ const utils={
         }catch{
             ret = null
         }
-        return ret
+        if(done){
+            return ret != null
+        }else{
+            return null
+        }
     },
 
 
-    //return not null se ha premuto sul bottone elimina
+    //return true se ha premuto sul bottone elimina, altrimenti false, null se qualcosa non ha funzionato
     deleteAddress: async function(address){
-
+        var done = true
         //va in thinman settings
         const menu = global.app.client.$('#menu-link-3');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -409,6 +450,7 @@ const utils={
             try{
                 x = await global.app.client.$(child + " > div.address-info > div").getHTML();
             }catch{
+                done = false
             }
             if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
                 //salvo elemento da eliminare per eliminarlo in seguito
@@ -422,19 +464,24 @@ const utils={
         }catch{
             elim = null
         }
-        return elim
+        if(done){
+            return elimina != null
+        }else{
+            return null
+        }
     },
 
 
-    //return true se non c'è un address con l'hostname dato, altrimenti false
+    //return true se non c'è un address con l'hostname dato, altrimenti false, null se qualcosa non ha funzionato
     checkDelete: async function(address){
-
+        var done = true
         //va in thinman settings
         const menu = global.app.client.$('#menu-link-3');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -465,25 +512,32 @@ const utils={
             try{
                 x = await global.app.client.$(child + " > div.address-info > div").getHTML();
             }catch{
+                done = false
             }
             if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
                 //aggiorno found
                 found = true;
             }
-        } 
-        return !found
+        }
+        if(done){
+            return !found
+        }else{
+            return null
+        }
+        
     },
 
 
-    //return not null se ha confermato la creazione della regola
+    //return true se ha confermato la creazione della regola, false altrimenti, null se qualcosa non ha funzionato 
     addUsbRule: async function(description, vid, pid){
-
+        var done = true
         //Apre menù USB Redirection
         const menu = global.app.client.$('#menu-link-10');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -497,6 +551,7 @@ const utils={
         try{
             click = await button.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -513,6 +568,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -528,6 +584,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -543,6 +600,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -557,19 +615,24 @@ const utils={
         }catch{
             click = null
         }
-        return click
+        if(done){
+            return click != null
+        }else{
+            return null
+        }
     },
     
 
-    //ritorna not null se ha creato la startup, altrimenti null
+    //ritorna true se ha creato la startup, altrimenti false, null se qualcosa non ha funzionato
     addStartup: async function(name, command){
-
+        var done = true
         //va in startup
         const menu = global.app.client.$('#menu-link-7');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -583,6 +646,7 @@ const utils={
         try{
             click = await button.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -599,6 +663,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -614,6 +679,7 @@ const utils={
                 
             }
         }catch{
+            done = false
         }
 
 
@@ -629,7 +695,11 @@ const utils={
             ret = null
         }
 
-        return ret
+        if(done){
+            return ret != null
+        }else{
+            return null
+        }
     },
 
 
@@ -664,12 +734,14 @@ const utils={
 
     //ritorna true se remote assistance è enabled, altrimenti false. ritorna null se qualcosa non ha funzionato 
     enableRemoteAssistance: async function(){
+        var done = true
         //va nella sezione remote assistance
         const menu = global.app.client.$('#menu-link-4');
         var click = null;
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -680,34 +752,40 @@ const utils={
         try{
             checkbox = global.app.client.$("#enable-remote-assistance")
         }catch{
+            done = false
         }
         var val = null
-        var isEnable = null
+        var isEnable = false
         try{
             val = await checkbox.getValue()
         }catch{
+            done = false
         }
         // await utils.sleep(200)
         if(val == "false"){
             const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row > div > label")
-            click = null
             try{
-                click = label.click()
+                await label.click()
+                isEnable = true
             }catch{
+                done = false
             }
         }else if(val == "true"){
             isEnable = true
         }
-        if(click != null){
-            isEnable = true
+        
+        if(done){
+            return isEnable
+        }else{
+            return null
         }
-        return isEnable
     },
 
 
     //input: valore da inserire
-    //output: true se enable remote assistance e require user authorization sono spuntate e auto-accept after ... seconds ha il valore corretto, altrimenti false
+    //output: true se enable remote assistance e require user authorization sono spuntate e auto-accept after ... seconds ha il valore corretto, altrimenti false, null se qualcosa non ha funzionato
     setAutoAccept: async function(v){
+        var done = true
         await utils.enableRemoteAssistance()
         await utils.sleep(500)
         var checkbox = global.app.client.$("#allow-reject")
@@ -715,32 +793,36 @@ const utils={
         try{
             val = await checkbox.getValue()
         }catch{
+            done = false
         }
         if(val == "false"){
             const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row:nth-child(2) > div > div > label")
             try{
-                label.click()
+                await label.click()
             }catch{
+                done = false
             }
         }
         await utils.sleep(500)
-        var isEnable = null
+        var isEnable = false
         val = null
         checkbox = global.app.client.$("#check-auto-accept")
         try{
             val = await checkbox.getValue()
         }catch{
+            done = false
         }
         if(val == "false"){
             const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row:nth-child(2) > div > div.col > div > label")
             try{
-                click = label.click()
+                await label.click()
+                isEnable = true
             }catch{
+                done = false
             }
         }else if (val == "true"){
             isEnable = true
         }
-        if(click != null) isEnable = true
         await utils.sleep(500)
         const time = global.app.client.$("#auto-accept")
         if(isEnable){
@@ -761,6 +843,7 @@ const utils={
                     })
                 })                    
             }catch{
+                done = false
             }
         }
         await utils.sleep(1000)
@@ -770,24 +853,32 @@ const utils={
         try{
             click = await menu.click();
         }catch{
+            done = false
         }
 
         await utils.sleep(500)
 
         const radb = await db.getRemoteAssistance()
-        return (radb.enabled && radb.acceptance.allow_reject && radb.acceptance.auto_accept == v)
+        if(done){
+            return (radb.enabled && radb.acceptance.allow_reject && radb.acceptance.auto_accept == v)
+        }else{
+            return null
+        }
+        
     },
 
     //input: 
         //ssid: ssid della wifi da scegliere
     //output: 
-        //not null se l'ssid è corretto, altrimenti null
+        //true se l'ssid è corretto, altrimenti false, null se qualcosa non ha funzionato
     checkWifiAuthenticationSsid: async function(ssid){
+        var done = true
         //va nella sezione agile authentication
         const menu = global.app.client.$('#menu-link-12');
         try{
             await menu.click();
         }catch{
+            done = false
         }
         global.app.client.waitUntilWindowLoaded();
 
@@ -801,6 +892,7 @@ const utils={
             dropdown.click()
             dataActivates = await dropdown.getAttribute("data-activates")
         }catch{
+            done = false
         }
 
 
@@ -811,6 +903,7 @@ const utils={
         try{
             wifi.click()
         }catch{
+            done = false
         }
 
         await utils.sleep(500)
@@ -819,6 +912,7 @@ const utils={
         try{
             global.app.client.$("#wifi").click()
         }catch{
+            done = false
         }
 
 
@@ -831,7 +925,11 @@ const utils={
         }catch{
             ret = null
         }
-        return ret
+        if(done){
+            return ret != null
+        }else{
+            return null
+        }
     },
 
     //input: 
@@ -840,7 +938,7 @@ const utils={
     //output: 
         //true se tutto è andato a buon fine, altrimenti false
     addWifiAuthentication: async function(ssid, password){
-
+        var done = true
         var classe = null
 
         await this.checkWifiAuthenticationSsid(ssid)
@@ -853,6 +951,7 @@ const utils={
             auth.click()
             dataActivates = await auth.getAttribute("data-activates")
         }catch{
+            done = false
         }
 
 
@@ -862,6 +961,7 @@ const utils={
         try{
             global.app.client.$("#"+dataActivates+" > li:nth-child(4)").click()
         }catch{
+            done = false
         }
 
 
@@ -875,6 +975,7 @@ const utils={
             psw.click()
             await psw.setValue(password)
         }catch{
+            done = false
         }
 
 
@@ -885,6 +986,7 @@ const utils={
         try{
             global.app.client.$('#menu-link-12').click()
         }catch{
+            done = false
         }
 
 
@@ -894,9 +996,15 @@ const utils={
         try{
             classe = await global.app.client.$(base).getAttribute("class")
         }catch{
+            done = false
         }
 
-        return classe == "password-element"
+        if(done){
+            return classe == "password-element"
+        }else{
+            return null
+        }
+        
     }
 
 }

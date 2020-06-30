@@ -45,8 +45,8 @@ describe("Check resource parameters", function(){
         {name:"aaa" ,url:"google" }
     ]
     wrongValues.forEach(elem => {
-        it("should return null if name or url are wrong", async () => {
-            expect(await utils.addResource(elem.name, elem.url)).to.be.null
+        it("should return false if name or url are wrong", async () => {
+            expect(await utils.addResource(elem.name, elem.url)).to.be.false
         })
     })
 
@@ -56,15 +56,15 @@ describe("Check resource parameters", function(){
     ]
     rightValues.forEach(elem => {
 
-        it("should return not null if the resource has been added", async () => {
-            expect(await utils.addResource(elem.name, elem.url)).to.not.be.null
+        it("should return true if the resource has been added", async () => {
+            expect(await utils.addResource(elem.name, elem.url)).to.be.true
         })
 
         it("should return true if the resource has been added and the success notification appeared", async () => {
             const res = await utils.addResource(elem.name, elem.url)
             await utils.sleep(1000)
             const notification = await utils.checkSuccessNotification()
-            expect(res != null && notification).to.be.true
+            expect(res && notification).to.be.true
         })
     })
 

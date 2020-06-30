@@ -42,9 +42,8 @@ describe("Check WiFi parameters", function(){
         {ssid:123345, psw:123455555}
     ]
     wrongSsid.forEach(elem => {
-        it("should return null if there is not a wifi with the given ssid in the list", async () => {
-            const isNull = await utils.checkSsid(elem.ssid)
-            expect(isNull).to.be.null
+        it("should return false if there is not a wifi with the given ssid in the list", async () => {
+            expect(await utils.checkSsid(elem.ssid)).to.be.false
         })
     })
 
@@ -54,8 +53,8 @@ describe("Check WiFi parameters", function(){
         {ssid:"PRAIM_WIFI_N", psw:""}
     ]
     wrongPsw.forEach(elem => {
-        it("should return null if the password is wrong or there is not a wifi with the given ssid in the list", async () => {
-            expect(await utils.saveWifi(elem.ssid, elem.psw)).to.be.null
+        it("should return false if the password is wrong or there is not a wifi with the given ssid in the list", async () => {
+            expect(await utils.saveWifi(elem.ssid, elem.psw)).to.be.false
         })
     })
 
@@ -64,8 +63,8 @@ describe("Check WiFi parameters", function(){
     ]
     rightValues.forEach(elem => {
 
-        it("should return not null if the wifi has been added correctly", async () => {
-            expect(await utils.saveWifi(elem.ssid, elem.psw)).to.be.not.null
+        it("should return true if the wifi has been added correctly", async () => {
+            expect(await utils.saveWifi(elem.ssid, elem.psw)).to.be.true
         })
 
         it("should return true if the wifi has been added correctly and success notification appeared", async () => {

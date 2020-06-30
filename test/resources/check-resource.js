@@ -40,8 +40,8 @@ describe("Check if a resource created is available", function(){
     })
 
 
-    it("should return null if it tries to add a resource with the same name", async () => {
-        expect(await utils.addResource("test", "https://prova.it")).to.be.null
+    it("should return false if it tries to add a resource with the same name", async () => {
+        expect(await utils.addResource("test", "https://prova.it")).to.be.false
     })
 
 

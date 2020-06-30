@@ -67,7 +67,7 @@ describe("Check if a device saved is available", function () {
         expect(found).to.be.true
     })
 
-    it("should return null if it tries to add a device with same vid and pid", async () => {
-        expect(await utils.addRule(9999,9999)).to.be.null
+    it("should return false if it tries to add a device with same vid and pid", async () => {
+        expect(await utils.addRule(9999,9999)).to.be.false
     })
 })

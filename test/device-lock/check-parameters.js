@@ -52,8 +52,8 @@ describe("Check device lock parameters", function(){
         {v:"aaaa", p:12374}
     ]
     wrongValues.forEach(elem => {
-        it("should return null if the rule can't be confirmed", async () => {
-            expect(await utils.addRule(elem.v, elem.p)).to.be.null
+        it("should return false if the rule can't be confirmed", async () => {
+            expect(await utils.addRule(elem.v, elem.p)).to.be.false
         })
     })
 
@@ -63,8 +63,8 @@ describe("Check device lock parameters", function(){
         {v:"aaaa", p:1234}
     ]
     rightValues.forEach(elem => {                
-        it("should return not null if the rule has been confirmed", async () => {
-            expect( await utils.addRule(elem.v, elem.p)).to.not.be.null
+        it("should return true if the rule has been confirmed", async () => {
+            expect( await utils.addRule(elem.v, elem.p)).to.be.true
         })
     })
 

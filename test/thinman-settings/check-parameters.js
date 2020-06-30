@@ -45,8 +45,8 @@ describe("Check address parameters", function(){
     ]
     wrongValues.forEach(elem => {
         
-        it("should return null for invalid address, port or timeout", async () => {
-            expect(await utils.addAddress(elem.address, elem.port, elem.timeout)).to.be.null
+        it("should return false for invalid address, port or timeout", async () => {
+            expect(await utils.addAddress(elem.address, elem.port, elem.timeout)).to.be.false
         })
     })
 
@@ -55,8 +55,8 @@ describe("Check address parameters", function(){
     ]
     rightValues.forEach(elem => {
 
-        it("should return not null if the address has been added", async () => {
-            expect(await utils.addAddress(elem.address, elem.port, elem.timeout)).to.not.be.null
+        it("should return true if the address has been added", async () => {
+            expect(await utils.addAddress(elem.address, elem.port, elem.timeout)).to.be.true
         })
 
         it("should return true if an address has been created and then deleted successfully", async () => {
@@ -70,7 +70,7 @@ describe("Check address parameters", function(){
             const del = await utils.deleteAddress(elem.address)
 
             //controlla che entrambe siano andate a buon fine
-            expect(add != null && del != null).to.be.true
+            expect(add && del).to.be.true
         })
 
         it("should return true if an address has been created, deleted and is not in the list anymore", async () => {
@@ -89,7 +89,7 @@ describe("Check address parameters", function(){
             const list = await utils.checkDelete(elem.address)
 
             //controlla che entrambe siano andate a buon fine
-            expect(add != null && del != null && list == true).to.be.true
+            expect(add && del && list).to.be.true
         })
     })
 })

@@ -35,7 +35,7 @@ describe("Check delete address", function(){
 
     it("Should return true if the address has been deleted", async () => {
         //Elimina address
-        expect(await utils.deleteAddress("prova_thinman")).to.not.be.null
+        expect(await utils.deleteAddress("prova_thinman")).to.be.true
     })
 
     it("Should return true if the address has been deleted and is not in the list anymore", async () => {
@@ -53,8 +53,8 @@ describe("Check delete address", function(){
         expect(res).to.be.null
     })
 
-    it("should return null if there is not any address to delete with the given hostname", async () => {
-        expect(await utils.deleteAddress("prova")).to.be.null
+    it("should return false if there is not any address to delete with the given hostname", async () => {
+        expect(await utils.deleteAddress("prova")).to.be.false
     })
 
 })

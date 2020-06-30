@@ -34,8 +34,8 @@ describe("Check authentication settings", function(){
 
     const wrongSsid = ["aa", "bb", "1232"]
     wrongSsid.forEach(elem => {
-        it("should return null for wrong ssid", async () => {
-            expect(await utils.checkWifiAuthenticationSsid(elem)).to.be.null
+        it("should return false for wrong ssid", async () => {
+            expect(await utils.checkWifiAuthenticationSsid(elem)).to.be.false
         })
     })
 
