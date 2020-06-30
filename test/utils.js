@@ -365,33 +365,25 @@ const utils={
         const t = global.app.client.$("#new-timeout");
     
         try{
-            t.click();
-            //TODO: condizione particolare, sarebbe da evitare 
-            if(timeout == "" || isNaN(timeout)){
-                //cancellazione manuale, con clearElement non funziona in questo caso
-                var r = false
-                r = await new Promise(function (resolve, reject){
-                    t.getValue().then(function(result){
-                        for(i=0;i<result.length;i++){	
-                            global.app.client.keys("Backspace");	
-                        }
-                        resolve(true)
-                    })
-                }) 
-                while(!r){
-    
-                }
-            }else{
-                x = false
-                x = await t.setValue(timeout)
-                while(!x){
-    
-                }
-            }
+            t.click()
+            const val = timeout.toString()
+            await new Promise(function (resolve, reject){
+                t.getValue().then(function(result){
+                    //cancella il valore predefinito
+                    for(i=0;i<result.length;i++){	
+                        global.app.client.keys("Backspace");	
+                    }
+                    //inserisce manualmente il valore da settare
+                    for(i=0;i<val.length;i++){
+                        global.app.client.keys(val[i])
+                    }
+                    resolve(true)
+                })
+            })                    
         }catch{
             done = false
         }
-    
+
     
         await utils.sleep(1000)
     

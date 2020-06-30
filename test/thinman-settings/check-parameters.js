@@ -40,8 +40,7 @@ describe("Check address parameters", function(){
         {address:"sss", port:"aaa", timeout:123},
         {address:"ddd", port:"1.5", timeout:1000},
         {address:"fff", port:335, timeout:"abc"},
-        {address:"1234", port:"1a1", timeout:123},
-        {address:"ggg", port:123, timeout:0}
+        {address:"1234", port:"1a1", timeout:123}
     ]
     wrongValues.forEach(elem => {
         
@@ -51,7 +50,9 @@ describe("Check address parameters", function(){
     })
 
     const rightValues = [
-        {address:"test", port:123, timeout:123}
+        {address:"test", port:123, timeout:123},
+        {address:"ggg", port:123, timeout:0},
+        {address:"sdf", port:123, timeout:3e2}
     ]
     rightValues.forEach(elem => {
 
