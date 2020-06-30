@@ -92,6 +92,65 @@ const utils={
     },
 
 
+    //return true se la risorsa è stata eliminata, false altrimenti, null se ci sono stati problemi 
+    deleteResource: async function(name){
+        var done = true
+        //va in risorse
+        const menu = global.app.client.$("#menu-link-6");
+        var click = null;
+        try{
+            click = await menu.click();
+        }catch{
+            done = false
+        }
+        global.app.client.waitUntilWindowLoaded();
+
+
+        await utils.sleep(500)
+
+
+        var del = null
+        const length = await db.getResourceListLength();
+        var n = null;
+        var index = -1
+        for(i = 0; i < length; i++){
+            const base = "#connection"+i+" > div > div.connection-item-properties > div";
+            try{
+                n = await global.app.client.$(base + " > div").getText();
+            }catch{
+                done = false
+            } 
+            if(n == "agile_local "+ name){
+                index = i
+            }
+        }
+
+
+        await utils.sleep(500)
+
+
+        try{
+            await global.app.client.$("#connection"+index+" > div > div.block-item-delete > i").click()
+        }catch{
+            done = false
+        }
+
+        await utils.sleep(500)
+
+
+        try{
+            del = await global.app.client.$("#connection"+index+" > div.connection-modal > div.connection-footer > a:nth-child(2)").click()
+        }catch{
+            done = false
+        }
+        if(done){
+            return del != null
+        }else{
+            return null
+        }
+    },
+
+
     //ritorna true se c'è una wifi disponibile con l'ssid dato, altrimenti false, null se qualcosa non ha funzionato
     checkSsid : async function (ssid) {
         var done = true
