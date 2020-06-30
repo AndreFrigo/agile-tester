@@ -43,7 +43,7 @@ describe("Check WiFi parameters", function(){
     ]
     wrongSsid.forEach(elem => {
         it("should return false if there is not a wifi with the given ssid in the list", async () => {
-            expect(await utils.checkSsid(elem.ssid)).to.be.false
+            expect(await utils.networkSettings.checkSsid(elem.ssid)).to.be.false
         })
     })
 
@@ -54,7 +54,7 @@ describe("Check WiFi parameters", function(){
     ]
     wrongPsw.forEach(elem => {
         it("should return false if the password is wrong or there is not a wifi with the given ssid in the list", async () => {
-            expect(await utils.saveWifi(elem.ssid, elem.psw)).to.be.false
+            expect(await utils.networkSettings.saveWifi(elem.ssid, elem.psw)).to.be.false
         })
     })
 
@@ -64,11 +64,11 @@ describe("Check WiFi parameters", function(){
     rightValues.forEach(elem => {
 
         it("should return true if the wifi has been added correctly", async () => {
-            expect(await utils.saveWifi(elem.ssid, elem.psw)).to.be.true
+            expect(await utils.networkSettings.saveWifi(elem.ssid, elem.psw)).to.be.true
         })
 
         it("should return true if the wifi has been added correctly and success notification appeared", async () => {
-            const res = await utils.saveWifi(elem.ssid, elem.psw)
+            const res = await utils.networkSettings.saveWifi(elem.ssid, elem.psw)
             await utils.sleep(1000)
             const notification = await utils.checkSuccessNotification()
             expect(res != null && notification).to.be.true

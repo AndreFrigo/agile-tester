@@ -35,26 +35,26 @@ describe("Check delete address", function(){
 
     it("Should return true if the address has been deleted", async () => {
         //Elimina address
-        expect(await utils.deleteAddress("prova_thinman")).to.be.true
+        expect(await utils.thinmanSettings.thinmanSettings("prova_thinman")).to.be.true
     })
 
     it("Should return true if the address has been deleted and is not in the list anymore", async () => {
         //Elimina address
-        await utils.deleteAddress("prova_thinman")
+        await utils.thinmanSettings.thinmanSettings("prova_thinman")
         await utils.sleep(1000)
-        expect(await utils.checkDelete("prova_thinman")).to.be.true
+        expect(await utils.thinmanSettings.checkDelete("prova_thinman")).to.be.true
     })
 
     it("should return null if the address has been deleted and is not in the database anymore", async () => {
         //Elimina address
-        await utils.deleteAddress("prova_thinman")
+        await utils.thinmanSettings.thinmanSettings("prova_thinman")
         await utils.sleep(1500)
         const res = await db.getThinManFromHostname("prova_thinman");
         expect(res).to.be.null
     })
 
     it("should return false if there is not any address to delete with the given hostname", async () => {
-        expect(await utils.deleteAddress("prova")).to.be.false
+        expect(await utils.thinmanSettings.thinmanSettings("prova")).to.be.false
     })
 
 })

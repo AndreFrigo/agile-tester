@@ -37,7 +37,7 @@ describe("Check add address", function(){
     })
 
     it("should return false if it tries to add an address with the same hostname", async () => {
-        expect(await utils.addAddress("prova_thinman", 443, 15)).to.be.false
+        expect(await utils.thinmanSettings.addAddress("prova_thinman", 443, 15)).to.be.false
     })
 
     it("should return true if the thinman address is in the list", async () => {

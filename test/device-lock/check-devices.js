@@ -68,6 +68,6 @@ describe("Check if a device saved is available", function () {
     })
 
     it("should return false if it tries to add a device with same vid and pid", async () => {
-        expect(await utils.addRule(9999,9999)).to.be.false
+        expect(await utils.deviceLock.addRule(9999,9999)).to.be.false
     })
 })

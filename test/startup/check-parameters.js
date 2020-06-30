@@ -46,7 +46,7 @@ describe("Check startup parameters", function () {
 
     wrongValues.forEach(elem => {
         it("should return false if some parameters were wrong", async () => {
-            expect(await utils.addStartup(elem.name, elem.command)).to.be.false
+            expect(await utils.startup.addStartup(elem.name, elem.command)).to.be.false
         })
     })
 
@@ -56,12 +56,12 @@ describe("Check startup parameters", function () {
 
     rightValues.forEach(elem => {
         it("should return true if the startup was added successfully", async () => {
-            expect(await utils.addStartup(elem.name, elem.command)).to.be.true
+            expect(await utils.startup.addStartup(elem.name, elem.command)).to.be.true
         })
         
 
         it("should return true if the startup was added and the notification appeared", async () => {
-            const res = await utils.addStartup(elem.name, elem.command)
+            const res = await utils.startup.addStartup(elem.name, elem.command)
             await utils.sleep(1000)
             const notification = await utils.checkSuccessNotification()
             expect(res && notification).to.be.true

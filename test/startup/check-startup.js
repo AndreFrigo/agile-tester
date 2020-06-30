@@ -46,7 +46,7 @@ describe("Check startup database", function(){
     })
 
     it("should return false if it tries to add a startup with the same name", async () => {
-        expect(await utils.addStartup("test_startup", "anything")).to.be.false
+        expect(await utils.startup.addStartup("test_startup", "anything")).to.be.false
     })
 
     it("should return true if the startup is in the Agile list", async() => {

@@ -70,7 +70,7 @@ describe("Check add usb redirection rule", function(){
     })
 
     it("should return false if it tries to add a rule with same vid and pid of another rule", async () => {
-        expect(await utils.addUsbRule("any", 1234, 1234)).to.be.false
+        expect(await utils.usbRedirection.addRule("any", 1234, 1234)).to.be.false
     })
 
 })

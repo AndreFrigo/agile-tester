@@ -45,7 +45,7 @@ describe("Check address parameters", function(){
     wrongValues.forEach(elem => {
         
         it("should return false for invalid address, port or timeout", async () => {
-            expect(await utils.addAddress(elem.address, elem.port, elem.timeout)).to.be.false
+            expect(await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)).to.be.false
         })
     })
 
@@ -57,18 +57,18 @@ describe("Check address parameters", function(){
     rightValues.forEach(elem => {
 
         it("should return true if the address has been added", async () => {
-            expect(await utils.addAddress(elem.address, elem.port, elem.timeout)).to.be.true
+            expect(await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)).to.be.true
         })
 
         it("should return true if an address has been created and then deleted successfully", async () => {
 
             //crea l'address
-            const add = await utils.addAddress(elem.address, elem.port, elem.timeout)
+            const add = await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)
 
             await utils.sleep(1500)
 
             //elimina l'address creato
-            const del = await utils.deleteAddress(elem.address)
+            const del = await utils.thinmanSettings.thinmanSettings(elem.address)
 
             //controlla che entrambe siano andate a buon fine
             expect(add && del).to.be.true
@@ -77,17 +77,17 @@ describe("Check address parameters", function(){
         it("should return true if an address has been created, deleted and is not in the list anymore", async () => {
             
             //crea l'address
-            const add = await utils.addAddress(elem.address, elem.port, elem.timeout)
+            const add = await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)
 
             await utils.sleep(1000)
 
             //elimina l'address creato
-            const del = await utils.deleteAddress(elem.address)
+            const del = await utils.thinmanSettings.thinmanSettings(elem.address)
 
             await utils.sleep(1000)
 
             //controlla che non sia nella lista
-            const list = await utils.checkDelete(elem.address)
+            const list = await utils.thinmanSettings.checkDelete(elem.address)
 
             //controlla che entrambe siano andate a buon fine
             expect(add && del && list).to.be.true

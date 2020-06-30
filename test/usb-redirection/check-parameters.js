@@ -51,7 +51,7 @@ describe("Add USB redirection rule", function(){
         ]
         wrongValues.forEach(elem => {
             it("should return false for invalid description, vid or pid", async () => {
-                expect(await utils.addUsbRule(elem.description, elem.vid, elem.pid)).to.be.false
+                expect(await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)).to.be.false
             })
         })
 
@@ -60,7 +60,7 @@ describe("Add USB redirection rule", function(){
         ]
         rightValues.forEach(elem => {
             it("should return true if the rule has been added", async () => {
-                expect(await utils.addUsbRule(elem.description, elem.vid, elem.pid)).to.be.true
+                expect(await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)).to.be.true
             })
         })
     })

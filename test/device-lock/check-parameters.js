@@ -53,7 +53,7 @@ describe("Check device lock parameters", function(){
     ]
     wrongValues.forEach(elem => {
         it("should return false if the rule can't be confirmed", async () => {
-            expect(await utils.addRule(elem.v, elem.p)).to.be.false
+            expect(await utils.deviceLock.addRule(elem.v, elem.p)).to.be.false
         })
     })
 
@@ -64,7 +64,7 @@ describe("Check device lock parameters", function(){
     ]
     rightValues.forEach(elem => {                
         it("should return true if the rule has been confirmed", async () => {
-            expect( await utils.addRule(elem.v, elem.p)).to.be.true
+            expect( await utils.deviceLock.addRule(elem.v, elem.p)).to.be.true
         })
     })
 

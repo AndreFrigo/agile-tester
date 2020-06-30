@@ -32,17 +32,17 @@ describe("Delete resource tests", function(){
     })
 
     it("should return true if a resource is deleted", async () => {
-        expect(await utils.deleteResource("test")).to.be.true
+        expect(await utils.resources.deleteResource("test")).to.be.true
     })
 
     it("should return null if it tries to delete a resource that does not exists", async () => {
-        expect(await utils.deleteResource("wrong_name")).to.be.null
+        expect(await utils.resources.deleteResource("wrong_name")).to.be.null
     })
 
     it("should return true if a resource is deleted and is not in the database anymore", async () => {
         var del = null
         var check = null
-        del = await utils.deleteResource("test")
+        del = await utils.resources.deleteResource("test")
         await utils.sleep(1000)
         check = await db.getResourceFromName("test")
         expect(del && check == null).to.be.true
@@ -51,7 +51,7 @@ describe("Delete resource tests", function(){
     it("should return true if a resource is deleted and is not in the list anymore", async () => {
         var del = null
         var found = false;
-        del = await utils.deleteResource("test")
+        del = await utils.resources.deleteResource("test")
         await utils.sleep(1000)
         //va in risorse
         const menu = global.app.client.$("#menu-link-6");
@@ -87,7 +87,7 @@ describe("Delete resource tests", function(){
         var del = null
         var notification = null;
 
-        del = await utils.deleteResource("test")
+        del = await utils.resources.deleteResource("test")
         
         await utils.sleep(1000)
 
