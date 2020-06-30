@@ -66,6 +66,32 @@ describe("Check resource parameters", function(){
             const notification = await utils.checkSuccessNotification()
             expect(res && notification).to.be.true
         })
+
+        it("should return true if the resource has been added and then deleted", async () => {
+            var add = null
+            var del = null
+            add = await utils.addResource(elem.name, elem.url)
+            await utils.sleep(1000)
+            del = await utils.deleteResource(elem.name)
+            await utils.sleep(500)
+            expect(add && del).to.be.true
+        })
+
+        it("should return true if the resource has been added, deleted and both the success notification appeared", async () => {
+            var add = null
+            var del = null
+            var notAdd = null
+            var notDel = null
+            add = await utils.addResource(elem.name, elem.url)
+            await utils.sleep(1000)
+            notAdd = await utils.checkSuccessNotification()
+            await utils.sleep(1000)
+            del = await utils.deleteResource(elem.name)
+            await utils.sleep(1000)
+            notDel = await utils.checkSuccessNotification()
+            await utils.sleep(500)
+            expect(add && notAdd && del && notDel).to.be.true
+        })
     })
 
 })
