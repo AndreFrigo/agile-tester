@@ -38,7 +38,17 @@ describe("check delete device", function(){
         var del = null
         var found = null
         del = await utils.deviceLock.deleteRule(9999, 9999)
+        await utils.sleep(500)
         found = await utils.deviceLock.checkList(9999, 9999)
         expect(del && found == false).to.be.true
+    })
+
+    it("should return true if the device has been deleted and is not in the database anymore", async () => {
+        var del = null
+        var found = true
+        del = await utils.deviceLock.deleteRule(9999, 9999)
+        await utils.sleep(500)
+        found = await db.getDeviceLock(9999, 9999)
+        expect(del && found == null).to.be.true
     })
 })
