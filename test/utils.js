@@ -661,31 +661,36 @@ const utils={
 
 
             //inserisce il vid
-            const v = global.app.client.$("#vid");
-            try{
-                v.click();
-                var x = await v.setValue(vid);
-                while(!x){
-                    
+            if(vid != null){
+                const v = global.app.client.$("#vid");
+                try{
+                    v.click();
+                    var x = await v.setValue(vid);
+                    while(!x){
+                        
+                    }
+                }catch{
+                    done = false
                 }
-            }catch{
-                done = false
             }
-
+            
 
             await utils.sleep(1000)
 
 
             //inserisce il pid
-            const p = global.app.client.$("#pid");
-            try{
-                p.click();
-                x = await p.setValue(pid);
-                while(!x){
-                    
+
+            if(pid != null){
+                const p = global.app.client.$("#pid");
+                try{
+                    p.click();
+                    x = await p.setValue(pid);
+                    while(!x){
+                        
+                    }
+                }catch{
+                    done = false
                 }
-            }catch{
-                done = false
             }
 
 
@@ -705,6 +710,58 @@ const utils={
             }else{
                 return null
             }
+        },
+
+        //return true se ha eliminato la regola, false altrimenti, null se ci sono stati errori 
+        deleteRule: async function(vid, pid){
+            var done = true
+            //Apre menù USB Redirection
+            const menu = global.app.client.$('#menu-link-10');
+            var click = null;
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            const length = await db.getUSBRedirectionListLength()
+            var base = null
+            var vidPid = null
+            var index = null
+            for(i=1; i<=length;i++){
+                base = "#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div"
+                try{
+                    vidPid = await global.app.client.$(base + " > div.usbredir-item-properties > div > p").getText()
+                }catch{
+                    done = false
+                }
+                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
+                    index = i
+                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
+                    index = i
+                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
+                    index = i
+                }
+                
+            }
+            try{
+                console.log("Index: "+index)
+                click = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+index+") > div > div.usbredir-item-delete > i").click()
+            }catch(err){
+                done = false
+            }
+
+            if(done){
+                return click != null
+            }else{
+                return null
+            }
+
         }
     },
 
