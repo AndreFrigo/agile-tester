@@ -749,19 +749,65 @@ const utils={
                 }
                 
             }
-            try{
-                console.log("Index: "+index)
-                click = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+index+") > div > div.usbredir-item-delete > i").click()
-            }catch(err){
-                done = false
+            if(index != null){
+                try{
+                    click = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+index+") > div > div.usbredir-item-delete > i").click()
+                }catch(err){
+                    done = false
+                }
             }
-
+            
             if(done){
                 return click != null
             }else{
                 return null
             }
 
+        },
+
+        //return true se ha trovato la rule nella lista di agile, altrimenti false, null se ci sono errori
+        findRule: async function(vid, pid){
+            var done = true
+            //apre menu usb redirection
+            const menu = global.app.client.$('#menu-link-10');
+            try{
+                click = await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(500)
+
+
+            //numero di address agile 
+            const length = await db.getUSBRedirectionListLength();
+
+            //indica se ho trovato un'address con quell'hostname
+            var found = false;
+            var vidPid = null;
+
+            for(i = 1; i <= length; i++){
+                try{
+                    vidPid = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > p > span").getText();
+                }catch{
+                    done = false
+                }
+                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
+                    found = true
+                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
+                    found = true
+                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
+                    found = true
+                }
+            }
+
+            if(done){
+                return found
+            }else{
+                return null
+            }
         }
     },
 
