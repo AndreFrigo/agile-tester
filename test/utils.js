@@ -421,6 +421,48 @@ const utils={
                 return null
             }
 
+        },
+
+        //ritorna true se l'elemento è nella lista, false altrimenti, null in caso di errori
+        checkList: async function(vid, pid){
+            var done = true
+            //apre device lock menu
+            const menu = global.app.client.$('#menu-link-11');
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1500);
+
+
+            const length = await db.getDeviceLockListLength();
+            const base = "#main-div > div.main-content > main > section > div.section-wrapper.with-header.scrollable > div > div"
+            var found = false;
+            var vidPid = null;
+            for(i = 1; i <= length; i++){
+                try{
+                    vidPid = await global.app.client.$(base + " > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
+                }catch{
+                    done = false
+                }
+                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
+                    found = true
+                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
+                    found = true
+                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
+                    found = true
+                } 
+            }
+            if(done){
+                return found
+            }else{
+                return null
+            }
+
         }
     },
 
