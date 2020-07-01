@@ -9,7 +9,6 @@ describe("Check add usb redirection rule", function(){
     this.timeout(30000)
 
     before(async function(){
-        await global.app.start()
         //salva database locale
         db.conn.select(1)
         localDB = await new Promise(function (resolve, reject){
@@ -18,11 +17,17 @@ describe("Check add usb redirection rule", function(){
                 resolve(res)
             });
         })
+    })
+
+    beforeEach(async function(){
+        await global.app.start()
         //cambia database locale
+        db.conn.select(1)
         db.conn.set("config_citrix", "{\"usb_redirection\":{\"auto_redirect_on_start\":true,\"auto_redirect_on_plug\":false,\"rules\":[{\"type\":\"ALLOW\",\"vid\":\"1234\",\"pid\":\"1234\",\"class\":\"\",\"subclass\":\"\",\"prot\":\"\",\"description\":\"prova_usb\",\"split\":false,\"interfaces\":[]}],\"default\":\"ALLOW\"}}")
     }) 
 
-    after(async function(){
+    afterEach(async function(){
+        db.conn.select(1)
         db.conn.set("config_citrix", localDB)
         await global.app.stop()
     })
@@ -33,40 +38,7 @@ describe("Check add usb redirection rule", function(){
     })
 
     it("should return true if the rule is in the Agile list", async () => {
-
-        //apre menu usb redirection
-        const menu = global.app.client.$('#menu-link-10');
-        var click = null;
-        try{
-            click = await menu.click();
-        }catch{
-            assert.ok(false, "Impossible to find the usb redirection menù")
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1000)
-
-
-        //numero di address agile 
-        const length = await db.getUSBRedirectionListLength();
-
-        //indica se ho trovato un'address con quell'hostname
-        var found = null;
-        var d = null;
-        var vidPid = null;
-
-        for(i = 1; i <= length; i++){
-            try{
-                d = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
-                vidPid = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > p > span").getText();
-            }catch{
-            }
-            if(d == "prova_usb" && vidPid == "Vid: "+ 1234 + ", Pid: " + 1234){
-                found = true;
-            }
-        } 
-        expect(found).to.be.true
+        expect(await utils.usbRedirection.findRule(1234, 1234)).to.be.true
     })
 
     it("should return false if it tries to add a rule with same vid and pid of another rule", async () => {
