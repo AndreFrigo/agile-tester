@@ -226,6 +226,16 @@ const db={
             })
         })
         return remoteAssistance
+    },
+    getOutputVolume: async function(){
+        db.conn.select(0)
+        const vol = await new Promise(function(resolve, reject){
+            db.conn.get("info_audio", function(err,res){
+                if(err) reject(err); 
+                resolve(JSON.parse(res).out.volume);
+            })
+        })
+        return vol
     }
 }
 
