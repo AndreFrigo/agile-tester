@@ -62,6 +62,17 @@ describe("Add USB redirection rule", function(){
             it("should return true if the rule has been added", async () => {
                 expect(await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)).to.be.true
             })
+
+            it("should return true if the rule has been added and then deleted", async () => {
+                var add = null
+                var del = null
+                add = await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)
+                await utils.sleep(500)
+                del = await utils.usbRedirection.deleteRule(elem.vid, elem.pid)
+                await utils.sleep(500)
+                console.log("Add: "+add+", del: "+del)
+                expect(add && del).to.be.true
+            })
         })
     })
 
