@@ -4,7 +4,7 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
 
-describe("Check if a device saved is available", function () {
+describe("Check add device", function () {
     
     this.timeout(30000)
 
@@ -37,34 +37,7 @@ describe("Check if a device saved is available", function () {
     })
 
     it("should return true if the device is in the agile list", async () => {
-        //apre device lock menu
-        const menu = global.app.client.$('#menu-link-11');
-        var click = null;
-        try{
-            click = await menu.click();
-        }catch{
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1500);
-
-
-        const length = await db.getDeviceLockListLength();
-        const base = "#main-div > div.main-content > main > section > div.section-wrapper.with-header.scrollable > div > div"
-        var found = false;
-        var vidPid = null;
-        for(i = 1; i <= length; i++){
-            try{
-                vidPid = await global.app.client.$(base + " > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
-            }catch{
-                
-            }
-            if(vidPid == "Vid: " + 9999 + ", Pid: " + 9999){
-                found = true;
-            }
-        }
-        expect(found).to.be.true
+        expect(await utils.deviceLock.checkList(9999, 9999)).to.be.true
     })
 
     it("should return false if it tries to add a device with same vid and pid", async () => {
