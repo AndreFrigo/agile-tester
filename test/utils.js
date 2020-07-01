@@ -367,6 +367,60 @@ const utils={
             }else{
                 return null
             }
+        },
+        //ritorna true se ha eliminato con successo, altrimenti false, null se ci sono errori
+        deleteRule: async function(vid, pid){
+            var done = true
+            //va in impostazioi
+            const menu = global.app.client.$('#menu-link-11');
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+            
+
+            await utils.sleep(500)
+
+
+            const length = await db.getDeviceLockListLength()
+
+            await utils.sleep(500)
+            var click = null
+            var base = null
+            var vidPid = null
+            var index = null
+            for(i=1; i<=length;i++){
+                base = "#main-div > div.main-content > main > section > div.section-wrapper > div.usbredir-list > div > div:nth-child("+i+") > div"
+                try{
+                    vidPid = await global.app.client.$(base + " > div.usbredir-item-properties > div > div").getText()
+                }catch{
+                    done = false
+                }
+                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
+                    index = i
+                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
+                    index = i
+                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
+                    index = i
+                }
+                
+            }
+            if(index != null){
+                try{
+                    click = await global.app.client.$("#main-div > div.main-content > main > section > div.section-wrapper > div.usbredir-list > div > div:nth-child("+index+") > div > div.usbredir-item-delete > i").click()
+                }catch(err){
+                    done = false
+                }
+            }
+            
+            if(done){
+                return click != null
+            }else{
+                return null
+            }
+
         }
     },
 
