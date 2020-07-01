@@ -66,6 +66,42 @@ describe("Check device lock parameters", function(){
         it("should return true if the rule has been confirmed", async () => {
             expect( await utils.deviceLock.addRule(elem.v, elem.p)).to.be.true
         })
+
+        it("should return true if the rule has been confirmed and is now in the agile list", async () => {
+            var add = null
+            var check = null
+            add = await utils.deviceLock.addRule(elem.v, elem.p)
+            await utils.sleep(500)
+            check = await utils.deviceLock.checkList(elem.v, elem.p)
+            await utils.sleep(500)
+            expect(add && check).to.be.true
+        })
+
+        it("should return true if the rule has been confirmed and then deleted", async () => {
+            var add = null
+            var del = null
+            add = await utils.deviceLock.addRule(elem.v, elem.p)
+            await utils.sleep(500)
+            del = await utils.deviceLock.deleteRule(elem.v, elem.p)
+            await utils.sleep(500)
+            expect(add && del).to.be.true
+        })
+
+        it("should return true if the rule has been confirmed and is then in the agile list, then deleted and removed from the list", async () => {
+            var add = null
+            var checkAdd = null
+            var del = null
+            var checkDel = null
+            add = await utils.deviceLock.addRule(elem.v, elem.p)
+            await utils.sleep(500)
+            checkAdd = await utils.deviceLock.checkList(elem.v, elem.p)
+            await utils.sleep(500)
+            del = await utils.deviceLock.deleteRule(elem.v, elem.p)
+            await utils.sleep(500)
+            checkDel = await utils.deviceLock.checkList(elem.v, elem.p)
+            await utils.sleep(500)
+            expect(add && checkAdd && del && checkDel == false).to.be.true
+        })
     })
 
 })
