@@ -2,7 +2,8 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
-var localDB = null
+var localDBconfig = null
+var localDBinfo = null
 
 describe("set output sound", function(){
 
