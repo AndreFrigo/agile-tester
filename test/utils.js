@@ -196,14 +196,14 @@ const utils={
             }
         },
 
-        //TODO: add a local resource
+        //ritorna true se la creazione è stata confermata, false altrimenti, null se ci sono stati errori
         addLocal: async function(resourceName){
             var done = true
             //va in risorse
             const menu = global.app.client.$("#menu-link-6");
             var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -215,9 +215,8 @@ const utils={
 
             //clicca su add resource
             const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            click = null;
             try{
-                click = await addResource.click();
+                await addResource.click();
             }catch{
                 done = false
             }
@@ -229,9 +228,8 @@ const utils={
 
             //seleziona local app
             const localApp = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(5) > label");
-            click = null;
             try{
-                click = await localApp.click();
+                await localApp.click();
             }catch{
                 done = false
             }
@@ -248,16 +246,39 @@ const utils={
                 done = false
             }
 
-            await utils.sleep(500)
+            await utils.sleep(1000)
 
 
             //inserisce il nome del file nel file picker (deve trovarsi nella stessa directory dell'app aperta)
-            await robot.typeString(resourceName)
+            try{
+                await robot.typeString(resourceName)
+    
+                await utils.sleep(500)
+    
+                //preme invio per confermare
+                robot.keyTap("enter")
+            }catch{
+                done = false
+            }
 
-            await utils.sleep(500)
+            await utils.sleep(1000)
 
-            //preme invio per confermare
-            robot.keyTap("enter")
+            //preme su ok per confermare
+            try{
+                click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
+            }catch{
+                done = false
+            }
+
+            if(done){
+                if(click != null){
+                    return true
+                }else{
+                    return false
+                }
+            }else{
+                return null
+            }
 
         }
 
