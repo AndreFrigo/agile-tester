@@ -36,6 +36,15 @@ describe("Add a local resource tests", function(){
         it("should return true if a local resource has been added", async () => {
             expect(await utils.resources.addLocal(element)).to.be.true
         })
+
+        it("should return true if the resource has been added and success notification appeared", async () => {
+            var add = null
+            var notification = null
+            add = await utils.resources.addLocal(element)
+            await utils.sleep(500)
+            notification = await utils.checkSuccessNotification()
+            expect(add && notification).to.be.true
+        })
         
     });
 
