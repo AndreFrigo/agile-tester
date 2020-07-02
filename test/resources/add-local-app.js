@@ -3,8 +3,8 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
-const robot = require("robotjs")
-describe("test", function(){
+
+describe("Add a local resource tests", function(){
 
     this.timeout(30000)
 
@@ -27,10 +27,22 @@ describe("test", function(){
     
     afterEach(async function(){
         db.conn.set("connections", localDB)
-        //await global.app.stop()
+        await global.app.stop()
     })
 
-    it("try", async () => {
-        await utils.resources.addLocal("AgileRad")
+    //Array di String che rappresentano applicazioni nella stessa cartella di Agile 
+    const rightValues = ["AgileRad"]
+    rightValues.forEach(element => {
+        it("should return true if a local resource has been added", async () => {
+            expect(await utils.resources.addLocal(element)).to.be.true
+        })
+        
+    });
+
+    const wrongValues = ["wrong"]
+    wrongValues.forEach(element => {
+        it("should return null if there is not any app with the given name", async () => {
+            expect(await utils.resources.addLocal(element)).to.be.null
+        })
     })
 })
