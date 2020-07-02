@@ -35,7 +35,7 @@ describe("Check authentication settings", function(){
     const wrongSsid = ["aa", "bb", "1232"]
     wrongSsid.forEach(elem => {
         it("should return false for wrong ssid", async () => {
-            expect(await utils.agileAuthentication.setAutoAccept(elem)).to.be.false
+            expect(await utils.agileAuthentication.checkWifiAuthenticationSsid(elem)).to.be.false
         })
     })
 
