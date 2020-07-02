@@ -6,6 +6,21 @@ const utils={
     //funzione di wait
     sleep : time => new Promise(r => setTimeout(r, time)),
 
+    //funzione per avviare l'applicazione
+    start: async function(){
+        return global.app.start().then( async () => {
+            //minimizza il terminale vuoto
+            await robot.keyToggle("space", "down", ["alt"])
+            await robot.keyTap("n")
+            await utils.sleep(500)
+            await robot.keyToggle("space", "up", ["alt"])
+
+            //setta l'applicazione come finestra principale 
+            await global.app.browserWindow.setAlwaysOnTop(true);
+            await global.app.browserWindow.focus();
+        })
+    },
+
     //return true se è apparso un pop up di successo, altrimenti false 
     checkSuccessNotification: async function(){
         var notification = null
