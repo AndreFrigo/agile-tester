@@ -20,10 +20,10 @@ describe("check remote assistance settings", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("remote_assistance", "{\"enabled\":false,\"always_on\":{\"enabled\":false,\"password\":null},\"acceptance\":{\"allow_reject\":false,\"auto_accept\":null},\"protection\":{\"enable\":false,\"password\":\"\"},\"appearance\":{\"show_icon\":false,\"show_desktop\":false}}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

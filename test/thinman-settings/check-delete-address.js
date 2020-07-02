@@ -22,10 +22,10 @@ describe("Check delete address", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

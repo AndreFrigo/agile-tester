@@ -25,7 +25,7 @@ describe("Check startup database", function(){
         db.conn.set("config_autorun","[{\"name\":\"test_startup\",\"command\":\"test_startup_cmd\",\"status\":true,\"statusagilemode\":false}]")
         db.conn.select(0)
         db.conn.set("info_autorun", "[{\"name\":\"test_startup\",\"command\":\"test_startup_cmd\",\"status\":true,\"statusagilemode\":false}]")
-        await global.app.start()
+        await utils.start()
     }) 
 
     afterEach(async function(){

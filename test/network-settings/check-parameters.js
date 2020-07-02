@@ -23,10 +23,10 @@ describe("Check WiFi parameters", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[],\"hosts\":null}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

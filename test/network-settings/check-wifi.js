@@ -9,7 +9,6 @@ describe("Check if a wifi saved is available", function(){
     this.timeout(30000)
 
     before(async function(){
-        await global.app.start()
         //salva database locale
         db.conn.select(1)
         localDB = await new Promise(function (resolve, reject){
@@ -20,6 +19,7 @@ describe("Check if a wifi saved is available", function(){
         })
         //cambia database locale
         db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[{\"ssid\":\"prova_wifi\",\"authentication\":\"WPA2-PSK\",\"encryption\":\"AES\",\"hidden\":false,\"psk\":\"cHJhaW0tYWVzLTEyOC1jYmM6wRyVyCSItEALI2T4eKVZv1Wf5tKVgxW/ALd0sseL5F3vS/UV85EkrpLv0Prels4J\"}],\"hosts\":null}")
+        await utils.start()
     }) 
 
     after(async function(){

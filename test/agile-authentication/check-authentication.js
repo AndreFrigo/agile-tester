@@ -20,10 +20,10 @@ describe("Check authentication settings", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("config_auth", "null")
+        await utils.start()
     }) 
 
     afterEach(async function(){

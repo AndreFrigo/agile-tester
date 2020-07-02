@@ -25,7 +25,7 @@ describe("Check startup parameters", function () {
         db.conn.set("config_autorun","[]")
         db.conn.select(0)
         db.conn.set("info_autorun", "[]")
-        await global.app.start()
+        await utils.start()
     }) 
 
     afterEach(async function(){

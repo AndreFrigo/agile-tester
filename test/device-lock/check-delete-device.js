@@ -20,9 +20,9 @@ describe("check delete device", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.set("config_usb_lock", "{\"lock_enabled\":false,\"lock_except\":[],\"lock_specific\":[{\"vid\":\"9999\",\"pid\":\"9999\"}]}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

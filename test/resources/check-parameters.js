@@ -22,10 +22,10 @@ describe("Check resource parameters", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("connections", "[]")
+        await utils.start()
     }) 
 
     afterEach(async function(){

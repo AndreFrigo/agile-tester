@@ -98,7 +98,7 @@ describe("Choose english as language", function(){
             //Setta spagnolo
             db.conn.select(1)
             db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"es-ES\"}")
-            await global.app.start()
+            await utils.start()
         }) 
 
         after(async function(){
@@ -139,7 +139,7 @@ describe("Choose english as language", function(){
             //Setta italiano
             db.conn.select(1)
             db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"it-IT\"}")
-            await global.app.start()
+            await utils.start()
         }) 
 
         after(async function(){
@@ -180,7 +180,7 @@ describe("Choose english as language", function(){
             //Setta inglese
             db.conn.select(1)
             db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"en-GB\"}")
-            await global.app.start()
+            await utils.start()
         }) 
 
         after(async function(){

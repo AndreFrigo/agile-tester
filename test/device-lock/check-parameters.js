@@ -22,10 +22,10 @@ describe("Check device lock parameters", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("config_usb_lock", "{\"lock_enabled\":false,\"lock_except\":[],\"lock_specific\":[]}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

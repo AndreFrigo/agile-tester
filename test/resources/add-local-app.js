@@ -3,7 +3,7 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
-
+const robot = require("robotjs")
 describe("test", function(){
 
     this.timeout(30000)
@@ -20,11 +20,11 @@ describe("test", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.set("connections", "[{\"name\":\"test\",\"type\":\"URL\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"url\":\"https://prova.it\",\"kiosk\":false,\"fullscreen\":false,\"browser\":\"iexplore\"},\"id\":\"afe39343-6643-49a5-a684-572ead42d3ee\"}]")
+        await utils.start()
     }) 
-
+    
     afterEach(async function(){
         db.conn.set("connections", localDB)
         //await global.app.stop()

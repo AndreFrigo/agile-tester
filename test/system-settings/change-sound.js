@@ -28,12 +28,12 @@ describe("set output sound", function(){
 
     beforeEach(async function(){
         //TODO: impostare volume di sistema
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("config_audio", "{\"out\":{\"volume\":0,\"mute\":true},\"in\":{\"volume\":0,\"mute\":false}}")
         db.conn.select(0)
         db.conn.set("info_audio", "{\"out\":{\"Description\":\"Speakers (Realtek(R) Audio)\",\"volume\":0,\"mute\":true},\"in\":{\"Description\":\"Microphone (Realtek(R) Audio)\",\"volume\":0,\"mute\":false}}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

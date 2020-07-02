@@ -21,10 +21,10 @@ describe("Check address parameters", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

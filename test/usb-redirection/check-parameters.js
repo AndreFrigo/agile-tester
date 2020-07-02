@@ -22,10 +22,10 @@ describe("Add USB redirection rule", function(){
     })
 
     beforeEach(async function(){
-        await global.app.start()
         //cambia database locale
         db.conn.select(1)
         db.conn.set("config_citrix", "{\"usb_redirection\":{\"auto_redirect_on_start\":true,\"auto_redirect_on_plug\":false,\"rules\":[],\"default\":\"ALLOW\"}}")
+        await utils.start()
     }) 
 
     afterEach(async function(){

@@ -9,7 +9,6 @@ describe("Check add address", function(){
     this.timeout(30000)
 
     before(async function(){
-        await global.app.start()
         //salva database locale
         db.conn.select(1)
         localDB = await new Promise(function (resolve, reject){
@@ -20,6 +19,7 @@ describe("Check add address", function(){
         })
         //cambia database locale
         db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
+        await utils.start()
     }) 
 
     after(async function(){
