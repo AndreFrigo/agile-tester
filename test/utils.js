@@ -1,5 +1,6 @@
 const {db} = require ("./db.js");
 const {global} = require ("./global.js");
+const robot = require("robotjs")
 
 const utils={
     //funzione di wait
@@ -229,8 +230,19 @@ const utils={
             try{
                 await file.click()
             }catch(err){
-                console.log("Errore premere file: "+err)
+                done = false
             }
+
+            await utils.sleep(500)
+
+
+            //inserisce il nome del file nel file picker (deve trovarsi nella stessa directory dell'app aperta)
+            await robot.typeString(resourceName)
+
+            await utils.sleep(500)
+
+            //preme invio per confermare
+            robot.keyTap("enter")
 
         }
 

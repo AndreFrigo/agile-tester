@@ -31,6 +31,6 @@ describe("test", function(){
     })
 
     it("try", async () => {
-        await utils.resources.addLocal()
+        await utils.resources.addLocal("AgileRad")
     })
 })
