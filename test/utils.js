@@ -178,7 +178,62 @@ const utils={
             }else{
                 return null
             }
+        },
+
+        //TODO: add a local resource
+        addLocal: async function(resourceName){
+            var done = true
+            //va in risorse
+            const menu = global.app.client.$("#menu-link-6");
+            var click = null;
+            try{
+                click = await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //clicca su add resource
+            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
+            click = null;
+            try{
+                click = await addResource.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //seleziona local app
+            const localApp = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(5) > label");
+            click = null;
+            try{
+                click = await localApp.click();
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(1000)
+
+
+            //clicca in file
+            const file = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(4) > div > div > div > div.waves-effect.btn > span")
+            try{
+                await file.click()
+            }catch(err){
+                console.log("Errore premere file: "+err)
+            }
+
         }
+
     },
     
     networkSettings:{
