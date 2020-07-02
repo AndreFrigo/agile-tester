@@ -196,6 +196,72 @@ const utils={
             }
         },
 
+        //TODO: decidere come fare il confronto (slice, gettext o che altro)
+        //ritorna true se l'elemento cercato è nella lista, altrimenti false, null se ci sono errori
+        isInAgileList: async function(name, info){
+            var done = true
+            //va in risorse
+            const menu = global.app.client.$("#menu-link-6");
+            var click = null;
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            const length = await db.getResourceListLength();
+            var found = false;
+            var n = null;
+            var u = null;
+            try{
+                if(typeof name != "string") name = name.toString()
+                if(typeof info != "string") info = info.toString()
+            }catch{
+                done = false
+            }
+            //lunghezza delle string
+            var lenName = null
+            var lenInfo = null
+            try{
+                lenName = name.length
+                lenInfo = info.length
+            }catch{
+                done = false
+            }
+            
+            for(i = 0; i < length; i++){
+                const base = "#connection"+i+" > div > div.connection-item-properties > div";
+                //prendo le informazioni dell'elemento
+                try{
+                    n = await global.app.client.$(base + " > div").getText();
+                    u = await global.app.client.$(base + " > p > span").getText();
+                }catch{
+                    done = false
+                } 
+                console.log("n:***"+n+"***u:***"+u+"***"+"try:***"+global.app.client.$(base + " > div").innerText)
+                //controllo se elemento trovato e cercato corrispondono 
+                try{
+                    //questo non ha controlli a sinistra 
+                    if(n.slice(-1 * lenName) == name && u.slice(-1 * lenInfo) == info){
+                        found = true
+                    }
+                }catch{
+                    done = false
+                }
+            }
+
+            if(done){
+                return found
+            }else{
+                return null
+            }
+        },
+
         //ritorna true se la creazione è stata confermata, false altrimenti, null se ci sono stati errori
         addLocal: async function(resourceName){
             var done = true

@@ -46,35 +46,8 @@ describe("Check if a resource created is available", function(){
 
 
     it("should return true if the resource is in the Agile list", async() => {
-        //va in risorse
-        const menu = global.app.client.$("#menu-link-6");
-        var click = null;
-        try{
-            click = await menu.click();
-        }catch{
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1000)
-
-
-        const length = await db.getResourceListLength();
-        var found = false;
-        var n = null;
-        var u = null;
-        for(i = 0; i < length; i++){
-            const base = "#connection"+i+" > div > div.connection-item-properties > div";
-            try{
-                n = await global.app.client.$(base + " > div").getText();
-                u = await global.app.client.$(base + " > p > span").getText();
-            }catch{
-            } 
-            if(n == "agile_local "+ "test" && u == "subdirectory_arrow_right" + "https://prova.it"){
-                found = true;
-            }
-        }
-        expect(found).to.be.true
+        var x = await utils.resources.isInAgileList("test", "https://prova.it")
+        expect(x).to.be.true
     })
 
 
