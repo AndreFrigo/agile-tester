@@ -30,11 +30,11 @@ describe("add local application tests", function(){
         await global.app.stop()
     })
 
-    it("should return true if the resource is in the Agile list", async() => {
+    it("should return true if the application is in the Agile list", async() => {
         expect(await utils.resources.isInAgileList(5, "app_test", "app_test")).to.be.true
     })
 
-    it("should return true if the resource is in the database", async () => {
+    it("should return true if the application is in the database", async () => {
         var found = false
         const resource = await db.getResourceFromName("app_test");
         if(resource && resource.options.filename == "app_test.exe"){
@@ -43,7 +43,7 @@ describe("add local application tests", function(){
         expect(found).to.be.true
     })
 
-    it("should return false if it tries to add a resource with the same name", async () => {
-        expect(await utils.resources.addLocal("app_test", "app_test")).to.be.false
+    it("should return false if it tries to add an application with the same name", async () => {
+        expect(await utils.resources.addLocalApplication("app_test", "app_test")).to.be.false
     })
 })

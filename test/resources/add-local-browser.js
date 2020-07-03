@@ -41,7 +41,7 @@ describe("Check if a resource created is available", function(){
 
 
     it("should return false if it tries to add a resource with the same name", async () => {
-        expect(await utils.resources.addResource("test", "https://prova.it")).to.be.false
+        expect(await utils.resources.addLocalBrowser("test", "https://prova.it")).to.be.false
     })
 
 

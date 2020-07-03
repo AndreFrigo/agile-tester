@@ -46,7 +46,7 @@ describe("Check resource parameters", function(){
     ]
     wrongValues.forEach(elem => {
         it("should return false if name or url are wrong", async () => {
-            expect(await utils.resources.addResource(elem.name, elem.url)).to.be.false
+            expect(await utils.resources.addLocalBrowser(elem.name, elem.url)).to.be.false
         })
     })
 
@@ -57,11 +57,11 @@ describe("Check resource parameters", function(){
     rightValues.forEach(elem => {
 
         it("should return true if the resource has been added", async () => {
-            expect(await utils.resources.addResource(elem.name, elem.url)).to.be.true
+            expect(await utils.resources.addLocalBrowser(elem.name, elem.url)).to.be.true
         })
 
         it("should return true if the resource has been added and the success notification appeared", async () => {
-            const res = await utils.resources.addResource(elem.name, elem.url)
+            const res = await utils.resources.addLocalBrowser(elem.name, elem.url)
             await utils.sleep(1000)
             const notification = await utils.checkSuccessNotification()
             expect(res && notification).to.be.true
@@ -70,7 +70,7 @@ describe("Check resource parameters", function(){
         it("should return true if the resource has been added and then deleted", async () => {
             var add = null
             var del = null
-            add = await utils.resources.addResource(elem.name, elem.url)
+            add = await utils.resources.addLocalBrowser(elem.name, elem.url)
             await utils.sleep(1000)
             del = await utils.resources.deleteResource(elem.name)
             await utils.sleep(500)
@@ -82,7 +82,7 @@ describe("Check resource parameters", function(){
             var del = null
             var notAdd = null
             var notDel = null
-            add = await utils.resources.addResource(elem.name, elem.url)
+            add = await utils.resources.addLocalBrowser(elem.name, elem.url)
             await utils.sleep(1000)
             notAdd = await utils.checkSuccessNotification()
             await utils.sleep(1000)

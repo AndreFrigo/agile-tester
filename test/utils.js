@@ -52,7 +52,7 @@ const utils={
 
     resources:{
         //return true se la risorsa è stata creata con successo, false se non è stata creata e null se qualche passo intermedio non è andato a buon fine
-        addResource : async function (resourceName, resourceUrl) {
+        addLocalBrowser : async function (resourceName, resourceUrl) {
 
             var done = true
             //va in risorse
@@ -268,7 +268,7 @@ const utils={
 
         //param resourceName: nome da assegnare alla risorsa, resourceInfo: nome della risorsa da aggiungere
         //ritorna true se la creazione è stata confermata, false altrimenti, null se ci sono stati errori
-        addLocal: async function(resourceName, resourceInfo){
+        addLocalApplication: async function(resourceName, resourceInfo){
             var done = true
             //va in risorse
             const menu = global.app.client.$("#menu-link-6");
