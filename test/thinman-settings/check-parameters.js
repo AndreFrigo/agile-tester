@@ -87,10 +87,10 @@ describe("Check address parameters", function(){
             await utils.sleep(1000)
 
             //controlla che non sia nella lista
-            const list = await utils.thinmanSettings.checkDelete(elem.address)
+            const list = await utils.thinmanSettings.isInAgileList(elem.address)
 
             //controlla che entrambe siano andate a buon fine
-            expect(add && del && list).to.be.true
+            expect(add && del && list == false).to.be.true
         })
     })
 })

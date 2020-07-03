@@ -57,9 +57,8 @@ const utils={
             var done = true
             //va in risorse
             const menu = global.app.client.$("#menu-link-6");
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -71,9 +70,9 @@ const utils={
 
             //clicca su add resource
             const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            click = null;
+            
             try{
-                click = await addResource.click();
+                await addResource.click();
             }catch{
                 done = false
             }
@@ -85,9 +84,8 @@ const utils={
 
             //seleziona local browser
             const localBrowser = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(4) > label");
-            click = null;
             try{
-                click = await localBrowser.click();
+                await localBrowser.click();
             }catch{
                 done = false
             }
@@ -143,9 +141,8 @@ const utils={
             var done = true
             //va in risorse
             const menu = global.app.client.$("#menu-link-6");
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -230,12 +227,15 @@ const utils={
                 //controllo se elemento trovato e cercato corrispondono 
                 switch(type){
                     case 1:{
+                        //TODO
                         break
                     }
                     case 2:{
+                        //TODO
                         break
                     }
                     case 3:{
+                        //TODO
                         break
                     }
                     //Local Browser
@@ -313,7 +313,7 @@ const utils={
             const file = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(4) > div > div > div > div.waves-effect.btn > span")
             try{
                 await file.click()
-            }catch(err){
+            }catch{
                 done = false
             }
 
@@ -339,7 +339,7 @@ const utils={
             //inserisce il nome 
             try{
                 await global.app.client.$("#add-connection-name").setValue(resourceName)
-            }catch(err){
+            }catch{
                 done = false
             }
 
@@ -374,9 +374,8 @@ const utils={
             var done = true
             //Va nella sezione impostazioni di rete
             const menu = global.app.client.$('#menu-link-2');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -388,9 +387,8 @@ const utils={
 
             //Va nella sezione wifi
             const wifi = global.app.client.$("#ab > a");
-            click = null;
             try{
-                click = await wifi.click();
+                await wifi.click();
             }catch{
                 done = false
             }
@@ -402,9 +400,8 @@ const utils={
 
             //Clicca su aggiungi rete wifi
             const add = global.app.client.$("#wifiTab > div > div > div.header-inputs > a");
-            click = null;
             try{
-                click = await add.click();
+                await add.click();
             }catch{
                 done = false
             }
@@ -416,9 +413,8 @@ const utils={
 
             //apre la lista delle reti disponibili
             const button = global.app.client.$("#wifi");
-            var click = null;
             try{
-                click = await button.click();
+                await button.click();
             }catch{
                 done = false
             }
@@ -489,7 +485,7 @@ const utils={
             const menu = global.app.client.$('#menu-link-11');
             var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -499,10 +495,9 @@ const utils={
             await utils.sleep(1500);
             
 
-            click = null;                    
             const addRule = global.app.client.$("#main-div > div.main-content > main > section > div.fixed-header > div > div > a");
             try{
-                click = await addRule.click();
+                await addRule.click();
             }catch{
                 done = false
             }
@@ -543,7 +538,6 @@ const utils={
 
 
             const ok = global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(1)")
-            click = null;
             try{
                 click = await ok.click()
             }catch{
@@ -611,7 +605,7 @@ const utils={
         },
 
         //ritorna true se l'elemento è nella lista, false altrimenti, null in caso di errori
-        checkList: async function(vid, pid){
+        isInAgileList: async function(vid, pid){
             var done = true
             //apre device lock menu
             const menu = global.app.client.$('#menu-link-11');
@@ -659,9 +653,8 @@ const utils={
             var done = true
             //va in thinman settings
             const menu = global.app.client.$('#menu-link-3');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -673,9 +666,8 @@ const utils={
         
             //preme su add address
             const add = global.app.client.$('h5 > a');
-            var click = null;
             try{
-                click = await add.click();
+                await add.click();
             }catch{
                 done = false
             }
@@ -783,9 +775,8 @@ const utils={
             var done = true
             //va in thinman settings
             const menu = global.app.client.$('#menu-link-3');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -832,21 +823,20 @@ const utils={
                 elim = null
             }
             if(done){
-                return elimina != null
+                return elim != null
             }else{
                 return null
             }
         },
 
 
-        //return true se non c'è un address con l'hostname dato, altrimenti false, null se qualcosa non ha funzionato
-        checkDelete: async function(address){
+        //return true se non l'address con l'hostname dato è nella lista, altrimenti false, null se qualcosa non ha funzionato
+        isInAgileList: async function(address){
             var done = true
             //va in thinman settings
             const menu = global.app.client.$('#menu-link-3');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -887,7 +877,7 @@ const utils={
                 }
             }
             if(done){
-                return !found
+                return found
             }else{
                 return null
             }
@@ -901,9 +891,8 @@ const utils={
             var done = true
             //Apre menù USB Redirection
             const menu = global.app.client.$('#menu-link-10');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -915,9 +904,8 @@ const utils={
 
             //clicca add redirection rule
             const button = global.app.client.$('#citrix > div > div > div > a');
-            click = null;
             try{
-                click = await button.click();
+                await button.click();
             }catch{
                 done = false
             }
@@ -1054,7 +1042,7 @@ const utils={
             //apre menu usb redirection
             const menu = global.app.client.$('#menu-link-10');
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -1100,9 +1088,8 @@ const utils={
             var done = true
             //va in startup
             const menu = global.app.client.$('#menu-link-7');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -1114,9 +1101,8 @@ const utils={
 
             //preme su Add startup
             const button = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a")
-            click = null
             try{
-                click = await button.click();
+                await button.click();
             }catch{
                 done = false
             }
@@ -1181,9 +1167,8 @@ const utils={
             var done = true
             //va nella sezione remote assistance
             const menu = global.app.client.$('#menu-link-4');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }
@@ -1290,12 +1275,15 @@ const utils={
                     done = false
                 }
             }
+
+
             await utils.sleep(1000)
+            
+            
             //preme sul menù per confermare 
             const menu = global.app.client.$('#menu-link-4');
-            var click = null;
             try{
-                click = await menu.click();
+                await menu.click();
             }catch{
                 done = false
             }

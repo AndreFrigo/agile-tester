@@ -41,52 +41,7 @@ describe("Check add address", function(){
     })
 
     it("should return true if the thinman address is in the list", async () => {
-
-        //va in thinman settings
-        const menu = global.app.client.$('#menu-link-3');
-        var click = null;
-        try{
-            click = await menu.click();
-        }catch{
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1000)
-
-
-        //aggiorno lingua da database
-        global.language = await db.dbLanguage()
-        //numero di address agile 
-        const length = await db.getThinManListLength();
-
-        var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
-        var child = null;
-        //indica se ho trovato un'address con quell'hostname
-        var found = null;
-        //aggiorno lingua
-        global.language = await db.dbLanguage()
-        //string per html che dipende dalla lingua in uso
-        var indirizzo = null;
-        if(global.language == 1) indirizzo = "Indirizzo"
-        else if(global.language == 2) indirizzo = "Address"
-        else if(global.language == 3) indirizzo = "Dirección"
-
-        for(i=1;i<=length;i++){
-            //cerco l'address
-            child = thinman + " > li:nth-child("+i+") > div > div"
-            //guardo se gli address corrispondono
-            var x = null;
-            try{
-                x = await global.app.client.$(child + " > div.address-info > div").getHTML();
-            }catch{
-            }
-            if(x == "<div><b>"+indirizzo+":</b> "+ "prova_thinman" +"</div>"){
-                //aggiorno found
-                found = true;
-            }
-        } 
-        expect(found).to.be.true
+        expect(await utils.thinmanSettings.isInAgileList("prova_thinman")).to.be.true
     })
 
 

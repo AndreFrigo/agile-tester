@@ -72,7 +72,7 @@ describe("Check device lock parameters", function(){
             var check = null
             add = await utils.deviceLock.addRule(elem.v, elem.p)
             await utils.sleep(500)
-            check = await utils.deviceLock.checkList(elem.v, elem.p)
+            check = await utils.deviceLock.isInAgileList(elem.v, elem.p)
             await utils.sleep(500)
             expect(add && check).to.be.true
         })
@@ -94,11 +94,11 @@ describe("Check device lock parameters", function(){
             var checkDel = null
             add = await utils.deviceLock.addRule(elem.v, elem.p)
             await utils.sleep(500)
-            checkAdd = await utils.deviceLock.checkList(elem.v, elem.p)
+            checkAdd = await utils.deviceLock.isInAgileList(elem.v, elem.p)
             await utils.sleep(500)
             del = await utils.deviceLock.deleteRule(elem.v, elem.p)
             await utils.sleep(500)
-            checkDel = await utils.deviceLock.checkList(elem.v, elem.p)
+            checkDel = await utils.deviceLock.isInAgileList(elem.v, elem.p)
             await utils.sleep(500)
             expect(add && checkAdd && del && checkDel == false).to.be.true
         })

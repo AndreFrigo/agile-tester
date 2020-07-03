@@ -38,11 +38,11 @@ describe("Check delete address", function(){
         expect(await utils.thinmanSettings.thinmanSettings("prova_thinman")).to.be.true
     })
 
-    it("Should return true if the address has been deleted and is not in the list anymore", async () => {
+    it("Should return false if the address has been deleted and is not in the list anymore", async () => {
         //Elimina address
         await utils.thinmanSettings.thinmanSettings("prova_thinman")
         await utils.sleep(1000)
-        expect(await utils.thinmanSettings.checkDelete("prova_thinman")).to.be.true
+        expect(await utils.thinmanSettings.isInAgileList("prova_thinman")).to.be.false
     })
 
     it("should return null if the address has been deleted and is not in the database anymore", async () => {

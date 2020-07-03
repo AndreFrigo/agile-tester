@@ -39,7 +39,7 @@ describe("check delete device", function(){
         var found = null
         del = await utils.deviceLock.deleteRule(9999, 9999)
         await utils.sleep(500)
-        found = await utils.deviceLock.checkList(9999, 9999)
+        found = await utils.deviceLock.isInAgileList(9999, 9999)
         expect(del && found == false).to.be.true
     })
 

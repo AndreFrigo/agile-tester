@@ -37,7 +37,7 @@ describe("Check add device", function () {
     })
 
     it("should return true if the device is in the agile list", async () => {
-        expect(await utils.deviceLock.checkList(9999, 9999)).to.be.true
+        expect(await utils.deviceLock.isInAgileList(9999, 9999)).to.be.true
     })
 
     it("should return false if it tries to add a device with same vid and pid", async () => {
