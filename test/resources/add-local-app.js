@@ -4,7 +4,7 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
 
-describe("Add a local resource tests", function(){
+describe("add local application tests", function(){
 
     this.timeout(30000)
 
@@ -21,7 +21,7 @@ describe("Add a local resource tests", function(){
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.set("connections", "[{\"name\":\"test\",\"type\":\"URL\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"url\":\"https://prova.it\",\"kiosk\":false,\"fullscreen\":false,\"browser\":\"iexplore\"},\"id\":\"afe39343-6643-49a5-a684-572ead42d3ee\"}]")
+        db.conn.set("connections", "[{\"name\":\"app_test\",\"type\":\"APP\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"path\":\"C:\\\\percorso\\\\local_app.exe\",\"filename\":\"local_app.exe\",\"args\":\"\",\"domain\":\"\",\"hideDomain\":false,\"exclude\":{\"name\":[],\"type\":[]}},\"id\":\"18a4df02-ddad-40af-8e1d-3fa31852d9f6\"}]")
         await utils.start()
     }) 
     
@@ -30,42 +30,7 @@ describe("Add a local resource tests", function(){
         await global.app.stop()
     })
 
-    //Array di String che rappresentano applicazioni nella stessa cartella di Agile 
-    const rightValues = [
-        {name: "AgileRad", info: "AgileRad"}
-    ]
-    rightValues.forEach(element => {
-        it("should return true if a local resource has been added", async () => {
-            expect(await utils.resources.addLocal(element.name)).to.be.true
-        })
-
-        it("should return true if the resource has been added and success notification appeared", async () => {
-            var add = null
-            var notification = null
-            add = await utils.resources.addLocal(element.name)
-            await utils.sleep(500)
-            notification = await utils.checkSuccessNotification()
-            expect(add && notification).to.be.true
-        })
-
-        it("should return true if the resource has been added and is now in the Agile list, and success notification appeared", async () => {
-            var add = null
-            var notification = null
-            var check = null
-            add = await utils.resources.addLocal(element.name)
-            await utils.sleep(500)
-            notification = await utils.checkSuccessNotification()
-            await utils.sleep(500)
-            check = await utils.resources.isInAgileList(5, element.name, element.info)
-            expect(add && notification && check).to.be.true
-        })
-        
-    });
-
-    const wrongValues = ["wrong"]
-    wrongValues.forEach(element => {
-        it("should return null if there is not any app with the given name", async () => {
-            expect(await utils.resources.addLocal(element)).to.be.null
-        })
+    it("should return true if the resource is in the Agile list", async() => {
+        expect(await utils.resources.isInAgileList(5, "app_test", "local_app")).to.be.true
     })
 })
