@@ -52,34 +52,8 @@ describe("Delete resource tests", function(){
         var del = null
         var found = false;
         del = await utils.resources.deleteResource("test")
-        await utils.sleep(1000)
-        //va in risorse
-        const menu = global.app.client.$("#menu-link-6");
-        var click = null;
-        try{
-            click = await menu.click();
-        }catch{
-            found = null
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1000)
-
-
-        const length = await db.getResourceListLength();
-        var n = null;
-        for(i = 0; i < length; i++){
-            const base = "#connection"+i+" > div > div.connection-item-properties > div";
-            try{
-                n = await global.app.client.$(base + " > div").getText();
-            }catch{
-                found = null
-            } 
-            if(n == "agile_local "+ "test"){
-                found = true;
-            }
-        }
+        await utils.sleep(500)
+        found = await utils.resources.isInAgileList(4, "test", "https://prova.it")
         expect(del && found == false).to.be.true
     })
 
