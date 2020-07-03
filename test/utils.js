@@ -196,13 +196,12 @@ const utils={
             }
         },
 
-        //TODO: decidere come fare il confronto (slice, gettext o che altro)
         //ritorna true se l'elemento cercato è nella lista, altrimenti false, null se ci sono errori
-        isInAgileList: async function(name, info){
+        //param type: citryx => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
+        isInAgileList: async function(type, name, info){
             var done = true
             //va in risorse
             const menu = global.app.client.$("#menu-link-6");
-            var click = null;
             try{
                 await menu.click();
             }catch{
@@ -218,21 +217,6 @@ const utils={
             var found = false;
             var n = null;
             var u = null;
-            try{
-                if(typeof name != "string") name = name.toString()
-                if(typeof info != "string") info = info.toString()
-            }catch{
-                done = false
-            }
-            //lunghezza delle string
-            var lenName = null
-            var lenInfo = null
-            try{
-                lenName = name.length
-                lenInfo = info.length
-            }catch{
-                done = false
-            }
             
             for(i = 0; i < length; i++){
                 const base = "#connection"+i+" > div > div.connection-item-properties > div";
@@ -243,15 +227,35 @@ const utils={
                 }catch{
                     done = false
                 } 
-                console.log("n:***"+n+"***u:***"+u+"***"+"try:***"+global.app.client.$(base + " > div").innerText)
                 //controllo se elemento trovato e cercato corrispondono 
-                try{
-                    //questo non ha controlli a sinistra 
-                    if(n.slice(-1 * lenName) == name && u.slice(-1 * lenInfo) == info){
-                        found = true
+                switch(type){
+                    case 1:{
+                        break
                     }
-                }catch{
-                    done = false
+                    case 2:{
+                        break
+                    }
+                    case 3:{
+                        break
+                    }
+                    //Local Browser
+                    case 4:{
+                        if(n == "agile_local " + name && u == "subdirectory_arrow_right" + info){
+                            found = true 
+                        }
+                        break
+                    }
+                    //Local Application 
+                    case 5:{
+                        if(n == "agile_local " + name && u == "insert_drive_file" + info + ".exe"){
+                            found = true
+                        }
+                        break
+                    }
+                    default:{
+                        done = false
+                        break
+                    }
                 }
             }
 
