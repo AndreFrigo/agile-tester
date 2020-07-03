@@ -266,8 +266,9 @@ const utils={
             }
         },
 
+        //param resourceName: nome da assegnare alla risorsa, resourceInfo: nome della risorsa da aggiungere
         //ritorna true se la creazione è stata confermata, false altrimenti, null se ci sono stati errori
-        addLocal: async function(resourceName){
+        addLocal: async function(resourceName, resourceInfo){
             var done = true
             //va in risorse
             const menu = global.app.client.$("#menu-link-6");
@@ -322,7 +323,7 @@ const utils={
             //inserisce il nome del file nel file picker (deve trovarsi nella stessa directory dell'app aperta)
             //attenzione, se non c'è nessun file corretto le azioni successive ritorneranno errore e quindi la funzione ritornerà null
             try{
-                await robot.typeString(resourceName)
+                await robot.typeString(resourceInfo)
     
                 await utils.sleep(500)
     
@@ -334,11 +335,23 @@ const utils={
 
             await utils.sleep(1000)
 
+
+            //inserisce il nome 
+            try{
+                await global.app.client.$("#add-connection-name").setValue(resourceName)
+            }catch(err){
+                done = false
+            }
+
+
+            await utils.sleep(500)
+
+
             //preme su ok per confermare
             try{
                 click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
-            }catch{
-                done = false
+            }catch(err){
+                click = null
             }
 
             if(done){
