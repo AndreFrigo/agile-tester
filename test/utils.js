@@ -444,16 +444,13 @@ const utils={
         //ritorna true se ha confermato la wifi, false se la password non è corretta o la rete non è presente nell'elenco, null se qualcosa non ha funzionato
         saveWifi: async function (ssid, psw){
             var done = true
-            await utils.checkSsid(ssid)
+            await utils.networkSettings.checkSsid(ssid)
 
             //inserisce la password
             const password = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(4) > div > div > input");
             try{
                 password.click();
-                var x = await password.setValue(psw);
-                while(!x){
-                    
-                }
+                await password.setValue(psw);
             }catch{
                 done = false
             }
@@ -510,10 +507,7 @@ const utils={
             var v = global.app.client.$("#vid");
             try{
                 v.click();
-                var x = await v.setValue(vid);
-                while(!x){
-                    
-                }
+                await v.setValue(vid);
             }catch{
                 done = false
             }
@@ -525,10 +519,7 @@ const utils={
             v = global.app.client.$("#pid");
             try{
                 v.click();
-                var x = await v.setValue(pid);
-                while(!x){
-                    
-                }
+                await v.setValue(pid);
             }catch{
                 done = false
             }
@@ -681,10 +672,7 @@ const utils={
             const hostname = global.app.client.$("#new-address");
             try{
                 hostname.click();
-                var x = await hostname.setValue(address);
-                while(!x){
-                    
-                }
+                await hostname.setValue(address);
             }catch{
                 done = false
             }
@@ -701,8 +689,7 @@ const utils={
                 
                 if(port == ""){
                     //cancellazione manuale, con clearElement non funziona in questo caso
-                    var r = false
-                    r = await new Promise(function (resolve, reject){
+                    await new Promise(function (resolve, reject){
                         p.getValue().then(function(result){
                             for(i=0;i<result.length;i++){	
                                 global.app.client.keys("Backspace");	
@@ -710,15 +697,8 @@ const utils={
                             resolve(true)
                         })
                     }) 
-                    while(!r){
-        
-                    }
                 }else{
-                    x = false
-                    x = await p.setValue(port)
-                    while(!x){
-        
-                    }
+                    await p.setValue(port)
                 }
             }catch{
                 done = false
@@ -919,10 +899,7 @@ const utils={
             const d = global.app.client.$("#description");
             try{
                 d.click();
-                var x = await d.setValue(description);
-                while(!x){
-                    
-                }
+                await d.setValue(description);
             }catch{
                 done = false
             }
@@ -936,10 +913,7 @@ const utils={
                 const v = global.app.client.$("#vid");
                 try{
                     v.click();
-                    var x = await v.setValue(vid);
-                    while(!x){
-                        
-                    }
+                    await v.setValue(vid);
                 }catch{
                     done = false
                 }
@@ -955,10 +929,7 @@ const utils={
                 const p = global.app.client.$("#pid");
                 try{
                     p.click();
-                    x = await p.setValue(pid);
-                    while(!x){
-                        
-                    }
+                    await p.setValue(pid);
                 }catch{
                     done = false
                 }
@@ -1116,10 +1087,7 @@ const utils={
             const n = global.app.client.$("#name");
             try{
                 n.click();
-                var x = await n.setValue(name);
-                while(!x){
-                    
-                }
+                await n.setValue(name);
             }catch{
                 done = false
             }
@@ -1132,10 +1100,7 @@ const utils={
             const c = global.app.client.$("#command");
             try{
                 c.click();
-                var x = await c.setValue(command);
-                while(!x){
-                    
-                }
+                await c.setValue(command);
             }catch{
                 done = false
             }
