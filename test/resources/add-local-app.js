@@ -21,7 +21,7 @@ describe("add local application tests", function(){
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.set("connections", "[{\"name\":\"app_test\",\"type\":\"APP\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"path\":\"C:\\\\percorso\\\\local_app.exe\",\"filename\":\"local_app.exe\",\"args\":\"\",\"domain\":\"\",\"hideDomain\":false,\"exclude\":{\"name\":[],\"type\":[]}},\"id\":\"18a4df02-ddad-40af-8e1d-3fa31852d9f6\"}]")
+        db.conn.set("connections", "[{\"name\":\"app_test\",\"type\":\"APP\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"path\":\"C:\\\\percorso\\\\app_test.exe\",\"filename\":\"app_test.exe\",\"args\":\"\",\"domain\":\"\",\"hideDomain\":false,\"exclude\":{\"name\":[],\"type\":[]}},\"id\":\"18a4df02-ddad-40af-8e1d-3fa31852d9f6\"}]")
         await utils.start()
     }) 
     
@@ -31,6 +31,19 @@ describe("add local application tests", function(){
     })
 
     it("should return true if the resource is in the Agile list", async() => {
-        expect(await utils.resources.isInAgileList(5, "app_test", "local_app")).to.be.true
+        expect(await utils.resources.isInAgileList(5, "app_test", "app_test")).to.be.true
+    })
+
+    it("should return true if the resource is in the database", async () => {
+        var found = false
+        const resource = await db.getResourceFromName("app_test");
+        if(resource && resource.options.filename == "app_test.exe"){
+            found = true
+        }
+        expect(found).to.be.true
+    })
+
+    it("should return false if it tries to add a resource with the same name", async () => {
+        expect(await utils.resources.addLocal("app_test", "app_test")).to.be.false
     })
 })
