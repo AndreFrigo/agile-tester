@@ -364,6 +364,97 @@ const utils={
                 return null
             }
 
+        },
+        //return true se ha aggiunto la risorsa, altrimenti false, null se ci sono errori
+        addCitrix: async function(name, server, domain){
+            var done = true
+            //va in risorse
+            const menu = global.app.client.$("#menu-link-6");
+            var click = null;
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //clicca su add resource
+            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
+            try{
+                await addResource.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //seleziona citrix
+            const citrix = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(1) > label");
+            try{
+                await citrix.click();
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(500)
+
+
+            //inserisce il nome 
+            try{
+                await global.app.client.$("#add-connection-name").setValue(name)
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(1000)
+
+
+            //inserisce il server 
+            try{
+                await global.app.client.$("#add-connection-server").setValue(server)
+            }catch{
+                done = false
+            }
+
+            await utils.sleep(1000)
+
+            
+            //inserisce il domain 
+            try{
+                await global.app.client.$("#add-connection-domain").setValue(domain)
+            }catch{
+                done = false
+            }
+
+            await utils.sleep(1000)
+
+
+            //preme su ok per confermare
+            try{
+                click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
+            }catch{
+                click = null
+            }
+
+            if(done){
+                if(click != null){
+                    return true
+                }else{
+                    return false
+                }
+            }else{
+                return null
+            }            
+
         }
 
     },
