@@ -31,9 +31,9 @@ const utils={
             notification = null
         }
         //aggiorna lingua
-        global.language = await db.dbLanguage()
+        var language = await db.dbLanguage()
         var succ = null
-        switch(global.language){
+        switch(language){
             case 1: {
                 succ = "Successo"
                 break

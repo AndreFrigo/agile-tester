@@ -7,10 +7,7 @@ const AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile"
 
 const global={
     //app di agile
-    app: null,
-
-    // Italiano:1, Inglese:2, Spagnolo:3
-    language: null
+    app: null
 }
 
 before(function(done) {

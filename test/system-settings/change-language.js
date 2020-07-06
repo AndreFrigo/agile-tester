@@ -50,24 +50,18 @@ const chooseEnglish = async function(lan){
     if(lan == 1){
         try{
             ret = await global.app.client.click("span=Inglese")
-            //aggiorna la lingua corrente
-            global.language = 2;
         }catch{
             ret = null
         }
     }else if(lan == 2){
         try{
             ret = await global.app.client.click("span=English")
-            //aggiorna la lingua corrente
-            global.language = 2;
         }catch{
             ret = null
         }
     }else if (lan == 3){
         try{
             ret = await global.app.client.click("span=Inglés")
-            //aggiorna la lingua corrente
-            global.language = 2;
         }catch{
             ret = null
         }
@@ -116,6 +110,9 @@ describe("Choose english as language", function(){
         })
 
         it("should return true if agile and database language are the same", async () => {
+            var language = null
+            language = await db.dbLanguage()
+            await utils.sleep(500)
             //controllo lingua di agile dall'interfaccia
             var l = null;
             try{
@@ -124,9 +121,9 @@ describe("Choose english as language", function(){
             }catch{
             }
             var ret = false
-            if(l == "Impostazioni di Sistema") ret = (global.language == 1)
-            else if(l == "System Settings") ret = (global.language == 2)
-            else if(l == "Ajustes del Sistema") ret = (global.language == 3)
+            if(l == "Impostazioni di Sistema") ret = (language == 1)
+            else if(l == "System Settings") ret = (language == 2)
+            else if(l == "Ajustes del Sistema") ret = (language == 3)
             expect(ret).to.be.true
         })
 
@@ -157,6 +154,9 @@ describe("Choose english as language", function(){
         })
 
         it("should return true if agile and database language are the same", async () => {
+            var language = null
+            language = await db.dbLanguage()
+            await utils.sleep(500)
             //controllo lingua di agile dall'interfaccia
             var l = null;
             try{
@@ -165,9 +165,9 @@ describe("Choose english as language", function(){
             }catch{
             }
             var ret = false
-            if(l == "Impostazioni di Sistema") ret = (global.language == 1)
-            else if(l == "System Settings") ret = (global.language == 2)
-            else if(l == "Ajustes del Sistema") ret = (global.language == 3)
+            if(l == "Impostazioni di Sistema") ret = (language == 1)
+            else if(l == "System Settings") ret = (language == 2)
+            else if(l == "Ajustes del Sistema") ret = (language == 3)
             expect(ret).to.be.true
         })
 
@@ -198,6 +198,9 @@ describe("Choose english as language", function(){
         })
 
         it("should return true if agile and database language are the same", async () => {
+            var language = null
+            language = await db.dbLanguage()
+            await utils.sleep(500)
             //controllo lingua di agile dall'interfaccia
             var l = null;
             try{
@@ -206,9 +209,9 @@ describe("Choose english as language", function(){
             }catch{
             }
             var ret = false
-            if(l == "Impostazioni di Sistema") ret = (global.language == 1)
-            else if(l == "System Settings") ret = (global.language == 2)
-            else if(l == "Ajustes del Sistema") ret = (global.language == 3)
+            if(l == "Impostazioni di Sistema") ret = (language == 1)
+            else if(l == "System Settings") ret = (language == 2)
+            else if(l == "Ajustes del Sistema") ret = (language == 3)
             expect(ret).to.be.true
         })
 
