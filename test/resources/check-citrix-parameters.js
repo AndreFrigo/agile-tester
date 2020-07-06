@@ -37,6 +37,36 @@ describe("add a citrix resource test", function(){
         it("should return true if the resource has been added", async () => {
             expect(await utils.resources.addCitrix(elem.name, elem.server, elem.domain)).to.be.true
         })
+
+        it("should return true if the resource has been added and is now in the Agile list", async () => {
+            var add = null
+            var check = null
+            add = await utils.resources.addCitrix(elem.name, elem.server, elem.domain)
+            await utils.sleep(500)
+            check = await utils.resources.isInAgileList(1, elem.name, elem.server)
+            expect(add && check).to.be.true
+        })
+
+        it("should return true if the resource has been added and success notification appeared", async () => {
+            var add = null
+            var notification = null
+            add = await utils.resources.addCitrix(elem.name, elem.server, elem.domain)
+            await utils.sleep(500)
+            notification = await utils.checkSuccessNotification()
+            expect(add && notification).to.be.true
+        })
+
+        it("should return true if the resource has been added and is now in the Agile list, and success notification appeared", async () => {
+            var add = null
+            var notification = null
+            var check = null
+            add = await utils.resources.addCitrix(elem.name, elem.server, elem.domain)
+            await utils.sleep(500)
+            notification = await utils.checkSuccessNotification()
+            await utils.sleep(500)
+            check = await utils.resources.isInAgileList(1, elem.name, elem.server)
+            expect(add && notification && check).to.be.true
+        })
     })
 
     const wrongValues = [
