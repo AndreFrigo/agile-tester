@@ -40,6 +40,46 @@ describe("add microsoft resource parameters test", function(){
         it("should return true if the resource has been added", async () => {
             expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.true
         })
+
+        it("should return true if the resource has been added and is now in the Agile list", async () => {
+            var add = null
+            var check = null
+            add = await utils.resources.addMicrosoft(elem.name, elem.info)
+            await utils.sleep(500)
+            check = await utils.resources.isInAgileList(2, elem.name, elem.info)
+            expect(add && check).to.be.true
+        })
+
+        it("should return true if the resource has been added and success notification appeared", async () => {
+            var add = null
+            var notification = null
+            add = await utils.resources.addMicrosoft(elem.name, elem.info)
+            await utils.sleep(500)
+            notification = await utils.checkSuccessNotification()
+            expect(add && notification).to.be.true
+        })
+
+        it("should return true if the resource has been added and is now in the Agile list, and success notification appeared", async () => {
+            var add = null
+            var notification = null
+            var check = null
+            add = await utils.resources.addMicrosoft(elem.name, elem.info)
+            await utils.sleep(500)
+            notification = await utils.checkSuccessNotification()
+            await utils.sleep(500)
+            check = await utils.resources.isInAgileList(2, elem.name, elem.info)
+            expect(add && notification && check).to.be.true
+        })
+    })
+
+    const wrongValues = [
+        {name: "test", info: "wrong_info"}
+    ]
+
+    wrongValues.forEach(elem => {
+        it("should return false if some data are not correct", async () => {
+            expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.false
+        })
     })
 
 })
