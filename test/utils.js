@@ -233,7 +233,9 @@ const utils={
                         break
                     }
                     case 2:{
-                        //TODO
+                        if(n == "agile_local " + name && u == "insert_drive_file" + info + ".rdp"){
+                            found = true 
+                        }
                         break
                     }
                     case 3:{
