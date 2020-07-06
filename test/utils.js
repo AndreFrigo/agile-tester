@@ -1,6 +1,7 @@
 const {db} = require ("./db.js");
 const {global} = require ("./global.js");
 const robot = require("robotjs")
+const path = require("path")
 
 const utils={
     //funzione di wait
@@ -48,6 +49,57 @@ const utils={
             }
         }
         return notification == succ
+    },
+
+    //seleziona il file con il nome dato in input nella cartella agile-tester/files
+    //return true se tutto è andato bene, altrimenti false
+    fileChooser: async function(fileName){
+        var done = true
+        //va nella sezione path
+        try{
+            for(i=0;i<5;i++){
+                robot.keyTap("tab")
+                await utils.sleep(100)
+            }
+            robot.keyTap("enter")
+            await utils.sleep(200)
+        }catch{
+            done = false
+        }
+
+        //inserisce la path
+        const p = path.join(path.dirname(__filename), "../files")
+        try{
+            robot.typeString(p)
+            await utils.sleep(500)
+            robot.keyTap("enter")
+        }catch{
+            done = false
+        }
+
+        //va nella sezione nome del file
+        try{
+            for(i=0;i<6;i++){
+                robot.keyTap("tab")
+                await utils.sleep(100)
+            }
+        }catch{
+            done = false
+        }
+
+        //Inserisce il nome del file
+        try{
+            await robot.typeString(fileName)
+
+            await utils.sleep(500)
+
+            //preme invio per confermare
+            robot.keyTap("enter")
+        }catch{
+            done = false
+        }
+
+        return done
     },
 
     resources:{
@@ -533,16 +585,8 @@ const utils={
             await utils.sleep(1000)
 
 
-            //inserisce il nome del file nel file picker (deve trovarsi nella stessa directory dell'app aperta)
-            //attenzione, se non c'è nessun file corretto le azioni successive ritorneranno errore e quindi la funzione ritornerà null
-            try{
-                await robot.typeString(info)
-    
-                await utils.sleep(500)
-    
-                //preme invio per confermare
-                robot.keyTap("enter")
-            }catch{
+            //inserisce il nome del file nel file picker (deve trovarsi nella directory agile-tester/files)
+            if(await utils.fileChooser(info) == false){
                 done = false
             }
 
