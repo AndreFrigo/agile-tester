@@ -35,26 +35,32 @@ describe("Check delete address", function(){
 
     it("Should return true if the address has been deleted", async () => {
         //Elimina address
-        expect(await utils.thinmanSettings.thinmanSettings("prova_thinman")).to.be.true
+        expect(await utils.thinmanSettings.deleteAddress("prova_thinman")).to.be.true
     })
 
-    it("Should return false if the address has been deleted and is not in the list anymore", async () => {
+    it("Should return true if the address has been deleted and is not in the list anymore", async () => {
+        var elim = null
+        var check = null
         //Elimina address
-        await utils.thinmanSettings.thinmanSettings("prova_thinman")
+        elim = await utils.thinmanSettings.deleteAddress("prova_thinman")
         await utils.sleep(1000)
-        expect(await utils.thinmanSettings.isInAgileList("prova_thinman")).to.be.false
+        check = await utils.thinmanSettings.isInAgileList("prova_thinman")
+        await utils.sleep(500)
+        expect(elim && check == null).to.be.true
     })
 
-    it("should return null if the address has been deleted and is not in the database anymore", async () => {
+    it("should return true if the address has been deleted and is not in the database anymore", async () => {
+        var elim = null
+        var check = null
         //Elimina address
-        await utils.thinmanSettings.thinmanSettings("prova_thinman")
+        elim = await utils.thinmanSettings.deleteAddress("prova_thinman")
         await utils.sleep(1500)
-        const res = await db.getThinManFromHostname("prova_thinman");
-        expect(res).to.be.null
+        check = await db.getThinManFromHostname("prova_thinman");
+        expect(elim && check == null).to.be.true
     })
 
     it("should return false if there is not any address to delete with the given hostname", async () => {
-        expect(await utils.thinmanSettings.thinmanSettings("prova")).to.be.false
+        expect(await utils.thinmanSettings.deleteAddress("prova")).to.be.false
     })
 
 })

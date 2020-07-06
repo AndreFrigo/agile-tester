@@ -68,7 +68,7 @@ describe("Check address parameters", function(){
             await utils.sleep(1500)
 
             //elimina l'address creato
-            const del = await utils.thinmanSettings.thinmanSettings(elem.address)
+            const del = await utils.thinmanSettings.deleteAddress(elem.address)
 
             //controlla che entrambe siano andate a buon fine
             expect(add && del).to.be.true
@@ -82,7 +82,7 @@ describe("Check address parameters", function(){
             await utils.sleep(1000)
 
             //elimina l'address creato
-            const del = await utils.thinmanSettings.thinmanSettings(elem.address)
+            const del = await utils.thinmanSettings.deleteAddress(elem.address)
 
             await utils.sleep(1000)
 

@@ -66,8 +66,8 @@ describe("Add a local resource tests", function(){
         {name: "any", info: "wrong"}
     ]
     wrongValues.forEach(element => {
-        it("should return null if there is not any application to add with the given name", async () => {
-            expect(await utils.resources.addLocalApplication(element, element.info)).to.be.null
+        it("should return false if there is not any application to add with the given name", async () => {
+            expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.false
         })
     })
 })

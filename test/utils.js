@@ -136,7 +136,7 @@ const utils={
         },
 
 
-        //return true se la risorsa è stata eliminata, false altrimenti, null se ci sono stati problemi 
+        //return true se la risorsa è stata eliminata, false se la risorsa non è presente nella lista, null se ci sono stati problemi 
         deleteResource: async function(name){
             var done = true
             //va in risorse
@@ -172,19 +172,23 @@ const utils={
             await utils.sleep(500)
 
 
-            try{
-                await global.app.client.$("#connection"+index+" > div > div.block-item-delete > i").click()
-            }catch{
-                done = false
-            }
-
-            await utils.sleep(500)
-
-
-            try{
-                del = await global.app.client.$("#connection"+index+" > div.connection-modal > div.connection-footer > a:nth-child(2)").click()
-            }catch{
-                done = false
+            if(index != -1){
+                try{
+                    await global.app.client.$("#connection"+index+" > div > div.block-item-delete > i").click()
+                }catch{
+                    done = false
+                }
+    
+                await utils.sleep(500)
+    
+    
+                try{
+                    del = await global.app.client.$("#connection"+index+" > div.connection-modal > div.connection-footer > a:nth-child(2)").click()
+                }catch{
+                    done = false
+                }
+            }else{
+                del = null
             }
             if(done){
                 return del != null
@@ -301,6 +305,17 @@ const utils={
             await utils.sleep(1000)
 
 
+            //inserisce il nome 
+            try{
+                await global.app.client.$("#add-connection-name").setValue(resourceName)
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(1000)
+
+
             //seleziona local app
             const localApp = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(5) > label");
             try{
@@ -338,17 +353,6 @@ const utils={
             }
 
             await utils.sleep(1000)
-
-
-            //inserisce il nome 
-            try{
-                await global.app.client.$("#add-connection-name").setValue(resourceName)
-            }catch{
-                done = false
-            }
-
-
-            await utils.sleep(500)
 
 
             //preme su ok per confermare

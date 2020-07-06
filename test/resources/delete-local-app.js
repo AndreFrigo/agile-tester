@@ -34,8 +34,8 @@ describe("delete local application tests", function(){
         expect(await utils.resources.deleteResource("app_test")).to.be.true
     })
 
-    it("should return null if it tries to delete a resource that does not exists", async () => {
-        expect(await utils.resources.deleteResource("wrong_name")).to.be.null
+    it("should return false if it tries to delete a resource that does not exist", async () => {
+        expect(await utils.resources.deleteResource("wrong_name")).to.be.false
     })
 
     it("should return true if a resource is deleted and is not in the database anymore", async () => {
