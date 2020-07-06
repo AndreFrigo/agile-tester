@@ -230,20 +230,25 @@ const utils={
                 } 
                 //controllo se elemento trovato e cercato corrispondono 
                 switch(type){
+                    //Citrix
                     case 1:{
                         if(n == "agile_remote " + name && u == "subdirectory_arrow_right" + info){
                             found = true 
                         }
                         break
                     }
+                    //Microsoft
                     case 2:{
                         if(n == "agile_local " + name && u == "insert_drive_file" + info + ".rdp"){
                             found = true 
                         }
                         break
                     }
+                    //VMware
                     case 3:{
-                        //TODO
+                        if(n == "agile_remote " + name && u == "subdirectory_arrow_right" + info){
+                            found = true 
+                        }
                         break
                     }
                     //Local Browser
