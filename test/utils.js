@@ -31,7 +31,7 @@ const utils={
             notification = null
         }
         //aggiorna lingua
-        var language = await db.dbLanguage()
+        const language = await db.dbLanguage()
         var succ = null
         switch(language){
             case 1: {
@@ -969,12 +969,12 @@ const utils={
             //selector per il bottone da premere
             var elimina = null;
             //aggiorno lingua
-            global.language = await db.dbLanguage()
+            const language = await db.dbLanguage()
             //string per html che dipende dalla lingua in uso
             var indirizzo = null;
-            if(global.language == 1) indirizzo = "Indirizzo"
-            else if(global.language == 2) indirizzo = "Address"
-            else if(global.language == 3) indirizzo = "Dirección"
+            if(language == 1) indirizzo = "Indirizzo"
+            else if(language == 2) indirizzo = "Address"
+            else if(language == 3) indirizzo = "Dirección"
             
             for(i=1;i<=length;i++){
                 //cerco l'address che voglio eliminare
@@ -1030,12 +1030,12 @@ const utils={
             //indica se ho trovato un'address con quell'hostname
             var found = null;
             //aggiorno lingua
-            global.language = await db.dbLanguage()
+            const language = await db.dbLanguage()
             //string per html che dipende dalla lingua in uso
             var indirizzo = null;
-            if(global.language == 1) indirizzo = "Indirizzo"
-            else if(global.language == 2) indirizzo = "Address"
-            else if(global.language == 3) indirizzo = "Dirección"
+            if(language == 1) indirizzo = "Indirizzo"
+            else if(language == 2) indirizzo = "Address"
+            else if(language == 3) indirizzo = "Dirección"
 
             for(i=1;i<=length;i++){
                 //cerco l'address
