@@ -46,25 +46,26 @@ describe("set output sound", function(){
     })
 
     //essendo la scelta dell'audio implementata come range, è impossibile settare valori errati
-    const rightValues = [20, 50, 100]
+    const rightValues = [0, 20, 50, 100]
     rightValues.forEach(elem => {
         it("should return true if audio changed in the agile indicator", async () => {
             expect(await setAudio(elem)).to.be.true
         })
 
         it("should return true if audio changed in the agile indicator and in database", async () => {
+            //viene concesso un errore di +-1 a causa delle approssimazioni
             var changeAgile = null
             var changeDb = null
             changeAgile = await setAudio(elem)
             changeDb = await db.getOutputVolume()
-            expect(changeAgile && changeDb < elem +5 && changeDb > elem -5).to.be.true
+            expect(changeAgile && changeDb < elem +1 && changeDb > elem -1).to.be.true
         })
     })
 
 })
 
 //input valore dell'output audio da settare
-//output true se il valore è stato settato (con +-5 di errore), false altrimenti, null se ci sono errori 
+//output true se il valore è stato settato (con +1 di errore), false altrimenti, null se ci sono errori 
 const setAudio = async function(val){
     var done = true
     //va in impostazioni 
@@ -95,20 +96,15 @@ const setAudio = async function(val){
     var widthElem = null
     try{
         widthElem = await global.app.client.getCssProperty("#outputVolume", "width")
-    }catch(err){
-        console.log("Error catch 0: "+err)
+    }catch{
         done = false
     }
-    
+
     var width = null
     width = widthElem.parsed.value
     
-    await utils.sleep(500)
-    //la funzione non corrisponde, quindi viene divisa in più parti e shiftata a dovere, errore concesso +-5
-    var x = Math.round((width*val)/100)   
-    if(x<width/3) x+=7
-    else if(x<width/2) x+=3  
-    else if(x>2*width/3) x-=3 
+    //formula ricavata dal grafico x: expected value, y: actual value. L'equazione della retta è y = 1.1x - 6, viene concesso un errore di +-1 a causa dell'approssimazione 
+    var x = Math.round(((val + 6)/1.1)*width/100)   
 
     //opzions deprecated
     try{
@@ -117,8 +113,7 @@ const setAudio = async function(val){
         await global.app.client.buttonPress()
         await utils.sleep(500)
         await global.app.client.buttonPress()
-    }catch(err){
-        console.log("Error catch 1: "+err)
+    }catch{
         done = false
     }
     await utils.sleep(500)
@@ -126,17 +121,15 @@ const setAudio = async function(val){
     var currentValue = null
     try{
         currentValue = await global.app.client.$("#sound > span > div > p > span > span").getText()
-    }catch(err){
-        console.log("Error catch 3: "+err)
+    }catch{
         done = false
     }
     var ret = false
     try{
-        if(currentValue <= val + 5 && currentValue >= val -5){
+        if(currentValue <= val + 1 && currentValue >= val -1){
             ret = true
         }
     }catch{
-        console.log("Error catch 4: "+err)
         done = false
     }
 
