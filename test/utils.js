@@ -15,9 +15,9 @@ const utils={
             await utils.sleep(500)
             await robot.keyToggle("space", "up", ["alt"])
 
-            //setta l'applicazione come finestra principale 
-            await global.app.browserWindow.setAlwaysOnTop(true);
-            await global.app.browserWindow.focus();
+            // //setta l'applicazione come finestra principale 
+            // await global.app.browserWindow.setAlwaysOnTop(true);
+            // await global.app.browserWindow.focus();
         })
     },
 
@@ -1180,7 +1180,7 @@ const utils={
         //output: true se enable remote assistance e require user authorization sono spuntate e auto-accept after ... seconds ha il valore corretto, altrimenti false, null se qualcosa non ha funzionato
         setAutoAccept: async function(v){
             var done = true
-            await utils.enableRemoteAssistance()
+            await utils.remoteAssistance.enableRemoteAssistance()
             await utils.sleep(500)
             var checkbox = global.app.client.$("#allow-reject")
             var val = null
