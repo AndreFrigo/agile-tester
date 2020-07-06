@@ -163,7 +163,7 @@ const utils={
                 }catch{
                     done = false
                 } 
-                if(n == "agile_local "+ name){
+                if(n == "agile_local " + name || n == "agile_remote " + name){
                     index = i
                 }
             }
@@ -194,7 +194,7 @@ const utils={
         },
 
         //ritorna true se l'elemento cercato è nella lista, altrimenti false, null se ci sono errori
-        //param type: citryx => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
+        //param type: citrix => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
         isInAgileList: async function(type, name, info){
             var done = true
             //va in risorse
@@ -227,7 +227,9 @@ const utils={
                 //controllo se elemento trovato e cercato corrispondono 
                 switch(type){
                     case 1:{
-                        //TODO
+                        if(n == "agile_remote " + name && u == "subdirectory_arrow_right" + info){
+                            found = true 
+                        }
                         break
                     }
                     case 2:{
