@@ -398,14 +398,7 @@ const utils={
 
             //inserisce il nome del file nel file picker (deve trovarsi nella stessa directory dell'app aperta)
             //attenzione, se non c'è nessun file corretto le azioni successive ritorneranno errore e quindi la funzione ritornerà null
-            try{
-                await robot.typeString(resourceInfo)
-    
-                await utils.sleep(500)
-    
-                //preme invio per confermare
-                robot.keyTap("enter")
-            }catch{
+            if(await utils.fileChooser(resourceInfo) == false){
                 done = false
             }
 
