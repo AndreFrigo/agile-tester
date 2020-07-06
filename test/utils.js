@@ -457,6 +457,103 @@ const utils={
                 return null
             }            
 
+        },
+        //return true se la risorsa è stata aggiunta, altrimenti false, null se ci sono errori
+        addMicrosoft: async function(name, info){
+            var done = true
+            //va in risorse
+            const menu = global.app.client.$("#menu-link-6");
+            var click = null;
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //clicca su add resource
+            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
+            try{
+                await addResource.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //seleziona microsoft
+            const citrix = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(2) > label");
+            try{
+                await citrix.click();
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(500)
+
+
+            //inserisce il nome 
+            try{
+                await global.app.client.$("#add-connection-name").setValue(name)
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(1000)
+
+
+            //clicca in file
+            const file = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(5) > div > div > div > div.waves-effect.btn > span")
+            try{
+                await file.click()
+            }catch{
+                done = false
+            }
+
+            await utils.sleep(1000)
+
+
+            //inserisce il nome del file nel file picker (deve trovarsi nella stessa directory dell'app aperta)
+            //attenzione, se non c'è nessun file corretto le azioni successive ritorneranno errore e quindi la funzione ritornerà null
+            try{
+                await robot.typeString(info)
+    
+                await utils.sleep(500)
+    
+                //preme invio per confermare
+                robot.keyTap("enter")
+            }catch{
+                done = false
+            }
+
+            await utils.sleep(1000)
+
+            //preme su ok per confermare
+            try{
+                click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
+            }catch{
+                click = null
+            }
+
+            if(done){
+                if(click != null){
+                    return true
+                }else{
+                    return false
+                }
+            }else{
+                return null
+            }
+
         }
 
     },
