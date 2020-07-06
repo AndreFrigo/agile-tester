@@ -30,23 +30,22 @@ describe("Add a local resource tests", function(){
         await global.app.stop()
     })
 
-    //Array di String che rappresentano applicazioni nella stessa cartella di Agile 
     const rightValues = [
-        {name: "AgileRad", info: "AgileRad"}
+        {name: "local_app", info: "app"}
     ]
     rightValues.forEach(element => {
-        // it("should return true if a local application has been added", async () => {
-        //     expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.true
-        // })
+        it("should return true if a local application has been added", async () => {
+            expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.true
+        })
 
-        // it("should return true if the application has been added and success notification appeared", async () => {
-        //     var add = null
-        //     var notification = null
-        //     add = await utils.resources.addLocalApplication(element.name, element.info)
-        //     await utils.sleep(500)
-        //     notification = await utils.checkSuccessNotification()
-        //     expect(add && notification).to.be.true
-        // })
+        it("should return true if the application has been added and success notification appeared", async () => {
+            var add = null
+            var notification = null
+            add = await utils.resources.addLocalApplication(element.name, element.info)
+            await utils.sleep(500)
+            notification = await utils.checkSuccessNotification()
+            expect(add && notification).to.be.true
+        })
 
         it("should return true if the application has been added and is now in the Agile list, and success notification appeared", async () => {
             var add = null

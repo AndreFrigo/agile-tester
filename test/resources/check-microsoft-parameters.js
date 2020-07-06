@@ -31,7 +31,7 @@ describe("add microsoft resource parameters test", function(){
     })
 
     const rightValues = [
-        {name: "test", info: "xxx"}
+        {name: "microsoft", info: "microsoft_resource"}
     ]
 
     rightValues.forEach(elem => {
