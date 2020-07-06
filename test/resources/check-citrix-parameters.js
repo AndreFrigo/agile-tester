@@ -43,7 +43,7 @@ describe("add a citrix resource test", function(){
             var check = null
             add = await utils.resources.addCitrix(elem.name, elem.server, elem.domain)
             await utils.sleep(500)
-            check = await utils.resources.isInAgileList(1, elem.name, elem.server)
+            check = await utils.resources.isInAgileList(1, elem.name)
             expect(add && check).to.be.true
         })
 
@@ -64,7 +64,7 @@ describe("add a citrix resource test", function(){
             await utils.sleep(500)
             notification = await utils.checkSuccessNotification()
             await utils.sleep(500)
-            check = await utils.resources.isInAgileList(1, elem.name, elem.server)
+            check = await utils.resources.isInAgileList(1, elem.name)
             expect(add && notification && check).to.be.true
         })
     })

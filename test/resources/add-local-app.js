@@ -31,7 +31,7 @@ describe("add local application tests", function(){
     })
 
     it("should return true if the application is in the Agile list", async() => {
-        expect(await utils.resources.isInAgileList(5, "app_test", "app_test")).to.be.true
+        expect(await utils.resources.isInAgileList(5, "app_test")).to.be.true
     })
 
     it("should return true if the application is in the database", async () => {

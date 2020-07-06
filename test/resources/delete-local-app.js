@@ -52,7 +52,7 @@ describe("delete local application tests", function(){
         var found = false;
         del = await utils.resources.deleteResource("app_test")
         await utils.sleep(500)
-        found = await utils.resources.isInAgileList(5, "app_test", "app_test")
+        found = await utils.resources.isInAgileList(5, "app_test")
         expect(del && found == false).to.be.true
     })
 

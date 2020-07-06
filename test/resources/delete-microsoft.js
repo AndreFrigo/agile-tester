@@ -52,7 +52,7 @@ describe("delete microsoft resource tests", function(){
         var found = false;
         del = await utils.resources.deleteResource("test")
         await utils.sleep(500)
-        found = await utils.resources.isInAgileList(2, "test", "microsoft_test")
+        found = await utils.resources.isInAgileList(2, "test")
         expect(del && found == false).to.be.true
     })
 

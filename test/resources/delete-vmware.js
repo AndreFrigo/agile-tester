@@ -52,7 +52,7 @@ describe("delete VMware resource tests", function(){
         var found = false;
         del = await utils.resources.deleteResource("test")
         await utils.sleep(500)
-        found = await utils.resources.isInAgileList(3, "test", "test.com")
+        found = await utils.resources.isInAgileList(3, "test")
         expect(del && found == false).to.be.true
     })
 

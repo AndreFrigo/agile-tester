@@ -35,18 +35,18 @@ describe("Add a local resource tests", function(){
         {name: "AgileRad", info: "AgileRad"}
     ]
     rightValues.forEach(element => {
-        it("should return true if a local application has been added", async () => {
-            expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.true
-        })
+        // it("should return true if a local application has been added", async () => {
+        //     expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.true
+        // })
 
-        it("should return true if the application has been added and success notification appeared", async () => {
-            var add = null
-            var notification = null
-            add = await utils.resources.addLocalApplication(element.name, element.info)
-            await utils.sleep(500)
-            notification = await utils.checkSuccessNotification()
-            expect(add && notification).to.be.true
-        })
+        // it("should return true if the application has been added and success notification appeared", async () => {
+        //     var add = null
+        //     var notification = null
+        //     add = await utils.resources.addLocalApplication(element.name, element.info)
+        //     await utils.sleep(500)
+        //     notification = await utils.checkSuccessNotification()
+        //     expect(add && notification).to.be.true
+        // })
 
         it("should return true if the application has been added and is now in the Agile list, and success notification appeared", async () => {
             var add = null
@@ -56,7 +56,8 @@ describe("Add a local resource tests", function(){
             await utils.sleep(500)
             notification = await utils.checkSuccessNotification()
             await utils.sleep(500)
-            check = await utils.resources.isInAgileList(5, element.name, element.info)
+            check = await utils.resources.isInAgileList(5, element.name)
+            console.log("add: "+add+", check: "+check+", notification: "+notification)
             expect(add && notification && check).to.be.true
         })
         

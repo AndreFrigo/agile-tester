@@ -47,7 +47,7 @@ describe("test add microsoft resource", function(){
 
 
     it("should return true if the resource is in the Agile list", async() => {
-        expect(await utils.resources.isInAgileList(2, "test", "microsoft_test")).to.be.true
+        expect(await utils.resources.isInAgileList(2, "test")).to.be.true
     })
 
 })

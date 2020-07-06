@@ -251,7 +251,7 @@ const utils={
 
         //ritorna true se l'elemento cercato è nella lista, altrimenti false, null se ci sono errori
         //param type: citrix => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
-        isInAgileList: async function(type, name, info){
+        isInAgileList: async function(type, name){
             var done = true
             //va in risorse
             const menu = global.app.client.$("#menu-link-6");
@@ -269,14 +269,11 @@ const utils={
             const length = await db.getResourceListLength();
             var found = false;
             var n = null;
-            var u = null;
             
             for(i = 0; i < length; i++){
-                const base = "#connection"+i+" > div > div.connection-item-properties > div";
                 //prendo le informazioni dell'elemento
                 try{
-                    n = await global.app.client.$(base + " > div").getText();
-                    u = await global.app.client.$(base + " > p > span").getText();
+                    n = await global.app.client.$("#connection"+i+" > div > div.connection-item-properties > div > div").getText();
                 }catch{
                     done = false
                 } 
@@ -284,35 +281,35 @@ const utils={
                 switch(type){
                     //Citrix
                     case 1:{
-                        if(n == "agile_remote " + name && u == "subdirectory_arrow_right" + info){
+                        if(n == "agile_remote " + name){
                             found = true 
                         }
                         break
                     }
                     //Microsoft
                     case 2:{
-                        if(n == "agile_local " + name && u == "insert_drive_file" + info + ".rdp"){
+                        if(n == "agile_local " + name){
                             found = true 
                         }
                         break
                     }
                     //VMware
                     case 3:{
-                        if(n == "agile_remote " + name && u == "subdirectory_arrow_right" + info){
+                        if(n == "agile_remote " + name){
                             found = true 
                         }
                         break
                     }
                     //Local Browser
                     case 4:{
-                        if(n == "agile_local " + name && u == "subdirectory_arrow_right" + info){
+                        if(n == "agile_local " + name){
                             found = true 
                         }
                         break
                     }
                     //Local Application 
                     case 5:{
-                        if(n == "agile_local " + name && u == "insert_drive_file" + info + ".exe"){
+                        if(n == "agile_local " + name){
                             found = true
                         }
                         break

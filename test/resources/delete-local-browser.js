@@ -53,7 +53,7 @@ describe("Delete resource tests", function(){
         var found = false;
         del = await utils.resources.deleteResource("test")
         await utils.sleep(500)
-        found = await utils.resources.isInAgileList(4, "test", "https://prova.it")
+        found = await utils.resources.isInAgileList(4, "test")
         expect(del && found == false).to.be.true
     })
 

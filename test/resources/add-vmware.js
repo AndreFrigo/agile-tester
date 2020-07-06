@@ -46,6 +46,6 @@ describe("test add VMware recource", function(){
 
 
     it("should return true if the resource is in the Agile list", async() => {
-        expect(await utils.resources.isInAgileList(3, "test", "test.com")).to.be.true
+        expect(await utils.resources.isInAgileList(3, "test")).to.be.true
     })
 })

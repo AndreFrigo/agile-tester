@@ -46,7 +46,7 @@ describe("Check if a resource created is available", function(){
 
 
     it("should return true if the resource is in the Agile list", async() => {
-        expect(await utils.resources.isInAgileList(4, "test", "https://prova.it")).to.be.true
+        expect(await utils.resources.isInAgileList(4, "test")).to.be.true
     })
 
 
