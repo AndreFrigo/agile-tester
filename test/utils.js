@@ -20,6 +20,20 @@ const utils={
             // //setta l'applicazione come finestra principale 
             // await global.app.browserWindow.setAlwaysOnTop(true);
             // await global.app.browserWindow.focus();
+
+            //se siamo su linux l'applicazione non viene avviata da amministratore e quindi è necesssario inserire le credenziali
+            if(global.env == 'l'){
+                try{
+                    await utils.sleep(500)
+                    await global.app.client.$("#admin-username").setValue(global.adminUsername)
+                    await utils.sleep(500)
+                    await global.app.client.$("#admin-password").setValue(global.adminPassword)
+                    await utils.sleep(500)
+                    await global.app.client.$("#license-wrapper > div > div.col.s12.license-body > div > div.col.s3 > a").click()
+                }catch{
+                    console.log("Errore autenticazione")
+                }
+            }
         })
     },
 
