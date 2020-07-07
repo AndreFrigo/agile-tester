@@ -393,8 +393,7 @@ const utils={
             await utils.sleep(1000)
 
 
-            //inserisce il nome del file nel file picker (deve trovarsi nella stessa directory dell'app aperta)
-            //attenzione, se non c'è nessun file corretto le azioni successive ritorneranno errore e quindi la funzione ritornerà null
+            //inserisce il nome del file nel file picker (deve trovarsi nella directory agile-tester/files)
             if(await utils.fileChooser(resourceInfo) == false){
                 done = false
             }
@@ -601,6 +600,7 @@ const utils={
 
         },
 
+        //return true se l'ha creata, altrimenti false, null se ci sono stati errori
         addVMware: async function(name, server){
             var done = true
             //va in risorse
@@ -685,6 +685,7 @@ const utils={
     },
     
     networkSettings:{
+
         //ritorna true se c'è una wifi disponibile con l'ssid dato, altrimenti false, null se qualcosa non ha funzionato
         checkSsid : async function (ssid) {
             var done = true
@@ -760,7 +761,7 @@ const utils={
         //ritorna true se ha confermato la wifi, false se la password non è corretta o la rete non è presente nell'elenco, null se qualcosa non ha funzionato
         saveWifi: async function (ssid, psw){
             var done = true
-            await utils.networkSettings.checkSsid(ssid)
+            const first = await utils.networkSettings.checkSsid(ssid)
 
             //inserisce la password
             const password = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(4) > div > div > input");
@@ -784,7 +785,7 @@ const utils={
                 click = null
             }
             if(done){
-                return click != null
+                return first && click != null
             }else{
                 return null
             }
@@ -792,6 +793,7 @@ const utils={
     },
 
     deviceLock:{
+
         //ritorna true se ha creato la regola, altrimenti false, null se qualcosa non ha funzionato
         addRule: async function (vid, pid){
             var done = true
@@ -955,7 +957,7 @@ const utils={
     },
 
     thinmanSettings: {
-        //ritorna false se non ha potuto confermare, altrimenti true, null se qualcosa non ha funzionato
+        //ritorna true se ha aggiunto l'address, altrimenti false, null se qualcosa non ha funzionato
         addAddress: async function(address, port, timeout){
             var done = true
             //va in thinman settings
@@ -1310,7 +1312,7 @@ const utils={
             if(index != null){
                 try{
                     click = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+index+") > div > div.usbredir-item-delete > i").click()
-                }catch(err){
+                }catch{
                     done = false
                 }
             }
@@ -1471,7 +1473,6 @@ const utils={
             }catch{
                 done = false
             }
-            // await utils.sleep(200)
             if(val == "false"){
                 const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row > div > label")
                 try{
