@@ -18,6 +18,7 @@ describe("set output sound", function(){
                 resolve(res)
             });
         })
+        db.conn.select(0)
         localDBinfo = await new Promise(function (resolve, reject){
             db.conn.get("info_audio", function(err, res){
                 if(err) reject(err)
@@ -27,26 +28,28 @@ describe("set output sound", function(){
     })
 
     beforeEach(async function(){
-        //TODO: impostare volume di sistema
         //cambia database locale
         db.conn.select(1)
         db.conn.set("config_audio", "{\"out\":{\"volume\":0,\"mute\":true},\"in\":{\"volume\":0,\"mute\":false}}")
+        db.conn.publish("config_audio", "{\"action\":\"volume_out\",\"id\":\"canale\"}")
         db.conn.select(0)
         db.conn.set("info_audio", "{\"out\":{\"Description\":\"Speakers (Realtek(R) Audio)\",\"volume\":0,\"mute\":true},\"in\":{\"Description\":\"Microphone (Realtek(R) Audio)\",\"volume\":0,\"mute\":false}}")
+        db.conn.publish("info_audio", "{\"event\":\"audio\"}");
         await utils.start()
     }) 
 
     afterEach(async function(){
-        //TODO: impostare volume di sistema
         db.conn.select(1)
         db.conn.set("config_audio", localDBconfig)
+        db.conn.publish("config_audio", "{\"action\":\"volume_out\",\"id\":\"canale\"}")
         db.conn.select(0)
         db.conn.set("info_audio", localDBinfo)
+        db.conn.publish("info_audio", "{\"event\":\"audio\"}");
         await global.app.stop()
     })
 
     //essendo la scelta dell'audio implementata come range, è impossibile settare valori errati
-    const rightValues = [0, 20, 50, 100]
+    const rightValues = [20, 50, 100]
     rightValues.forEach(elem => {
         it("should return true if audio changed in the agile indicator", async () => {
             expect(await setAudio(elem)).to.be.true
