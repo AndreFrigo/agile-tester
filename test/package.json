@@ -16,7 +16,9 @@
     "electron": "^2.0.2",
     "mocha": "^5.2.0",
     "mochawesome": "^3.0.2",
-    "robotjs": "^0.5.1",
     "spectron": "^3.8.0"
+  },
+  "dependencies": {
+    "redis": "^3.0.2"
   }
 }
