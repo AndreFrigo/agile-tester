@@ -30,6 +30,8 @@ const utils={
                     await global.app.client.$("#admin-password").setValue(global.adminPassword)
                     await utils.sleep(500)
                     await global.app.client.$("#license-wrapper > div > div.col.s12.license-body > div > div.col.s3 > a").click()
+                    await utils.sleep(500)
+                    await global.app.client.waitUntilWindowLoaded()
                 }catch{
                     console.log("Errore autenticazione")
                 }
@@ -1161,11 +1163,11 @@ const utils={
 
             //numero di address agile 
             const length = await db.getThinManListLength();
-
+            
             var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
             var child = null;
             //indica se ho trovato un'address con quell'hostname
-            var found = null;
+            var found = false;
             //aggiorno lingua
             const language = await db.dbLanguage()
             //string per html che dipende dalla lingua in uso
