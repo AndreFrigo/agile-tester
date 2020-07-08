@@ -71,8 +71,26 @@ describe("set output sound", function(){
 //output true se il valore è stato settato (con +1 di errore), false altrimenti, null se ci sono errori 
 const setAudio = async function(val){
     var done = true
-    //va in impostazioni 
-    const menu = global.app.client.$('#menu-link-1');
+    //va nelle impostazioni di sistema
+    var menu = null
+    switch(await db.dbLanguage()){
+        case 1:{
+            menu = global.app.client.$('=Impostazioni di Sistema')
+            break
+        }
+        case 2:{
+            menu = global.app.client.$('=System Settings')
+            break
+        }
+        case 3:{
+            menu = global.app.client.$('=Ajustes del Sistema')
+            break
+        }
+        default:{
+            menu = global.app.client.$('error')
+            break
+        }
+    }
     try{
         await menu.click();
     }catch{
