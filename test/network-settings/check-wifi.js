@@ -36,7 +36,7 @@ describe("Check if a wifi saved is available", function(){
     it("should return true if the wifi is in the list", async () => {
 
         //Va nella sezione impostazioni di rete
-        const menu = global.app.client.$('#menu-link-2');
+        const menu = global.app.client.$(global.NETWORK_SETTINGS);
         var click = null;
         try{
             click = await menu.click();

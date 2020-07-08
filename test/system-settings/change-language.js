@@ -124,27 +124,28 @@ const chooseEnglish = async function(lan){
 
     //va nelle impostazioni di sistema
     var menu = null
-    switch(await db.dbLanguage()){
-        case 1:{
-            menu = global.app.client.$('=Impostazioni di Sistema')
-            agileLanguage = "Lingua di Agile"
-            break
-        }
-        case 2:{
-            menu = global.app.client.$('=System Settings')
-            agileLanguage = "Agile language"
-            break
-        }
-        case 3:{
-            menu = global.app.client.$('=Ajustes del Sistema')
-            agileLanguage = "Idioma de Agile"
-            break
-        }
-        default:{
-            menu = global.app.client.$('error')
-            break
-        }
-    }
+    // switch(await db.dbLanguage()){
+    //     case 1:{
+    //         menu = global.app.client.$('=Impostazioni di Sistema')
+    //         agileLanguage = "Lingua di Agile"
+    //         break
+    //     }
+    //     case 2:{
+    //         menu = global.app.client.$('=System Settings')
+    //         agileLanguage = "Agile language"
+    //         break
+    //     }
+    //     case 3:{
+    //         menu = global.app.client.$('=Ajustes del Sistema')
+    //         agileLanguage = "Idioma de Agile"
+    //         break
+    //     }
+    //     default:{
+    //         menu = global.app.client.$('error')
+    //         break
+    //     }
+    // }
+    menu = global.app.client.$(global.SYSTEM_SETTINGS)
     try{
         await menu.click();
     }catch{
@@ -231,36 +232,53 @@ const isSameLanguage = async function(){
     var language = await db.dbLanguage()
 
     //se la lingua nel database è corretta allora premerà sul bottone, altrimenti il bottone non sarà identificabile
-    switch(language){
-        case 1:{
-            menu = global.app.client.$('=Impostazioni di Sistema')
-            agileLanguage = "Lingua di Agile"
-            break
-        }
-        case 2:{
-            menu = global.app.client.$('=System Settings')
-            agileLanguage = "Agile language"
-            break
-        }
-        case 3:{
-            menu = global.app.client.$('=Ajustes del Sistema')
-            agileLanguage = "Idioma de Agile"
-            break
-        }
-        default:{
-            menu = global.app.client.$('error')
-            break
-        }
-    }
+    // switch(language){
+    //     case 1:{
+    //         menu = global.app.client.$('=Impostazioni di Sistema')
+    //         break
+    //     }
+    //     case 2:{
+    //         menu = global.app.client.$('=System Settings')
+    //         break
+    //     }
+    //     case 3:{
+    //         menu = global.app.client.$('=Ajustes del Sistema')
+    //         break
+    //     }
+    //     default:{
+    //         menu = global.app.client.$('error')
+    //         break
+    //     }
+    // }
+
+    
+    // try{
+    //     await menu.click()
+    // }catch{
+    //     done = false
+    // }
+
+    // if(done){
+    //     return true
+    // }else{
+    //     return false
+    // }
+
+    var l = null;
     try{
-        await menu.click()
+        const lang = global.app.client.$(global.SYSTEM_SETTINGS);
+        l = await lang.getText();
     }catch{
         done = false
     }
+    var ret = false
+    if(l == "Impostazioni di Sistema") ret = (language == 1)
+    else if(l == "System Settings") ret = (language == 2)
+    else if(l == "Ajustes del Sistema") ret = (language == 3)
 
     if(done){
-        return true
+        return ret
     }else{
-        return false
+        return null
     }
 }

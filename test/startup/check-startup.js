@@ -51,7 +51,7 @@ describe("Check startup database", function(){
 
     it("should return true if the startup is in the Agile list", async() => {
         //va in startup
-        const menu = global.app.client.$("#menu-link-7");
+        const menu = global.app.client.$(global.STARTUP);
         var click = null;
         try{
             click = await menu.click();
