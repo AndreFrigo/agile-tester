@@ -15,18 +15,18 @@ const global={
     adminPassword: "admin",
 
     //ids
-    SYSTEM_SETTINGS,
-    NETWORK_SETTINGS,
-    THINMAN_SETTINGS,
-    REMOTE_ASSISTANCE,
-    WRITE_FILTER,
-    RESOURCES,
-    STARTUP,
-    CERTIFICATE_MANAGER,
-    USB_REDIRECTION,
-    DEVICE_LOCK,
-    AGILE_AUTHENTICATION,
-    MODE
+    SYSTEM_SETTINGS: null,
+    NETWORK_SETTINGS: null,
+    THINMAN_SETTINGS: null,
+    REMOTE_ASSISTANCE: null,
+    WRITE_FILTER: null,
+    RESOURCES: null,
+    STARTUP: null,
+    CERTIFICATE_MANAGER: null,
+    USB_REDIRECTION: null,
+    DEVICE_LOCK: null,
+    AGILE_AUTHENTICATION: null,
+    MODE: null
 }
 
 before(function(done) {
@@ -45,18 +45,18 @@ before(function(done) {
     db.dbConnection();
 
     if(global.env == 'w' || global.env == 'l'){
-        SYSTEM_SETTINGS = '#menu-link-1'
-        NETWORK_SETTINGS = '#menu-link-2'
-        THINMAN_SETTINGS = '#menu-link-3'
-        REMOTE_ASSISTANCE = '#menu-link-4'
-        WRITE_FILTER = '#menu-link-5'
-        RESOURCES = '#menu-link-6'
-        STARTUP = '#menu-link-7'
-        CERTIFICATE_MANAGER = '#menu-link-8'
-        USB_REDIRECTION = '#menu-link-10'
-        DEVICE_LOCK = '#menu-link-11'
-        AGILE_AUTHENTICATION = '#menu-link-12'
-        MODE = '#menu-link-13'
+        global.SYSTEM_SETTINGS = '#menu-link-1'
+        global.NETWORK_SETTINGS = '#menu-link-2'
+        global.THINMAN_SETTINGS = '#menu-link-3'
+        global.REMOTE_ASSISTANCE = '#menu-link-4'
+        global.WRITE_FILTER = '#menu-link-5'
+        global.RESOURCES = '#menu-link-6'
+        global.STARTUP = '#menu-link-7'
+        global.CERTIFICATE_MANAGER = '#menu-link-8'
+        global.USB_REDIRECTION = '#menu-link-10'
+        global.DEVICE_LOCK = '#menu-link-11'
+        global.AGILE_AUTHENTICATION = '#menu-link-12'
+        global.MODE = '#menu-link-13'
     }
     done();
 })
