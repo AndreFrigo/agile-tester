@@ -119,8 +119,32 @@ describe("Choose english as language", function(){
 //return true se la lingua è stata cambiata, altrimenti false, null se ci sono stati errori
 const chooseEnglish = async function(lan){
     var done = true
+    //string contenente "Lingua di Agile" nelle diverse lingue 
+    var agileLanguage = null
+
     //va nelle impostazioni di sistema
-    const menu = global.app.client.$('#menu-link-1');
+    var menu = null
+    switch(await db.dbLanguage()){
+        case 1:{
+            menu = global.app.client.$('=Impostazioni di Sistema')
+            agileLanguage = "Lingua di Agile"
+            break
+        }
+        case 2:{
+            menu = global.app.client.$('=System Settings')
+            agileLanguage = "Agile language"
+            break
+        }
+        case 3:{
+            menu = global.app.client.$('=Ajustes del Sistema')
+            agileLanguage = "Idioma de Agile"
+            break
+        }
+        default:{
+            menu = global.app.client.$('error')
+            break
+        }
+    }
     try{
         await menu.click();
     }catch{
@@ -146,9 +170,25 @@ const chooseEnglish = async function(lan){
 
 
     //apre la scelta della lingua
-    const button = global.app.client.$("#language > span > div > div > div > input.select-dropdown");
+    var button = null
+    var cont = true
+    //c'è un header prima dei div, quindi l'indice parte da 2 al posto che da 1
+    var index = 2
+    var text = null
+    while(cont){
+        try{
+            text = await global.app.client.$("#language > span > div:nth-child(" + index + ") > span").getText()
+        }catch{
+            cont = false
+        }
+        if(text == agileLanguage){
+            button = "#language > span > div:nth-child(" + index + ") > div > div > input.select-dropdown"
+        }
+        index ++
+    }
+    
     try{
-        await button.click();
+        await global.app.client.click(button);
     }catch{
         done = false
     }
@@ -188,25 +228,39 @@ const chooseEnglish = async function(lan){
 //return true se lingua database ed agile corrispondono, false altrimenti, null se ci sono stati errori
 const isSameLanguage = async function(){
     var done = true
-    var language = null
-    language = await db.dbLanguage()
-    await utils.sleep(500)
-    //controllo lingua di agile dall'interfaccia
-    var l = null;
+    var language = await db.dbLanguage()
+
+    //se la lingua nel database è corretta allora premerà sul bottone, altrimenti il bottone non sarà identificabile
+    switch(language){
+        case 1:{
+            menu = global.app.client.$('=Impostazioni di Sistema')
+            agileLanguage = "Lingua di Agile"
+            break
+        }
+        case 2:{
+            menu = global.app.client.$('=System Settings')
+            agileLanguage = "Agile language"
+            break
+        }
+        case 3:{
+            menu = global.app.client.$('=Ajustes del Sistema')
+            agileLanguage = "Idioma de Agile"
+            break
+        }
+        default:{
+            menu = global.app.client.$('error')
+            break
+        }
+    }
     try{
-        const lang = global.app.client.$('#menu-link-1');
-        l = await lang.getText();
+        await menu.click()
     }catch{
         done = false
     }
-    var ret = false
-    if(l == "Impostazioni di Sistema") ret = (language == 1)
-    else if(l == "System Settings") ret = (language == 2)
-    else if(l == "Ajustes del Sistema") ret = (language == 3)
 
     if(done){
-        return ret
+        return true
     }else{
-        return null
+        return false
     }
 }
