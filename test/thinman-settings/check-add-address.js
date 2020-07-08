@@ -17,12 +17,15 @@ describe("Check add address", function(){
                 resolve(res)
             });
         })
+    }) 
+
+    beforeEach(async function(){
         //cambia database locale
         db.conn.set("thinman", "{\"enabled\":true,\"dhcp_opt\":163,\"address\":[{\"address\":\"prova_thinman\",\"port\":443,\"timeout\":15}],\"automatic_port\":true,\"listening_port\":443,\"fallback\":\"use_device\",\"passthrough\":false}")
         await utils.start()
-    }) 
+    })
 
-    after(async function(){
+    afterEach(async function(){
         db.conn.set("thinman", localDB)
         await global.app.stop()
     })
