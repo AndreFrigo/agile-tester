@@ -56,15 +56,17 @@ describe("delete VMware resource tests", function(){
         expect(del && found == false).to.be.true
     })
 
-    it("should return true if a resource is deleted and the success notification appeared", async () => {
-        var del = null
-        var notification = null;
-
-        del = await utils.resources.deleteResource("test")
-        
-        await utils.sleep(1000)
-
-        notification = await utils.checkSuccessNotification()
-        expect(del && notification).to.be.true
-    })
+    if(global.env == "w"){
+        it("should return true if a resource is deleted and the success notification appeared", async () => {
+            var del = null
+            var notification = null;
+    
+            del = await utils.resources.deleteResource("test")
+            
+            await utils.sleep(1000)
+    
+            notification = await utils.checkSuccessNotification()
+            expect(del && notification).to.be.true
+        })
+    }
 })

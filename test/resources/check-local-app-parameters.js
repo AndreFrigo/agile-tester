@@ -38,27 +38,40 @@ describe("Add a local resource tests", function(){
             expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.true
         })
 
-        it("should return true if the application has been added and success notification appeared", async () => {
-            var add = null
-            var notification = null
-            add = await utils.resources.addLocalApplication(element.name, element.info)
-            await utils.sleep(500)
-            notification = await utils.checkSuccessNotification()
-            expect(add && notification).to.be.true
-        })
+        if(global.env == "w"){
+            it("should return true if the application has been added and success notification appeared", async () => {
+                var add = null
+                var notification = null
+                add = await utils.resources.addLocalApplication(element.name, element.info)
+                await utils.sleep(500)
+                notification = await utils.checkSuccessNotification()
+                expect(add && notification).to.be.true
+            })
+        }
 
-        it("should return true if the application has been added and is now in the Agile list, and success notification appeared", async () => {
+        it("should return true if the application has been added and is now in the Agile list", async () => {
             var add = null
-            var notification = null
             var check = null
             add = await utils.resources.addLocalApplication(element.name, element.info)
             await utils.sleep(500)
-            notification = await utils.checkSuccessNotification()
-            await utils.sleep(500)
             check = await utils.resources.isInAgileList(5, element.name)
-            console.log("add: "+add+", check: "+check+", notification: "+notification)
-            expect(add && notification && check).to.be.true
+            expect(add && check).to.be.true
         })
+
+        if(global.env == "w"){
+            it("should return true if the application has been added and is now in the Agile list, and success notification appeared", async () => {
+                var add = null
+                var notification = null
+                var check = null
+                add = await utils.resources.addLocalApplication(element.name, element.info)
+                await utils.sleep(500)
+                notification = await utils.checkSuccessNotification()
+                await utils.sleep(500)
+                check = await utils.resources.isInAgileList(5, element.name)
+                console.log("add: "+add+", check: "+check+", notification: "+notification)
+                expect(add && notification && check).to.be.true
+            })
+        }
         
     });
 

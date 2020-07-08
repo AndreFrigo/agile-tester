@@ -60,12 +60,14 @@ describe("Check resource parameters", function(){
             expect(await utils.resources.addLocalBrowser(elem.name, elem.url)).to.be.true
         })
 
-        it("should return true if the resource has been added and the success notification appeared", async () => {
-            const res = await utils.resources.addLocalBrowser(elem.name, elem.url)
-            await utils.sleep(1000)
-            const notification = await utils.checkSuccessNotification()
-            expect(res && notification).to.be.true
-        })
+        if(global.env == "w"){
+            it("should return true if the resource has been added and the success notification appeared", async () => {
+                const res = await utils.resources.addLocalBrowser(elem.name, elem.url)
+                await utils.sleep(1000)
+                const notification = await utils.checkSuccessNotification()
+                expect(res && notification).to.be.true
+            })
+        }
 
         it("should return true if the resource has been added and then deleted", async () => {
             var add = null
@@ -77,21 +79,23 @@ describe("Check resource parameters", function(){
             expect(add && del).to.be.true
         })
 
-        it("should return true if the resource has been added, deleted and both the success notification appeared", async () => {
-            var add = null
-            var del = null
-            var notAdd = null
-            var notDel = null
-            add = await utils.resources.addLocalBrowser(elem.name, elem.url)
-            await utils.sleep(1000)
-            notAdd = await utils.checkSuccessNotification()
-            await utils.sleep(1000)
-            del = await utils.resources.deleteResource(elem.name)
-            await utils.sleep(1000)
-            notDel = await utils.checkSuccessNotification()
-            await utils.sleep(500)
-            expect(add && notAdd && del && notDel).to.be.true
-        })
+        if(global.env == "w"){
+            it("should return true if the resource has been added, deleted and both the success notification appeared", async () => {
+                var add = null
+                var del = null
+                var notAdd = null
+                var notDel = null
+                add = await utils.resources.addLocalBrowser(elem.name, elem.url)
+                await utils.sleep(1000)
+                notAdd = await utils.checkSuccessNotification()
+                await utils.sleep(1000)
+                del = await utils.resources.deleteResource(elem.name)
+                await utils.sleep(1000)
+                notDel = await utils.checkSuccessNotification()
+                await utils.sleep(500)
+                expect(add && notAdd && del && notDel).to.be.true
+            })
+        }
     })
 
 })

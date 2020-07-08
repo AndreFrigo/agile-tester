@@ -32,6 +32,7 @@ const utils={
                     await global.app.client.$("#license-wrapper > div > div.col.s12.license-body > div > div.col.s3 > a").click()
                     await utils.sleep(500)
                     await global.app.client.waitUntilWindowLoaded()
+                    //TODO: se dopo il login si mette a caricare, il test parte comunque 
                 }catch{
                     console.log("Errore autenticazione")
                 }
@@ -1163,7 +1164,7 @@ const utils={
 
             //numero di address agile 
             const length = await db.getThinManListLength();
-            
+
             var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
             var child = null;
             //indica se ho trovato un'address con quell'hostname
