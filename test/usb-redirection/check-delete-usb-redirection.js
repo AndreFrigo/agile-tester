@@ -48,7 +48,6 @@ describe("delete usb rule tests", function(){
         await utils.sleep(500)
         found = await utils.usbRedirection.findRule(1234, 1234)
         await utils.sleep(500)
-        console.log("Del: "+del+", found: "+found)
         expect(del && found == false).to.be.true
     })
 

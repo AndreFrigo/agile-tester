@@ -70,7 +70,6 @@ describe("Add USB redirection rule", function(){
                 await utils.sleep(500)
                 del = await utils.usbRedirection.deleteRule(elem.vid, elem.pid)
                 await utils.sleep(500)
-                console.log("Add: "+add+", del: "+del)
                 expect(add && del).to.be.true
             })
         })
