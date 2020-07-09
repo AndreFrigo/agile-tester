@@ -2,6 +2,8 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const { info } = require("../set-before-test.js");
+
 var localDBconfig = null
 var localDBinfo = null
 
@@ -72,25 +74,7 @@ describe("set output sound", function(){
 const setAudio = async function(val){
     var done = true
     //va nelle impostazioni di sistema
-    var menu = null
-    switch(await db.dbLanguage()){
-        case 1:{
-            menu = global.app.client.$('=Impostazioni di Sistema')
-            break
-        }
-        case 2:{
-            menu = global.app.client.$('=System Settings')
-            break
-        }
-        case 3:{
-            menu = global.app.client.$('=Ajustes del Sistema')
-            break
-        }
-        default:{
-            menu = global.app.client.$('error')
-            break
-        }
-    }
+    const menu = global.app.client.$(info.SYSTEM_SETTINGS)
     try{
         await menu.click();
     }catch{

@@ -2,6 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const { info } = require("../set-before-test.js");
 var localDB = null
 
 
@@ -123,29 +124,7 @@ const chooseEnglish = async function(lan){
     var agileLanguage = null
 
     //va nelle impostazioni di sistema
-    var menu = null
-    // switch(await db.dbLanguage()){
-    //     case 1:{
-    //         menu = global.app.client.$('=Impostazioni di Sistema')
-    //         agileLanguage = "Lingua di Agile"
-    //         break
-    //     }
-    //     case 2:{
-    //         menu = global.app.client.$('=System Settings')
-    //         agileLanguage = "Agile language"
-    //         break
-    //     }
-    //     case 3:{
-    //         menu = global.app.client.$('=Ajustes del Sistema')
-    //         agileLanguage = "Idioma de Agile"
-    //         break
-    //     }
-    //     default:{
-    //         menu = global.app.client.$('error')
-    //         break
-    //     }
-    // }
-    menu = global.app.client.$(global.SYSTEM_SETTINGS)
+    const menu = global.app.client.$(info.SYSTEM_SETTINGS)
     try{
         await menu.click();
     }catch{
@@ -173,6 +152,25 @@ const chooseEnglish = async function(lan){
     //apre la scelta della lingua
     var button = null
     var cont = true
+    //testo da confrontare
+    switch(await db.dbLanguage()){
+        case 1:{
+            agileLanguage = "Lingua di Agile"
+            break
+        }
+        case 2:{
+            agileLanguage = "Agile language"
+            break
+        }
+        case 3:{
+            agileLanguage = "Idioma de Agile"
+            break
+        }
+        default:{
+            agileLanguage = "error"
+            break
+        }
+    }
     //c'è un header prima dei div, quindi l'indice parte da 2 al posto che da 1
     var index = 2
     var text = null
@@ -231,42 +229,9 @@ const isSameLanguage = async function(){
     var done = true
     var language = await db.dbLanguage()
 
-    //se la lingua nel database è corretta allora premerà sul bottone, altrimenti il bottone non sarà identificabile
-    // switch(language){
-    //     case 1:{
-    //         menu = global.app.client.$('=Impostazioni di Sistema')
-    //         break
-    //     }
-    //     case 2:{
-    //         menu = global.app.client.$('=System Settings')
-    //         break
-    //     }
-    //     case 3:{
-    //         menu = global.app.client.$('=Ajustes del Sistema')
-    //         break
-    //     }
-    //     default:{
-    //         menu = global.app.client.$('error')
-    //         break
-    //     }
-    // }
-
-    
-    // try{
-    //     await menu.click()
-    // }catch{
-    //     done = false
-    // }
-
-    // if(done){
-    //     return true
-    // }else{
-    //     return false
-    // }
-
     var l = null;
     try{
-        const lang = global.app.client.$(global.SYSTEM_SETTINGS);
+        const lang = global.app.client.$(info.SYSTEM_SETTINGS);
         l = await lang.getText();
     }catch{
         done = false
