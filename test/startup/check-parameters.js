@@ -2,6 +2,8 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 describe("Check startup parameters", function () {
@@ -10,29 +12,32 @@ describe("Check startup parameters", function () {
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("config_autorun", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getAutorun(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.select(1)
-        db.conn.set("config_autorun","[]")
-        db.conn.select(0)
-        db.conn.set("info_autorun", "[]")
+        await new Promise(function(resolve, reject){
+            agileService.setAutorun(null, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
 
     afterEach(async function(){
-        db.conn.select(0)
-        db.conn.set("info_autorun", localDB)
-        db.conn.select(1)
-        db.conn.set("config_autorun", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setAutorun(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 

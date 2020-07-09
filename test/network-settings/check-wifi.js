@@ -3,6 +3,8 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const {info} = require("../set-before-test.js")
 const { expect } = require("chai");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 describe("Check if a wifi saved is available", function(){
@@ -10,21 +12,40 @@ describe("Check if a wifi saved is available", function(){
     this.timeout(30000)
 
     before(async function(){
-        //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("config_network", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getNetworkConfig(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
-        //cambia database locale
-        db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[{\"ssid\":\"prova_wifi\",\"authentication\":\"WPA2-PSK\",\"encryption\":\"AES\",\"hidden\":false,\"psk\":\"cHJhaW0tYWVzLTEyOC1jYmM6wRyVyCSItEALI2T4eKVZv1Wf5tKVgxW/ALd0sseL5F3vS/UV85EkrpLv0Prels4J\"}],\"hosts\":null}")
-        await utils.start()
     }) 
 
-    after(async function(){
-        db.conn.set("config_network", localDB)
+    beforeEach(async function(){
+        //cambia database locale
+        await new Promise(function(resolve, reject){
+            agileService.setNetworkConfig({
+                hostname: null,
+                interfaces: [],
+                wifi: [
+                  {
+                    ssid: 'prova_wifi',
+                    authentication: 'WPA2-PSK',
+                    encryption: 'AES',
+                    hidden: false,
+                    psk: 'cHJhaW0tYWVzLTEyOC1jYmM6wRyVyCSItEALI2T4eKVZv1Wf5tKVgxW/ALd0sseL5F3vS/UV85EkrpLv0Prels4J'
+                  }
+                ],
+                hosts: null
+              }, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
+        await utils.start()
+    })
+
+    afterEach(async function(){
+        //db.conn.set("config_network", localDB)
         await global.app.stop()
     })
 

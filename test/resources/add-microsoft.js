@@ -3,6 +3,8 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 describe("test add microsoft resource", function(){
@@ -11,23 +13,51 @@ describe("test add microsoft resource", function(){
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("connections", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getConnections(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
         //cambia database locale
+        db.conn.select(1)
         db.conn.set("connections", "[{\"name\":\"test\",\"type\":\"RDP\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":false,\"server\":false,\"options\":{\"allow_unauthorized\":false,\"file\":\"//long_string==\",\"filename\":\"microsoft_test.rdp\"},\"id\":\"24a97819-b4ef-4d19-a137-7c6287fe75c5\"}]")
+        await new Promise(function(resolve, reject){
+            agileService.setConnections([
+                {
+                  name: 'test',
+                  type: 'RDP',
+                  autostart: false,
+                  onExitAction: '',
+                  passthrough: false,
+                  local: false,
+                  server: false,
+                  options: {
+                    allow_unauthorized: false,
+                    file: '//long_string==',
+                    filename: 'microsoft_test.rdp'
+                  },
+                  id: '24a97819-b4ef-4d19-a137-7c6287fe75c5'
+                }
+              ]
+              , (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
 
     afterEach(async function(){
-        db.conn.set("connections", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setConnections(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 

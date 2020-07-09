@@ -2,6 +2,8 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 describe("check remote assistance settings", function(){
@@ -10,25 +12,31 @@ describe("check remote assistance settings", function(){
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("remote_assistance", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getRemoteAssistanceConfig(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
-        //cambia database locale
-        db.conn.select(1)
-        db.conn.set("remote_assistance", "{\"enabled\":false,\"always_on\":{\"enabled\":false,\"password\":null},\"acceptance\":{\"allow_reject\":false,\"auto_accept\":null},\"protection\":{\"enable\":false,\"password\":\"\"},\"appearance\":{\"show_icon\":false,\"show_desktop\":false}}")
+        await new Promise(function(resolve, reject){
+            agileService.setRemoteAssistanceConfig(null, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        }) 
         await utils.start()
     }) 
 
     afterEach(async function(){
-        db.conn.select(1)
-        db.conn.set("remote_assistance", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setRemoteAssistanceConfig(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 

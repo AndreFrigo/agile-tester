@@ -3,6 +3,7 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
+const agileService = require("agile-os-interface")
 var localDB = null
 
 
@@ -13,26 +14,34 @@ describe("Choose english as language", function(){
     
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("config_locale", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getCurrentLocaleAgile(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
     
     describe("Test from spanish", async () => {
 
-        before(async function(){    
+        before(async function(){   
             //Setta spagnolo
-            db.conn.select(1)
-            db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"es-ES\"}")
+            await new Promise(function(resolve, reject){
+                agileService.setCurrentLocaleAgile("es-ES", (err,res) => {
+                    if (err) reject(err)
+                    resolve(res)
+                })
+            })
             await utils.start()
         }) 
         
         after(async function(){
-            db.conn.set("config_locale", localDB)
+            await new Promise(function(resolve, reject){
+                agileService.setCurrentLocaleAgile(localDB, (err,res) => {
+                    if (err) reject(err)
+                    resolve(res)
+                })
+            })
             await global.app.stop()
         })
         
@@ -57,13 +66,22 @@ describe("Choose english as language", function(){
 
         before(async function(){    
             //Setta italiano
-            db.conn.select(1)
-            db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"it-IT\"}")
+            await new Promise(function(resolve, reject){
+                agileService.setCurrentLocaleAgile("it-IT", (err,res) => {
+                    if (err) reject(err)
+                    resolve(res)
+                })
+            })
             await utils.start()
         }) 
 
         after(async function(){
-            db.conn.set("config_locale", localDB)
+            await new Promise(function(resolve, reject){
+                agileService.setCurrentLocaleAgile(localDB, (err,res) => {
+                    if (err) reject(err)
+                    resolve(res)
+                })
+            })
             await global.app.stop()
         })
 
@@ -88,13 +106,22 @@ describe("Choose english as language", function(){
 
         before(async function(){    
             //Setta inglese
-            db.conn.select(1)
-            db.conn.set("config_locale", "{\"current_keyboard_locale\":\"it-IT\",\"current_locale_agile\":\"en-GB\"}")
+            await new Promise(function(resolve, reject){
+                agileService.setCurrentLocaleAgile("en-GB", (err,res) => {
+                    if (err) reject(err)
+                    resolve(res)
+                })
+            })
             await utils.start()
         }) 
         
         after(async function(){
-            db.conn.set("config_locale", localDB)
+            await new Promise(function(resolve, reject){
+                agileService.setCurrentLocaleAgile(localDB, (err,res) => {
+                    if (err) reject(err)
+                    resolve(res)
+                })
+            })
             await global.app.stop()
         })
 

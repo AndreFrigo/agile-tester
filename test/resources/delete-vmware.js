@@ -3,6 +3,8 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 describe("delete VMware resource tests", function(){
@@ -11,23 +13,51 @@ describe("delete VMware resource tests", function(){
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("connections", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getConnections(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.set("connections", "[{\"name\":\"test\",\"type\":\"VMWARE\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":false,\"server\":true,\"options\":{\"url\":\"test.com\",\"allow_unauthorized\":false,\"domain\":\"\",\"hideDomain\":false,\"exclude\":{\"name\":[],\"type\":[]}},\"id\":\"066366b2-804c-4eb5-b0f5-699c8ef66a4d\"}]")
+        await new Promise(function(resolve, reject){
+            agileService.setConnections([
+                {
+                  name: 'test',
+                  type: 'VMWARE',
+                  autostart: false,
+                  onExitAction: '',
+                  passthrough: false,
+                  local: false,
+                  server: true,
+                  options: {
+                    url: 'test.com',
+                    allow_unauthorized: false,
+                    domain: '',
+                    hideDomain: false,
+                    exclude: [Object]
+                  },
+                  id: '066366b2-804c-4eb5-b0f5-699c8ef66a4d'
+                }
+              ]
+              , (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
 
     afterEach(async function(){
-        db.conn.set("connections", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setConnections(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 

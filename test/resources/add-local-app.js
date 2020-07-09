@@ -3,6 +3,8 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 describe("add local application tests", function(){
@@ -11,23 +13,52 @@ describe("add local application tests", function(){
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("connections", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getConnections(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.set("connections", "[{\"name\":\"app_test\",\"type\":\"APP\",\"autostart\":false,\"onExitAction\":\"\",\"passthrough\":false,\"local\":true,\"server\":false,\"options\":{\"path\":\"C:\\\\percorso\\\\app_test.exe\",\"filename\":\"app_test.exe\",\"args\":\"\",\"domain\":\"\",\"hideDomain\":false,\"exclude\":{\"name\":[],\"type\":[]}},\"id\":\"18a4df02-ddad-40af-8e1d-3fa31852d9f6\"}]")
+        await new Promise(function(resolve, reject){
+            agileService.setConnections([
+                {
+                  name: 'app_test',
+                  type: 'APP',
+                  autostart: false,
+                  onExitAction: '',
+                  passthrough: false,
+                  local: true,
+                  server: false,
+                  options: {
+                    path: 'C:\\percorso\\app_test.exe',
+                    filename: 'app_test.exe',
+                    args: '',
+                    domain: '',
+                    hideDomain: false,
+                    exclude: [Object]
+                  },
+                  id: '18a4df02-ddad-40af-8e1d-3fa31852d9f6'
+                }
+              ]
+              , (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
     
     afterEach(async function(){
-        db.conn.set("connections", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setConnections(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 

@@ -3,6 +3,8 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 describe("Check startup database", function(){
@@ -12,28 +14,40 @@ describe("Check startup database", function(){
     before(async function(){
         //salva database locale
         db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("config_autorun", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getAutorun(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.select(1)
-        db.conn.set("config_autorun","[{\"name\":\"test_startup\",\"command\":\"test_startup_cmd\",\"status\":true,\"statusagilemode\":false}]")
-        db.conn.select(0)
-        db.conn.set("info_autorun", "[{\"name\":\"test_startup\",\"command\":\"test_startup_cmd\",\"status\":true,\"statusagilemode\":false}]")
+        await new Promise(function(resolve, reject){
+            agileService.setAutorun([
+                {
+                  name: 'test_startup',
+                  command: 'test_startup_cmd',
+                  status: true,
+                  statusagilemode: false
+                }
+              ]
+              , (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
 
     afterEach(async function(){
-        db.conn.select(0)
-        db.conn.set("info_autorun", localDB)
-        db.conn.select(1)
-        db.conn.set("config_autorun", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setAutorun(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 

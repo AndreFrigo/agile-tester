@@ -2,6 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const agileService = require("agile-os-interface")
 var localDB = null
 
 describe("Check authentication settings", function(){
@@ -10,25 +11,32 @@ describe("Check authentication settings", function(){
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("config_auth", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getAuthentication(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.select(1)
-        db.conn.set("config_auth", "null")
+        await new Promise(function(resolve, reject){
+            agileService.setAuthentication(null, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
 
     afterEach(async function(){
-        db.conn.select(1)
-        db.conn.set("config_auth", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setAuthentication(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 

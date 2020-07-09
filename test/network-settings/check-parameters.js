@@ -2,6 +2,8 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const agileService = require("agile-os-interface")
+
 var localDB = null
 
 
@@ -13,24 +15,31 @@ describe("Check WiFi parameters", function(){
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDB = await new Promise(function (resolve, reject){
-            db.conn.get("config_network", function(err, res){
-                if(err) reject(err)
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getNetworkConfig(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
-        //cambia database locale
-        db.conn.select(1)
-        db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[],\"hosts\":null}")
+        await new Promise(function(resolve, reject){
+            agileService.setNetworkConfig(null, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
 
     afterEach(async function(){
-        db.conn.set("config_network", localDB)
+        await new Promise(function(resolve, reject){
+            agileService.setNetworkConfig(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 
