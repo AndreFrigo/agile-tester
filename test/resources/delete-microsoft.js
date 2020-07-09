@@ -2,6 +2,8 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const { info } = require("../set-before-test.js");
+
 var localDB = null
 
 describe("delete microsoft resource tests", function(){
