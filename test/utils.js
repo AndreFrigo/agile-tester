@@ -39,8 +39,7 @@ const utils={
                     try{
                         //chiude il notification pop-up
                         await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > a").click();
-                    }catch(err){
-                        console.log("errore notification "+err)
+                    }catch{
                     }
                     //TODO: se dopo il login si mette a caricare, il test parte comunque 
                 }catch{
