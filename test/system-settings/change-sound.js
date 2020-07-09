@@ -41,6 +41,7 @@ describe("set output sound", function(){
     }) 
 
     afterEach(async function(){
+        //console.log("localdbconf: "+localDBconfig+", localdbinfo: "+localDBinfo)
         db.conn.select(1)
         db.conn.set("config_audio", localDBconfig)
         db.conn.publish("config_audio", "{\"action\":\"volume_out\",\"id\":\"canale\"}")
