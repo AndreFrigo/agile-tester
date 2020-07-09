@@ -2,6 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const { info } = require("../set-before-test.js");
 var localDB = null
 
 describe("Check startup database", function(){
@@ -51,7 +52,7 @@ describe("Check startup database", function(){
 
     it("should return true if the startup is in the Agile list", async() => {
         //va in startup
-        const menu = global.app.client.$(global.STARTUP);
+        const menu = global.app.client.$(info.STARTUP);
         var click = null;
         try{
             click = await menu.click();
