@@ -1,6 +1,7 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
+const {info} = require("../set-before-test.js")
 const { expect } = require("chai");
 var localDB = null
 
@@ -36,7 +37,7 @@ describe("Check if a wifi saved is available", function(){
     it("should return true if the wifi is in the list", async () => {
 
         //Va nella sezione impostazioni di rete
-        const menu = global.app.client.$(global.NETWORK_SETTINGS);
+        const menu = global.app.client.$(info.NETWORK_SETTINGS);
         var click = null;
         try{
             click = await menu.click();
@@ -68,10 +69,10 @@ describe("Check if a wifi saved is available", function(){
         for(i = 1; i<= length; i++){
             try{
                 name = await global.app.client.$(base + " > div:nth-child(" + i + ") > div > div.block-item-properties-wrapper > div").getText();
+                if(name.slice(14) == "prova_wifi"){
+                    found = true;
+                }
             }catch{
-            }
-            if(name.slice(14) == "prova_wifi"){
-                found = true;
             }
         }
         expect(found).to.be.true
