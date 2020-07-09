@@ -2,6 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const { info } = require("../set-before-test.js");
 var localDB = null
 
 describe("add local application tests", function(){
@@ -43,7 +44,9 @@ describe("add local application tests", function(){
         expect(found).to.be.true
     })
 
-    it("should return false if it tries to add an application with the same name", async () => {
-        expect(await utils.resources.addLocalApplication("app_test", "app_test")).to.be.false
-    })
+    if(info.os != "l"){
+        it("should return false if it tries to add an application with the same name", async () => {
+            expect(await utils.resources.addLocalApplication("app_test", "app_test")).to.be.false
+        })
+    }
 })

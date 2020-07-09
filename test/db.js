@@ -6,9 +6,9 @@ const db={
     //connessione al database
     dbConnection(){
         db.conn = redis.createClient(1681);
-        if(info.env == 'w'){
+        if(info.os == 'w'){
             db.conn.auth(info.dbPassWin);
-        }else if(info.env == "l"){
+        }else if(info.os == "l"){
             db.conn.auth(info.dbPassLin)
         }
     },

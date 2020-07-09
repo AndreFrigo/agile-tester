@@ -60,7 +60,7 @@ describe("Check resource parameters", function(){
             expect(await utils.resources.addLocalBrowser(elem.name, elem.url)).to.be.true
         })
 
-        if(global.env == "w"){
+        if(info.os == "w"){
             it("should return true if the resource has been added and the success notification appeared", async () => {
                 const res = await utils.resources.addLocalBrowser(elem.name, elem.url)
                 await utils.sleep(1000)
@@ -79,7 +79,7 @@ describe("Check resource parameters", function(){
             expect(add && del).to.be.true
         })
 
-        if(global.env == "w"){
+        if(info.os == "w"){
             it("should return true if the resource has been added, deleted and both the success notification appeared", async () => {
                 var add = null
                 var del = null

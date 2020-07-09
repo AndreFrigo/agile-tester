@@ -57,7 +57,7 @@ describe("Delete local browser tests", function(){
         expect(del && found == false).to.be.true
     })
 
-    if(global.env == "w"){
+    if(info.os == "w"){
         it("should return true if a resource is deleted and the success notification appeared", async () => {
             var del = null
             var notification = null;

@@ -11,7 +11,7 @@ const utils={
     //funzione per avviare l'applicazione
     start: async function(){
         return global.app.start().then( async () => {
-            if(info.env == "w"){
+            if(info.os == "w"){
                 robot = require("robotjs")
                 
                 // minimizza il terminale vuoto
@@ -26,7 +26,7 @@ const utils={
             // await global.app.browserWindow.focus();
 
             //se siamo su linux l'applicazione non viene avviata da amministratore e quindi è necesssario inserire le credenziali
-            if(info.env == 'l'){
+            if(info.os == 'l'){
                 try{
                     await utils.sleep(500)
                     await global.app.client.$("#admin-username").setValue(info.adminUsername)

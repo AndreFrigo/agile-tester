@@ -47,7 +47,7 @@ describe("add a VMware resource tests", function(){
             expect(add && check).to.be.true
         })
 
-        if(global.env == "w"){
+        if(info.os == "w"){
             it("should return true if the resource has been added and success notification appeared", async () => {
                 var add = null
                 var notification = null
@@ -58,7 +58,7 @@ describe("add a VMware resource tests", function(){
             })
         }
 
-        if(global.env == "w"){
+        if(info.os == "w"){
             it("should return true if the resource has been added and is now in the Agile list, and success notification appeared", async () => {
                 var add = null
                 var notification = null

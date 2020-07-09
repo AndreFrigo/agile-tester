@@ -2,6 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const { info } = require("../set-before-test.js");
 var localDB = null
 
 describe("add microsoft resource parameters test", function(){
@@ -35,42 +36,44 @@ describe("add microsoft resource parameters test", function(){
     ]
 
     rightValues.forEach(elem => {
-        it("should return true if the resource has been added", async () => {
-            expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.true
-        })
-
-        it("should return true if the resource has been added and is now in the Agile list", async () => {
-            var add = null
-            var check = null
-            add = await utils.resources.addMicrosoft(elem.name, elem.info)
-            await utils.sleep(500)
-            check = await utils.resources.isInAgileList(2, elem.name)
-            expect(add && check).to.be.true
-        })
-
-        if(global.env == "w"){
-            it("should return true if the resource has been added and success notification appeared", async () => {
-                var add = null
-                var notification = null
-                add = await utils.resources.addMicrosoft(elem.name, elem.info)
-                await utils.sleep(500)
-                notification = await utils.checkSuccessNotification()
-                expect(add && notification).to.be.true
+        if(info.os != "l"){
+            it("should return true if the resource has been added", async () => {
+                expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.true
             })
-        }
-
-        if(global.env == "w"){
-            it("should return true if the resource has been added and is now in the Agile list, and success notification appeared", async () => {
+    
+            it("should return true if the resource has been added and is now in the Agile list", async () => {
                 var add = null
-                var notification = null
                 var check = null
                 add = await utils.resources.addMicrosoft(elem.name, elem.info)
                 await utils.sleep(500)
-                notification = await utils.checkSuccessNotification()
-                await utils.sleep(500)
                 check = await utils.resources.isInAgileList(2, elem.name)
-                expect(add && notification && check).to.be.true
+                expect(add && check).to.be.true
             })
+    
+            if(info.os == "w"){
+                it("should return true if the resource has been added and success notification appeared", async () => {
+                    var add = null
+                    var notification = null
+                    add = await utils.resources.addMicrosoft(elem.name, elem.info)
+                    await utils.sleep(500)
+                    notification = await utils.checkSuccessNotification()
+                    expect(add && notification).to.be.true
+                })
+            }
+    
+            if(info.os == "w"){
+                it("should return true if the resource has been added and is now in the Agile list, and success notification appeared", async () => {
+                    var add = null
+                    var notification = null
+                    var check = null
+                    add = await utils.resources.addMicrosoft(elem.name, elem.info)
+                    await utils.sleep(500)
+                    notification = await utils.checkSuccessNotification()
+                    await utils.sleep(500)
+                    check = await utils.resources.isInAgileList(2, elem.name)
+                    expect(add && notification && check).to.be.true
+                })
+            }
         }
     })
 
@@ -79,9 +82,11 @@ describe("add microsoft resource parameters test", function(){
     ]
 
     wrongValues.forEach(elem => {
-        it("should return false if some data are not correct", async () => {
-            expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.false
-        })
+        if(info.os != "l"){
+            it("should return false if some data are not correct", async () => {
+                expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.false
+            })
+        }
     })
 
 })

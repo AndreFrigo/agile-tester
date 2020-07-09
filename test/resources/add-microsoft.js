@@ -2,6 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
+const { info } = require("../set-before-test.js");
 var localDB = null
 
 describe("test add microsoft resource", function(){
@@ -40,10 +41,12 @@ describe("test add microsoft resource", function(){
     })
 
 
-    it("should return false if it tries to add a resource with the same name", async () => {
-        //deve esserci il file microsoft_test.rdp
-        expect(await utils.resources.addMicrosoft("test", "microsoft_test")).to.be.false
-    })
+    if(info.os != "l"){
+        it("should return false if it tries to add a resource with the same name", async () => {
+            //deve esserci il file microsoft_test.rdp
+            expect(await utils.resources.addMicrosoft("test", "microsoft_test")).to.be.false
+        })
+    }
 
 
     it("should return true if the resource is in the Agile list", async() => {
