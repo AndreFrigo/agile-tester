@@ -3,9 +3,9 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
-
-var localDBconfig = null
-var localDBinfo = null
+const agileService = require ("agile-os-interface")
+var localVolume = null
+var localMute = null
 
 describe("set output sound", function(){
 
@@ -13,41 +13,44 @@ describe("set output sound", function(){
 
     before(async function(){
         //salva database locale
-        db.conn.select(1)
-        localDBconfig = await new Promise(function (resolve, reject){
-            db.conn.get("config_audio", function(err, res){
-                if(err) reject(err)
+        localVolume = await new Promise(function(resolve, reject){
+            agileService.getVolume(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
-        db.conn.select(0)
-        localDBinfo = await new Promise(function (resolve, reject){
-            db.conn.get("info_audio", function(err, res){
-                if(err) reject(err)
+        localMute = await new Promise(function(resolve, reject){
+            agileService.isMute(null, (err,res) => {
+                if (err) reject(err)
                 resolve(res)
-            });
+            })
         })
     })
 
     beforeEach(async function(){
         //cambia database locale
-        db.conn.select(1)
-        db.conn.set("config_audio", "{\"out\":{\"volume\":0,\"mute\":true},\"in\":{\"volume\":0,\"mute\":false}}")
-        db.conn.publish("config_audio", "{\"action\":\"volume_out\",\"id\":\"canale\"}")
-        db.conn.select(0)
-        db.conn.set("info_audio", "{\"out\":{\"Description\":\"Speakers (Realtek(R) Audio)\",\"volume\":0,\"mute\":true},\"in\":{\"Description\":\"Microphone (Realtek(R) Audio)\",\"volume\":0,\"mute\":false}}")
-        db.conn.publish("info_audio", "{\"event\":\"audio\"}");
+        await new Promise(function(resolve, reject){
+            agileService.setVolume(0, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await utils.start()
     }) 
 
     afterEach(async function(){
-        //console.log("localdbconf: "+localDBconfig+", localdbinfo: "+localDBinfo)
-        db.conn.select(1)
-        db.conn.set("config_audio", localDBconfig)
-        db.conn.publish("config_audio", "{\"action\":\"volume_out\",\"id\":\"canale\"}")
-        db.conn.select(0)
-        db.conn.set("info_audio", localDBinfo)
-        db.conn.publish("info_audio", "{\"event\":\"audio\"}");
+        await new Promise(function(resolve, reject){
+            agileService.setVolume(localVolume, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
+        await new Promise(function(resolve, reject){
+            agileService.mute(localMute, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
         await global.app.stop()
     })
 
