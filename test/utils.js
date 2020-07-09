@@ -36,6 +36,12 @@ const utils={
                     await global.app.client.$("#license-wrapper > div > div.col.s12.license-body > div > div.col.s3 > a").click()
                     await utils.sleep(500)
                     await global.app.client.waitUntilWindowLoaded()
+                    try{
+                        //chiude il notification pop-up
+                        await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > a").click();
+                    }catch(err){
+                        console.log("errore notification "+err)
+                    }
                     //TODO: se dopo il login si mette a caricare, il test parte comunque 
                 }catch{
                     console.log("Errore autenticazione")
