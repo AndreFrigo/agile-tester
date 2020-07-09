@@ -1,9 +1,8 @@
 const {db} = require ("./db.js");
 const {global} = require ("./global.js");
 const {info} = require("./set-before-test.js")
-//const robot = require("robotjs")
+var robot = null
 const path = require("path")
-const robot = null
 
 const utils={
     //funzione di wait
@@ -12,11 +11,15 @@ const utils={
     //funzione per avviare l'applicazione
     start: async function(){
         return global.app.start().then( async () => {
-            //minimizza il terminale vuoto
-            // await robot.keyToggle("space", "down", ["alt"])
-            // await robot.keyTap("n")
-            // await utils.sleep(500)
-            // await robot.keyToggle("space", "up", ["alt"])
+            if(info.env == "w"){
+                robot = require("robotjs")
+                
+                // minimizza il terminale vuoto
+                await robot.keyToggle("space", "down", ["alt"])
+                await robot.keyTap("n")
+                await utils.sleep(500)
+                await robot.keyToggle("space", "up", ["alt"])
+            }
 
             // //setta l'applicazione come finestra principale 
             // await global.app.browserWindow.setAlwaysOnTop(true);
