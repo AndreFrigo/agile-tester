@@ -1,5 +1,6 @@
 const {db} = require ("./db.js");
 const {global} = require ("./global.js");
+const {info} = require("./set-before-test.js")
 //const robot = require("robotjs")
 const path = require("path")
 const robot = null
@@ -22,12 +23,12 @@ const utils={
             // await global.app.browserWindow.focus();
 
             //se siamo su linux l'applicazione non viene avviata da amministratore e quindi è necesssario inserire le credenziali
-            if(global.env == 'l'){
+            if(info.env == 'l'){
                 try{
                     await utils.sleep(500)
-                    await global.app.client.$("#admin-username").setValue(global.adminUsername)
+                    await global.app.client.$("#admin-username").setValue(info.adminUsername)
                     await utils.sleep(500)
-                    await global.app.client.$("#admin-password").setValue(global.adminPassword)
+                    await global.app.client.$("#admin-password").setValue(info.adminPassword)
                     await utils.sleep(500)
                     await global.app.client.$("#license-wrapper > div > div.col.s12.license-body > div > div.col.s3 > a").click()
                     await utils.sleep(500)
@@ -126,7 +127,7 @@ const utils={
 
             var done = true
             //va in risorse
-            const menu = global.app.client.$(global.RESOURCES);
+            const menu = global.app.client.$(info.RESOURCES);
             try{
                 await menu.click();
             }catch{
@@ -210,7 +211,7 @@ const utils={
         deleteResource: async function(name){
             var done = true
             //va in risorse
-            const menu = global.app.client.$(global.RESOURCES);
+            const menu = global.app.client.$(info.RESOURCES);
             try{
                 await menu.click();
             }catch{
@@ -272,7 +273,7 @@ const utils={
         isInAgileList: async function(type, name){
             var done = true
             //va in risorse
-            const menu = global.app.client.$(global.RESOURCES);
+            const menu = global.app.client.$(info.RESOURCES);
             try{
                 await menu.click();
             }catch{
@@ -351,7 +352,7 @@ const utils={
         addLocalApplication: async function(resourceName, resourceInfo){
             var done = true
             //va in risorse
-            const menu = global.app.client.$(global.RESOURCES);
+            const menu = global.app.client.$(info.RESOURCES);
             var click = null;
             try{
                 await menu.click();
@@ -441,7 +442,7 @@ const utils={
         addCitrix: async function(name, server, domain){
             var done = true
             //va in risorse
-            const menu = global.app.client.$(global.RESOURCES);
+            const menu = global.app.client.$(info.RESOURCES);
             var click = null;
             try{
                 await menu.click();
@@ -529,10 +530,10 @@ const utils={
 
         },
         //return true se la risorsa è stata aggiunta, altrimenti false, null se ci sono errori
-        addMicrosoft: async function(name, info){
+        addMicrosoft: async function(name, resourceInfo){
             var done = true
             //va in risorse
-            const menu = global.app.client.$(global.RESOURCES);
+            const menu = global.app.client.$(info.RESOURCES);
             var click = null;
             try{
                 await menu.click();
@@ -593,7 +594,7 @@ const utils={
 
 
             //inserisce il nome del file nel file picker (deve trovarsi nella directory agile-tester/files)
-            if(await utils.fileChooser(info) == false){
+            if(await utils.fileChooser(resourceInfo) == false){
                 done = false
             }
 
@@ -622,7 +623,7 @@ const utils={
         addVMware: async function(name, server){
             var done = true
             //va in risorse
-            const menu = global.app.client.$(global.RESOURCES);
+            const menu = global.app.client.$(info.RESOURCES);
             var click = null;
             try{
                 await menu.click();
@@ -708,7 +709,7 @@ const utils={
         checkSsid : async function (ssid) {
             var done = true
             //Va nella sezione impostazioni di rete
-            const menu = global.app.client.$(global.NETWORK_SETTINGS);
+            const menu = global.app.client.$(info.NETWORK_SETTINGS);
             try{
                 await menu.click();
             }catch{
@@ -815,7 +816,7 @@ const utils={
         //ritorna true se ha creato la regola, altrimenti false, null se qualcosa non ha funzionato
         addRule: async function (vid, pid){
             var done = true
-            const menu = global.app.client.$(global.DEVICE_LOCK);
+            const menu = global.app.client.$(info.DEVICE_LOCK);
             var click = null;
             try{
                 await menu.click();
@@ -880,7 +881,7 @@ const utils={
         deleteRule: async function(vid, pid){
             var done = true
             //va in impostazioi
-            const menu = global.app.client.$(global.DEVICE_LOCK);
+            const menu = global.app.client.$(info.DEVICE_LOCK);
             try{
                 await menu.click();
             }catch{
@@ -935,7 +936,7 @@ const utils={
         isInAgileList: async function(vid, pid){
             var done = true
             //apre device lock menu
-            const menu = global.app.client.$(global.DEVICE_LOCK);
+            const menu = global.app.client.$(info.DEVICE_LOCK);
             try{
                 await menu.click();
             }catch{
@@ -979,7 +980,7 @@ const utils={
         addAddress: async function(address, port, timeout){
             var done = true
             //va in thinman settings
-            const menu = global.app.client.$(global.THINMAN_SETTINGS);
+            const menu = global.app.client.$(info.THINMAN_SETTINGS);
             try{
                 await menu.click();
             }catch{
@@ -1090,7 +1091,7 @@ const utils={
         deleteAddress: async function(address){
             var done = true
             //va in thinman settings
-            const menu = global.app.client.$(global.THINMAN_SETTINGS);
+            const menu = global.app.client.$(info.THINMAN_SETTINGS);
             try{
                 await menu.click();
             }catch{
@@ -1150,7 +1151,7 @@ const utils={
         isInAgileList: async function(address){
             var done = true
             //va in thinman settings
-            const menu = global.app.client.$(global.THINMAN_SETTINGS);
+            const menu = global.app.client.$(info.THINMAN_SETTINGS);
             try{
                 await menu.click();
             }catch{
@@ -1206,7 +1207,7 @@ const utils={
         addRule: async function(description, vid, pid){
             var done = true
             //Apre menù USB Redirection
-            const menu = global.app.client.$(global.USB_REDIRECTION);
+            const menu = global.app.client.$(info.USB_REDIRECTION);
             try{
                 await menu.click();
             }catch{
@@ -1294,7 +1295,7 @@ const utils={
         deleteRule: async function(vid, pid){
             var done = true
             //Apre menù USB Redirection
-            const menu = global.app.client.$(global.USB_REDIRECTION);
+            const menu = global.app.client.$(info.USB_REDIRECTION);
             var click = null;
             try{
                 await menu.click();
@@ -1347,7 +1348,7 @@ const utils={
         findRule: async function(vid, pid){
             var done = true
             //apre menu usb redirection
-            const menu = global.app.client.$(global.USB_REDIRECTION);
+            const menu = global.app.client.$(info.USB_REDIRECTION);
             try{
                 await menu.click();
             }catch{
@@ -1394,7 +1395,7 @@ const utils={
         addStartup: async function(name, command){
             var done = true
             //va in startup
-            const menu = global.app.client.$(global.STARTUP);
+            const menu = global.app.client.$(info.STARTUP);
             try{
                 await menu.click();
             }catch{
@@ -1467,7 +1468,7 @@ const utils={
         enableRemoteAssistance: async function(){
             var done = true
             //va nella sezione remote assistance
-            const menu = global.app.client.$(global.REMOTE_ASSISTANCE);
+            const menu = global.app.client.$(info.REMOTE_ASSISTANCE);
             try{
                 await menu.click();
             }catch{
@@ -1581,7 +1582,7 @@ const utils={
             
             
             //preme sul menù per confermare 
-            const menu = global.app.client.$(global.REMOTE_ASSISTANCE);
+            const menu = global.app.client.$(info.REMOTE_ASSISTANCE);
             try{
                 await menu.click();
             }catch{
@@ -1608,7 +1609,7 @@ const utils={
         checkWifiAuthenticationSsid: async function(ssid){
             var done = true
             //va nella sezione agile authentication
-            const menu = global.app.client.$(global.AGILE_AUTHENTICATION);
+            const menu = global.app.client.$(info.AGILE_AUTHENTICATION);
             try{
                 await menu.click();
             }catch{
@@ -1718,7 +1719,7 @@ const utils={
 
             //clicca altrove per confermare 
             try{
-                global.app.client.$(global.AGILE_AUTHENTICATION).click()
+                global.app.client.$(info.AGILE_AUTHENTICATION).click()
             }catch{
                 done = false
             }
