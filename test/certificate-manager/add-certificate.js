@@ -47,7 +47,6 @@ describe("Check add certificate", function(){
             first = await utils.certificateManager.addCertificate("DigiCertGlobalRootCA")
             await utils.sleep(500)
             second = await utils.certificateManager.addCertificate("DigiCertGlobalRootCA")
-            console.log("first: "+first+", second: "+second)
             expect(!(first && second == false)).to.be.false
         })
     }
