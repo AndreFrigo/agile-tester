@@ -1060,11 +1060,14 @@ const utils={
                 t.click()
                 const val = timeout.toString()
                 await new Promise(function (resolve, reject){
-                    t.getValue().then(function(result){
+                    t.getValue().then(async function(result){
                         //cancella il valore predefinito
                         for(i=0;i<result.length;i++){	
                             global.app.client.keys("Backspace");	
                         }
+
+                        await utils.sleep(500)
+
                         //inserisce manualmente il valore da settare
                         for(i=0;i<val.length;i++){
                             global.app.client.keys(val[i])
