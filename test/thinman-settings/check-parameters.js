@@ -62,7 +62,6 @@ describe("Check address parameters", function(){
 
     const rightValues = [
         {address:"test", port:123, timeout:123},
-        {address:"ggg", port:123, timeout:0},
         {address:"sdf", port:123, timeout:3e2}
     ]
     rightValues.forEach(elem => {
@@ -103,5 +102,50 @@ describe("Check address parameters", function(){
             //controlla che entrambe siano andate a buon fine
             expect(add && del && list == false).to.be.true
         })
+    })
+
+    const realValues = [
+        {address:"10.1.138.224", port:443, timeout:15},
+        {address:"av-praim.com", port:4443, timeout:15}
+    ]
+    realValues.forEach(elem => {
+        it("should return true if the address has been added", async () => {
+            expect(await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)).to.be.true
+        })
+
+        it("should return true if an address has been created and then deleted successfully", async () => {
+
+            //crea l'address
+            const add = await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)
+
+            await utils.sleep(1500)
+
+            //elimina l'address creato
+            const del = await utils.thinmanSettings.deleteAddress(elem.address)
+
+            //controlla che entrambe siano andate a buon fine
+            expect(add && del).to.be.true
+        })
+
+        it("should return true if an address has been created, deleted and is not in the list anymore", async () => {
+            
+            //crea l'address
+            const add = await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)
+
+            await utils.sleep(1000)
+
+            //elimina l'address creato
+            const del = await utils.thinmanSettings.deleteAddress(elem.address)
+
+            await utils.sleep(1000)
+
+            //controlla che non sia nella lista
+            const list = await utils.thinmanSettings.isInAgileList(elem.address)
+
+            //controlla che entrambe siano andate a buon fine
+            expect(add && del && list == false).to.be.true
+        })
+
+        //TODO: test connessione
     })
 })
