@@ -68,7 +68,7 @@ describe("Check startup parameters", function () {
         it("should return true if the startup was added and the notification appeared", async () => {
             const res = await utils.startup.addStartup(elem.name, elem.command)
             await utils.sleep(1000)
-            const notification = await utils.checkSuccessNotification()
+            const notification = await utils.checkNotification("success")
             expect(res && notification).to.be.true
         })
     })

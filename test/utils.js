@@ -49,8 +49,9 @@ const utils={
         })
     },
 
-    //return true se è apparso un pop up di successo, altrimenti false 
-    checkSuccessNotification: async function(){
+    //return true se è apparso il pop up , altrimenti false 
+    //param type: tipo di notifica: success | warning
+    checkNotification: async function(type){
         var notification = null
         try{
             //titolo del pop-up
@@ -60,22 +61,25 @@ const utils={
         }
         //aggiorna lingua
         const language = await db.dbLanguage()
-        var succ = null
+        var not = null
         switch(language){
             case 1: {
-                succ = "Successo"
+                if(type == "success") not = "Successo"
+                else if(type == "warning") not = "Attenzione"
                 break
             }
             case 2: {
-                succ = "Success"
+                if(type == "success") not = "Success"
+                else if(type == "warning") not = "Warning"
                 break
             }
             case 3: {
-                succ = "Exito"
+                if(type == "success") not = "Exito"
+                else if(type == "warning") not = "Atención"
                 break
             }
         }
-        return notification == succ
+        return notification == not
     },
 
     //seleziona il file con il nome dato in input nella cartella agile-tester/files
@@ -1267,7 +1271,7 @@ const utils={
 
             await utils.sleep(1500)
 
-            const succ = await utils.checkSuccessNotification()
+            const succ = await utils.checkNotification("success")
 
             if(done){
                 return t != null && succ

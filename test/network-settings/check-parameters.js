@@ -79,7 +79,7 @@ describe("Check WiFi parameters", function(){
         it("should return true if the wifi has been added correctly and success notification appeared", async () => {
             const res = await utils.networkSettings.saveWifi(elem.ssid, elem.psw)
             await utils.sleep(1000)
-            const notification = await utils.checkSuccessNotification()
+            const notification = await utils.checkNotification("success")
             expect(res != null && notification).to.be.true
         })
     })

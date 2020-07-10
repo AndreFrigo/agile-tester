@@ -67,7 +67,7 @@ describe("add microsoft resource parameters test", function(){
                     var notification = null
                     add = await utils.resources.addMicrosoft(elem.name, elem.info)
                     await utils.sleep(500)
-                    notification = await utils.checkSuccessNotification()
+                    notification = await utils.checkNotification("success")
                     expect(add && notification).to.be.true
                 })
             }
@@ -79,7 +79,7 @@ describe("add microsoft resource parameters test", function(){
                     var check = null
                     add = await utils.resources.addMicrosoft(elem.name, elem.info)
                     await utils.sleep(500)
-                    notification = await utils.checkSuccessNotification()
+                    notification = await utils.checkNotification("success")
                     await utils.sleep(500)
                     check = await utils.resources.isInAgileList(2, elem.name)
                     expect(add && notification && check).to.be.true

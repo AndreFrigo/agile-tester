@@ -76,7 +76,7 @@ describe("Check resource parameters", function(){
             it("should return true if the resource has been added and the success notification appeared", async () => {
                 const res = await utils.resources.addLocalBrowser(elem.name, elem.url)
                 await utils.sleep(1000)
-                const notification = await utils.checkSuccessNotification()
+                const notification = await utils.checkNotification("success")
                 expect(res && notification).to.be.true
             })
         }
@@ -99,11 +99,11 @@ describe("Check resource parameters", function(){
                 var notDel = null
                 add = await utils.resources.addLocalBrowser(elem.name, elem.url)
                 await utils.sleep(1000)
-                notAdd = await utils.checkSuccessNotification()
+                notAdd = await utils.checkNotification("success")
                 await utils.sleep(1000)
                 del = await utils.resources.deleteResource(elem.name)
                 await utils.sleep(1000)
-                notDel = await utils.checkSuccessNotification()
+                notDel = await utils.checkNotification("success")
                 await utils.sleep(500)
                 expect(add && notAdd && del && notDel).to.be.true
             })

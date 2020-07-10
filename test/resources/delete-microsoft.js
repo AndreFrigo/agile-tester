@@ -97,7 +97,7 @@ describe("delete microsoft resource tests", function(){
             
             await utils.sleep(1000)
     
-            notification = await utils.checkSuccessNotification()
+            notification = await utils.checkNotification("success")
             expect(del && notification).to.be.true
         })
     }

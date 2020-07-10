@@ -57,7 +57,7 @@ describe("Add a local resource tests", function(){
                     var notification = null
                     add = await utils.resources.addLocalApplication(element.name, element.info)
                     await utils.sleep(500)
-                    notification = await utils.checkSuccessNotification()
+                    notification = await utils.checkNotification("success")
                     expect(add && notification).to.be.true
                 })
             }
@@ -78,7 +78,7 @@ describe("Add a local resource tests", function(){
                     var check = null
                     add = await utils.resources.addLocalApplication(element.name, element.info)
                     await utils.sleep(500)
-                    notification = await utils.checkSuccessNotification()
+                    notification = await utils.checkNotification("success")
                     await utils.sleep(500)
                     check = await utils.resources.isInAgileList(5, element.name)
                     expect(add && notification && check).to.be.true

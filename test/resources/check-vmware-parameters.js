@@ -64,7 +64,7 @@ describe("add a VMware resource tests", function(){
                 var notification = null
                 add = await utils.resources.addVMware(elem.name, elem.info)
                 await utils.sleep(500)
-                notification = await utils.checkSuccessNotification()
+                notification = await utils.checkNotification("success")
                 expect(add && notification).to.be.true
             })
         }
@@ -76,7 +76,7 @@ describe("add a VMware resource tests", function(){
                 var check = null
                 add = await utils.resources.addVMware(elem.name, elem.info)
                 await utils.sleep(500)
-                notification = await utils.checkSuccessNotification()
+                notification = await utils.checkNotification("success")
                 await utils.sleep(500)
                 check = await utils.resources.isInAgileList(3, elem.name)
                 expect(add && notification && check).to.be.true
