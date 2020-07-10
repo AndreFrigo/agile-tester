@@ -7,7 +7,7 @@ const {info} = require("../set-before-test.js")
 
 var localDB = null
 
-describe("Check add certificate", function(){
+describe("Check certificate parameters", function(){
 
     this.timeout(30000)
 
