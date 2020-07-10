@@ -1815,6 +1815,93 @@ const utils={
                 return null
             }   
         }
+    },
+
+    certificateManager: {
+        getAgileListLength: async function(){
+            var done = true
+            //va in certificati
+            const menu = global.app.client.$(info.CERTIFICATE_MANAGER);
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //itera nella lista e ne conta le righe 
+            const list = "#main-div > div.main-content > main > section > div.section-wrapper"
+            var num = 0
+            var cont = true
+            var x = null
+            while(cont){
+                x=null
+                try{
+                    x = await global.app.client.$(list + " > div:nth-child("+num+1+") > div").getHTML()
+                    if(x != null) num++
+                }catch{
+                    cont = false
+                }
+            }
+
+            if(done){
+                return num
+            }else{
+                return null
+            }
+        },
+        
+        addCertificate: async function(name){
+
+            const certNumber = await utils.certificateManager.getAgileListLength()
+            var done = true
+            //va in certificati
+            const menu = global.app.client.$(info.CERTIFICATE_MANAGER);
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //clicca su import certificate
+            const importCertificate = global.app.client.$("#main-div > div.main-content > main > section > div.fixed-header > div > div > div.waves-effect.btn-flat > span > i");
+            try{
+                await importCertificate.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+            //inserisce il nome del file nel file picker (deve trovarsi nella directory agile-tester/files)
+            if(await utils.fileChooser(name) == false){
+                done = false
+            }
+
+            await utils.sleep(1000)
+
+            var ret = false
+            if(await utils.certificateManager.getAgileListLength() > certNumber){
+                ret = true
+            }
+
+            if(done){
+                return ret
+            }else{
+                return null
+            }
+        }
     }
     
 }
