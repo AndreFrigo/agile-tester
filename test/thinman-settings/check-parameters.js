@@ -24,7 +24,15 @@ describe("Check address parameters", function(){
     beforeEach(async function(){
         //cambia database locale
         await new Promise(function(resolve, reject){
-            agileService.setThinmanConfig(null, (err,res) => {
+            agileService.setThinmanConfig({
+                address: [],
+                dhcp_opt: 163,
+                enabled: false,
+                fallback: 'use_device',
+                listening_port: 443,
+                automatic_port: true
+              }
+              , (err,res) => {
                 if (err) reject(err)
                 resolve(res)
             })
