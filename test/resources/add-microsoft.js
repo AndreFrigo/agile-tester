@@ -9,7 +9,7 @@ var localDB = null
 
 describe("test add microsoft resource", function(){
 
-    this.timeout(30000)
+    this.timeout(50000)
 
     before(async function(){
         //salva database locale
