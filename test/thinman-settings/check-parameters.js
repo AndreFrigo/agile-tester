@@ -146,6 +146,11 @@ describe("Check address parameters", function(){
             expect(add && del && list == false).to.be.true
         })
 
-        //TODO: test connessione
+        it("should return true if the address has been added and the connection is working", async () => {
+            const add = await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)
+            await utils.sleep(500)
+            const succ = await utils.thinmanSettings.testAddress(elem.address)
+            expect(add && succ).to.be.true
+        })
     })
 })

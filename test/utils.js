@@ -1207,6 +1207,70 @@ const utils={
                 return null
             }
             
+        },
+
+        //return true se ha premuto sul bottone test ed è apparsa la notifica di successo, altrimenti false, null se qualcosa non ha funzionato
+        testAddress: async function(address){
+            var done = true
+            //va in thinman settings
+            const menu = global.app.client.$(info.THINMAN_SETTINGS);
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //numero di address agile 
+            const length = await db.getThinManListLength();
+            var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
+            var child = null;
+            //selector per il bottone da premere
+            var test = null;
+            //aggiorno lingua
+            const language = await db.dbLanguage()
+            //string per html che dipende dalla lingua in uso
+            var indirizzo = null;
+            if(language == 1) indirizzo = "Indirizzo"
+            else if(language == 2) indirizzo = "Address"
+            else if(language == 3) indirizzo = "Dirección"
+            
+            for(i=1;i<=length;i++){
+                //cerco l'address che voglio eliminare
+                child = thinman + " > li:nth-child("+i+") > div > div"
+                //guardo se gli address corrispondono
+                var x = null;
+                try{
+                    x = await global.app.client.$(child + " > div.address-info > div").getHTML();
+                }catch{
+                    done = false
+                }
+                if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
+                    //salvo elemento da testare per testarlo in seguito
+                    test = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div:nth-child(2) > a";
+                }
+            } 
+            //bottone da premere per testare l'elemento
+            var t = null;
+            try{
+                t = await global.app.client.$(test).click();
+            }catch{
+                t = null
+            }
+
+            await utils.sleep(1500)
+
+            const succ = await utils.checkSuccessNotification()
+
+            if(done){
+                return t != null && succ
+            }else{
+                return null
+            }
         }
     },
 
