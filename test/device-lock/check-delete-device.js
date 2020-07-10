@@ -33,7 +33,7 @@ describe("check delete device", function(){
 
     afterEach(async function(){
         await new Promise(function(resolve, reject){
-            agileService.getUsbLock(null, (err,res) => {
+            agileService.setUsbLock(localDB, (err,res) => {
                 if (err) reject(err)
                 resolve(res)
             })
