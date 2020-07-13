@@ -24,7 +24,7 @@ describe("Choose english as language", function(){
     
     describe("Test from spanish", async () => {
 
-        before(async function(){   
+        beforeEach(async function(){   
             //Setta spagnolo
             await new Promise(function(resolve, reject){
                 agileService.setCurrentLocaleAgile("es-ES", (err,res) => {
@@ -35,7 +35,7 @@ describe("Choose english as language", function(){
             await utils.start()
         }) 
         
-        after(async function(){
+        afterEach(async function(){
             await new Promise(function(resolve, reject){
                 agileService.setCurrentLocaleAgile(localDB, (err,res) => {
                     if (err) reject(err)
@@ -45,18 +45,29 @@ describe("Choose english as language", function(){
             await global.app.stop()
         })
         
-        it("should return true if the language changed to english", async () => {
+        it("should return true if the language changed to english and db language is correct", async () => {
             var change = null
             change = await chooseEnglish(3)
             var ret = false
             await utils.sleep(1500)
             const lan = await db.dbLanguage()
             ret = (lan == 2)
-            expect(ret).to.be.true
+            expect(change && ret).to.be.true
         })
         
-        it("should return true if agile and database language are the same", async () => {
-            expect(await isSameLanguage()).to.be.true
+        it("should return true if the language changed to english and Agile language is correct", async () => {
+            var change = null
+            change = await chooseEnglish(3)
+            var ret = false
+            await utils.sleep(1500)
+            var lan = null
+            try{
+                lan = await global.app.client.$(info.SYSTEM_SETTINGS).getText()
+            }catch{
+                lan = null
+            }
+            ret = (lan == "System Settings")
+            expect(change && ret).to.be.true
         })
         
     })
@@ -64,7 +75,7 @@ describe("Choose english as language", function(){
     
     describe("Test from italian", async () => {
 
-        before(async function(){    
+        beforeEach(async function(){    
             //Setta italiano
             await new Promise(function(resolve, reject){
                 agileService.setCurrentLocaleAgile("it-IT", (err,res) => {
@@ -75,7 +86,7 @@ describe("Choose english as language", function(){
             await utils.start()
         }) 
 
-        after(async function(){
+        afterEach(async function(){
             await new Promise(function(resolve, reject){
                 agileService.setCurrentLocaleAgile(localDB, (err,res) => {
                     if (err) reject(err)
@@ -95,8 +106,19 @@ describe("Choose english as language", function(){
             expect(change && ret).to.be.true
         })
         
-        it("should return true if agile and database language are the same", async () => {
-            expect(await isSameLanguage()).to.be.true
+        it("should return true if the language changed to english and Agile language is correct", async () => {
+            var change = null
+            change = await chooseEnglish(1)
+            var ret = false
+            await utils.sleep(1500)
+            var lan = null
+            try{
+                lan = await global.app.client.$(info.SYSTEM_SETTINGS).getText()
+            }catch{
+                lan = null
+            }
+            ret = (lan == "System Settings")
+            expect(change && ret).to.be.true
         })
 
     })
@@ -104,7 +126,7 @@ describe("Choose english as language", function(){
 
     describe("Test from english", async () => {
 
-        before(async function(){    
+        beforeEach(async function(){    
             //Setta inglese
             await new Promise(function(resolve, reject){
                 agileService.setCurrentLocaleAgile("en-GB", (err,res) => {
@@ -115,7 +137,7 @@ describe("Choose english as language", function(){
             await utils.start()
         }) 
         
-        after(async function(){
+        afterEach(async function(){
             await new Promise(function(resolve, reject){
                 agileService.setCurrentLocaleAgile(localDB, (err,res) => {
                     if (err) reject(err)
@@ -135,8 +157,19 @@ describe("Choose english as language", function(){
             expect(change && ret).to.be.true
         })
 
-        it("should return true if agile and database language are the same", async () => {
-            expect(await isSameLanguage()).to.be.true
+        it("should return true if the language changed to english and Agile language is correct", async () => {
+            var change = null
+            change = await chooseEnglish(2)
+            var ret = false
+            await utils.sleep(1500)
+            var lan = null
+            try{
+                lan = await global.app.client.$(info.SYSTEM_SETTINGS).getText()
+            }catch{
+                lan = null
+            }
+            ret = (lan == "System Settings")
+            expect(change && ret).to.be.true
         })
         
     })
