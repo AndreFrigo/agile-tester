@@ -15,34 +15,26 @@ describe("Check WiFi parameters", function(){
 
     before(async function(){
         //salva database locale
-        localDB = await new Promise(function(resolve, reject){
-            agileService.getNetworkConfig(null, (err,res) => {
-                if (err) reject(err)
+        db.conn.select(1)
+        localDB = await new Promise(function (resolve, reject){
+            db.conn.get("config_network", function(err, res){
+                if(err) reject(err)
                 resolve(res)
-            })
+            });
         })
     })
 
     beforeEach(async function(){
-        await new Promise(function(resolve, reject){
-            agileService.setNetworkConfig(null, (err,res) => {
-                if (err) reject(err)
-                resolve(res)
-            })
-        })
+        //cambia database locale
+        db.conn.select(1)
+        db.conn.set("config_network", "{\"hostname\":null,\"interfaces\":[],\"wifi\":[],\"hosts\":null}")
         await utils.start()
     }) 
 
     afterEach(async function(){
-        await new Promise(function(resolve, reject){
-            agileService.setNetworkConfig(localDB, (err,res) => {
-                if (err) reject(err)
-                resolve(res)
-            })
-        })
+        db.conn.set("config_network", localDB)
         await global.app.stop()
     })
-
 
     const wrongSsid = [
         {ssid:"", psw:123455555},
