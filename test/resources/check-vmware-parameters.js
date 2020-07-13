@@ -42,7 +42,7 @@ describe("add a VMware resource tests", function(){
     })
 
     const rightValues = [
-        //{name: "test", info: "test.com"}
+        {name: "test", info: "test.com"}
     ]
     rightValues.forEach(elem => {
         it("should return true if the resource has been added", async () => {
@@ -92,6 +92,30 @@ describe("add a VMware resource tests", function(){
     wrongValues.forEach(elem => {
         it("should return false if some data are wrong", async () => {
             expect(await utils.resources.addVMware(elem.name, elem.info)).to.be.false
+        })
+    })
+
+    const realValues = [
+        {name: "rv", info: "https://hview75.sup.praim.com"}
+    ]
+    realValues.forEach(elem => {
+        it("should return true if the resource has been added and is now in the Agile list", async () => {
+            var add = null
+            var check = null
+            add = await utils.resources.addVMware(elem.name, elem.info)
+            await utils.sleep(500)
+            check = await utils.resources.isInAgileList(3, elem.name)
+            expect(add && check).to.be.true
+        })
+
+        it("should return true if the resource has been added and the test connection success", async () => {
+            var add = null
+            var test = null
+            add = await utils.resources.addVMware(elem.name, elem.info)
+            await utils.sleep(2500)
+            test = await utils.resources.test(3, elem.name)
+            await utils.sleep(500)
+            expect(add && test).to.be.true
         })
     })
 })
