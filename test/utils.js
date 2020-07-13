@@ -10,43 +10,55 @@ const utils={
 
     //funzione per avviare l'applicazione
     start: async function(){
-        return global.app.start().then( async () => {
-            if(info.os == "w"){
-                robot = require("robotjs")
-                
-                // minimizza il terminale vuoto
-                await robot.keyToggle("space", "down", ["alt"])
-                await robot.keyTap("n")
+        await global.app.start()
+        
+        //se siamo su windows si utilizza robotjs
+        if(info.os == "w"){
+            robot = require("robotjs")
+            
+            // minimizza il terminale vuoto
+            await robot.keyToggle("space", "down", ["alt"])
+            await robot.keyTap("n")
+            await utils.sleep(500)
+            await robot.keyToggle("space", "up", ["alt"])
+        }
+
+        // //setta l'applicazione come finestra principale 
+        // await global.app.browserWindow.setAlwaysOnTop(true);
+        // await global.app.browserWindow.focus();
+
+        //se siamo su linux l'applicazione non viene avviata da amministratore e quindi è necesssario inserire le credenziali
+        if(info.os == 'l'){
+            try{
                 await utils.sleep(500)
-                await robot.keyToggle("space", "up", ["alt"])
-            }
-
-            // //setta l'applicazione come finestra principale 
-            // await global.app.browserWindow.setAlwaysOnTop(true);
-            // await global.app.browserWindow.focus();
-
-            //se siamo su linux l'applicazione non viene avviata da amministratore e quindi è necesssario inserire le credenziali
-            if(info.os == 'l'){
+                await global.app.client.$("#admin-username").setValue(info.adminUsername)
+                await utils.sleep(500)
+                await global.app.client.$("#admin-password").setValue(info.adminPassword)
+                await utils.sleep(500)
+                await global.app.client.$("#license-wrapper > div > div.col.s12.license-body > div > div.col.s3 > a").click()
+                await utils.sleep(500)
+                await global.app.client.waitUntilWindowLoaded()
                 try{
-                    await utils.sleep(500)
-                    await global.app.client.$("#admin-username").setValue(info.adminUsername)
-                    await utils.sleep(500)
-                    await global.app.client.$("#admin-password").setValue(info.adminPassword)
-                    await utils.sleep(500)
-                    await global.app.client.$("#license-wrapper > div > div.col.s12.license-body > div > div.col.s3 > a").click()
-                    await utils.sleep(500)
-                    await global.app.client.waitUntilWindowLoaded()
-                    try{
-                        //chiude il notification pop-up
-                        await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > a").click();
-                    }catch{
-                    }
-                    //TODO: se dopo il login si mette a caricare, il test parte comunque 
+                    //chiude il notification pop-up
+                    await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > a").click();
                 }catch{
-                    console.log("Errore autenticazione")
                 }
+            }catch{
+                console.log("Errore autenticazione")
             }
-        })
+        }
+
+        //Dopo il login attende che l'applicazione sia completamente avviata e non in caricamento
+        var ok = null
+        while(ok == null){
+            try{
+                ok = await global.app.client.$(info.ABOUT).getText()
+            }catch{
+                ok = null
+                await utils.sleep(1000)
+            }
+        }
+        
     },
 
     //return true se è apparso il pop up , altrimenti false 

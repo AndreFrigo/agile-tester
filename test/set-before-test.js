@@ -22,6 +22,7 @@ const info={
     path: null,
 
     //ids
+    ABOUT: null,
     SYSTEM_SETTINGS: null,
     NETWORK_SETTINGS: null,
     THINMAN_SETTINGS: null,
@@ -46,6 +47,7 @@ before(function(){
 
     //id per windows e linux
     if(info.os == 'w' || info.os == 'l'){
+        info.ABOUT = "#menu-link-0"
         info.SYSTEM_SETTINGS = '#menu-link-1'
         info.NETWORK_SETTINGS = '#menu-link-2'
         info.THINMAN_SETTINGS = '#menu-link-3'
