@@ -2021,8 +2021,8 @@ const utils={
 
             //spunta ignora errori ssl
             try{
-                if(await global.app.client.$("#ignoreSSL").getValue() == false){
-                    await global.app.client.$("#ignoreSSL").click()
+                if(await global.app.client.$("#ignoreSSL").getValue() == "false"){
+                    await global.app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row.align-children.top-element > div.col.s4 > div > label").click()
                 }
             }catch{
                 done = false
