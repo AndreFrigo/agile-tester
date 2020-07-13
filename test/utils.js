@@ -91,7 +91,7 @@ const utils={
                 break
             }
         }
-        return notification == not
+        return notification == not && notification != null
     },
     //output titolo della notifica
     waitNotification: async function(){
