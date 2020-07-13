@@ -55,8 +55,9 @@ describe("Check startup parameters", function () {
         })
     })
 
+    //c'è il problema che anche pulendo il db, gli startup vengono presi dal sistema e quindi in rightValues non va messo test_startup perchè altrimenti l'altro test fallirebbe
     const rightValues = [
-        {name: "test_startup", command: "command_startup"}
+        {name: "startup_name", command: "command_startup"}
     ]
 
     rightValues.forEach(elem => {

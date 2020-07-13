@@ -196,9 +196,10 @@ const db={
     //output: 
         //elem: elemento da cercare, null se nessun elemento è stato trovato 
     getStartup: async function(name){
-        db.conn.select(1)
+        //select 0 perchè le funzioni getAutorun e setAutorun lavorano su quello
+        db.conn.select(0)
         const list = await new Promise(function(resolve, reject){
-            db.conn.get("config_autorun", function(err,res){
+            db.conn.get("info_autorun", function(err,res){
                 if(err) reject(err); 
                 resolve(JSON.parse(res));
             })
