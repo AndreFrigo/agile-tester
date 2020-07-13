@@ -1966,6 +1966,101 @@ const utils={
             }else{
                 return null
             }   
+        },
+
+        addImprivata: async function(address){
+            var done = true
+            //va nella sezione agile authentication
+            const menu = global.app.client.$(info.AGILE_AUTHENTICATION);
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            //apre dropdown di scelta
+            const dropdown = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.input-field > div > input")
+            var dataActivates = null
+            try{
+                dropdown.click()
+                dataActivates = await dropdown.getAttribute("data-activates")
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(500)
+
+
+            //sceglie imprivata
+            const imprivata = global.app.client.$("#"+dataActivates+" > li:nth-child(3)")
+            try{
+                await imprivata.click()
+            }catch{
+                done = false
+            }
+
+            await utils.sleep(500)
+
+
+            //inserisce l'address 
+            try{
+                await global.app.client.$("#addres").setValue(address)
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(500)
+
+
+            //spunta ignora errori ssl
+            try{
+                if(await global.app.client.$("#ignoreSSL").getValue() == false){
+                    await global.app.client.$("#ignoreSSL").click()
+                }
+            }catch{
+                done = false
+            }
+
+            await utils.sleep(500)
+
+
+            //preme altrove per confermare
+            try{
+                await global.app.client.$(info.AGILE_AUTHENTICATION).click()
+            }catch{
+                done = false
+            }
+
+
+            await utils.sleep(500)
+
+
+            var ret = null
+            const error = await global.app.client.$("#addres").getAttribute("aria-invalid")
+            try{
+                if(error == "true"){
+                    ret = false
+                }else if(error == "false"){
+                    ret = true
+                }
+            }catch{
+                done = false
+            }
+
+
+
+            if(done){
+                return ret == true
+            }else{
+                return null
+            }
         }
     },
 
