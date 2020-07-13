@@ -739,6 +739,108 @@ const utils={
             }else{
                 return null
             }
+        },
+        //input: type: 1|2|3|4|5 identifica il tipo di risorsa, name: il nome della risorsa
+        //output: true se il test ha prodotto una notifica di successo, false altrimenti, null in caso di errori
+        test: async function(type, name){
+            var done = true
+            //va in risorse
+            const menu = global.app.client.$(info.RESOURCES);
+            try{
+                await menu.click();
+            }catch{
+                done = false
+            }
+            global.app.client.waitUntilWindowLoaded();
+
+
+            await utils.sleep(1000)
+
+
+            const length = await db.getResourceListLength();
+            var elem = false;
+            var n = null;
+            
+            for(i = 0; i < length; i++){
+                //prendo le informazioni dell'elemento
+                try{
+                    n = await global.app.client.$("#connection"+i+" > div > div.connection-item-properties > div > div").getText();
+                }catch{
+                    done = false
+                } 
+                //controllo se elemento trovato e cercato corrispondono 
+                switch(type){
+                    //Citrix
+                    case 1:{
+                        if(n == "agile_remote " + name){
+                            elem = "#connection"+i
+                        }
+                        break
+                    }
+                    //Microsoft
+                    case 2:{
+                        if(n == "agile_local " + name){
+                            elem = "#connection"+i
+                        }
+                        break
+                    }
+                    //VMware
+                    case 3:{
+                        if(n == "agile_remote " + name){
+                            elem = "#connection"+i
+                        }
+                        break
+                    }
+                    //Local Browser
+                    case 4:{
+                        if(n == "agile_local " + name){
+                            elem = "#connection"+i
+                        }
+                        break
+                    }
+                    //Local Application 
+                    case 5:{
+                        if(n == "agile_local " + name){
+                            elem = "#connection"+i
+                        }
+                        break
+                    }
+                    default:{
+                        done = false
+                        break
+                    }
+                }
+            }
+
+            //preme sull'elemento
+            try{
+                await global.app.client.$(elem + " > div > div.connection-item-properties > div > div").click()
+            }catch{
+                done = false
+            }
+
+            await utils.sleep(1000)
+
+
+            //preme su test
+            try{
+                global.app.client.$(elem + " > div.connection-modal > div.connection-footer > span > a.test-connection").click()
+            }catch{
+                done = false
+                console.log("Errore click test")
+            }
+
+            await utils.sleep(1500)
+
+            var not = null
+            not = await utils.checkNotification("success")
+
+
+            if(done){
+                return not
+            }else{
+                return null
+            }
         }
 
     },
