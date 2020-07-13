@@ -97,4 +97,28 @@ describe("add a citrix resource test", function(){
         })
     })
 
+    const realValues = [
+        {name: "rv", server: "https://xendesk715.sup.praim.com", domain:""}
+    ]
+    realValues.forEach(elem => {
+        it("should return true if the resource has been added and is now in the Agile list", async () => {
+            var add = null
+            var check = null
+            add = await utils.resources.addCitrix(elem.name, elem.server, elem.domain)
+            await utils.sleep(500)
+            check = await utils.resources.isInAgileList(1, elem.name)
+            expect(add && check).to.be.true
+        })
+
+        it("should return true if the resource has been added and the test connection success", async () => {
+            var add = null
+            var test = null
+            add = await utils.resources.addCitrix(elem.name, elem.server, elem.domain)
+            await utils.sleep(2500)
+            test = await utils.resources.test(1, elem.name)
+            await utils.sleep(500)
+            expect(add && test).to.be.true
+        })
+    })
+
 })
