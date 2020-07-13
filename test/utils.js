@@ -2043,15 +2043,18 @@ const utils={
 
 
             var ret = null
-            const error = await global.app.client.$("#addres").getAttribute("aria-invalid")
+            var error = null
+            var addressText = null
             try{
-                if(error == "true"){
-                    ret = false
-                }else if(error == "false"){
-                    ret = true
-                }
+                error = await global.app.client.$("#addres").getAttribute("aria-invalid")
+                addressText = await global.app.client.$("#addres").getValue()
             }catch{
                 done = false
+            }
+            if(error == "true" || addressText == ""){
+                ret = false
+            }else if(error == "false" && addressText != ""){
+                ret = true
             }
 
 

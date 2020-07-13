@@ -1,0 +1,62 @@
+const {global} = require ("../global.js");
+const {utils} = require("../utils.js");
+const { expect } = require("chai");
+const agileService = require("agile-os-interface")
+var localDB = null
+
+describe("Check imprivata authentication settings", function(){
+
+    this.timeout(30000)
+
+    before(async function(){
+        //salva database locale
+        localDB = await new Promise(function(resolve, reject){
+            agileService.getAuthentication(null, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
+    })
+
+    beforeEach(async function(){
+        //cambia database locale
+        await new Promise(function(resolve, reject){
+            agileService.setAuthentication(null, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
+        await utils.start()
+    }) 
+
+    afterEach(async function(){
+        await new Promise(function(resolve, reject){
+            agileService.setAuthentication(localDB, (err,res) => {
+                if (err) reject(err)
+                resolve(res)
+            })
+        })
+        await global.app.stop()
+    })
+
+    const rightValues = [
+        "right-value.it"
+    ]
+    rightValues.forEach(elem => {
+        it("should return true if authentication has been added", async () => {
+            expect(await utils.agileAuthentication.addImprivata(elem)).to.be.true
+        })
+    })
+
+    const wrongValues = [
+        "",
+        "wrong_value",
+        "aa.it.i"
+    ]
+    wrongValues.forEach(elem => {
+        it("should return false if some parameters were wrong", async () => {
+            expect(await utils.agileAuthentication.addImprivata(elem)).to.be.false
+        })
+    })
+
+})
