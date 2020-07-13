@@ -63,14 +63,21 @@ const utils={
 
     //return true se è apparso il pop up , altrimenti false 
     //param type: tipo di notifica: success | warning
-    checkNotification: async function(type){
+    //param time: tempo massimo di attesa in secondi (da moltiplicare per 2)
+    checkNotification: async function(type, time = 2){
         var notification = null
-        try{
-            //titolo del pop-up
-            notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
-        }catch{
-            notification = null
+        var i = 0
+        while(notification == null && i<time){
+            try{
+                //titolo del pop-up
+                notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
+            }catch{
+                notification = null
+            }
+            i++
+            await utils.sleep(2000)
         }
+        
         //aggiorna lingua
         const language = await db.dbLanguage()
         var not = null
@@ -92,22 +99,6 @@ const utils={
             }
         }
         return notification == not && notification != null
-    },
-    //output titolo della notifica
-    waitNotification: async function(){
-        //attesa massima 60 secondi 
-        var notification = null
-        while(notification == null && i<30){
-            try{
-                //titolo del pop-up
-                notification = await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > div.header > p.title").getText();
-            }catch{
-                notification = null
-            }
-            i++
-            await utils.sleep(2000)
-        }
-        return notification
     },
 
     //seleziona il file con il nome dato in input nella cartella agile-tester/files
@@ -1402,27 +1393,10 @@ const utils={
             await utils.sleep(1500)
 
             //a volte ci mette un po' quindi attende fino a 60 secondi per ricevere la notifica e poi controlla il titolo
-            const notTitle = await utils.waitNotification()
-
-            const lan = await db.dbLanguage()
-            var ok = false
-            switch(lan){
-                case 1: {
-                    if(notTitle == "Successo") ok = true
-                    break
-                }
-                case 2: {
-                    if(notTitle == "Success") ok = true
-                    break
-                }
-                case 3: {
-                    if(notTitle == "Exito") ok = true
-                    break
-                }
-            }
+            const not = await utils.checkNotification("success", 30)
 
             if(done){
-                return t != null && ok
+                return t != null && not
             }else{
                 return null
             }
