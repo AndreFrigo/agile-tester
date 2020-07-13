@@ -9,7 +9,8 @@ var localDB = null
 
 describe("Check address parameters", function(){
 
-    this.timeout(30000)
+    //timeout lungo perchè può attendere diversi secondi per il test della connessione
+    this.timeout(90000)
 
     before(async function(){
         //salva database locale
