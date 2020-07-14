@@ -242,6 +242,16 @@ const db={
             })
         })
         return vol
+    },
+    getAuthentication: async function(){
+        db.conn.select(1)
+        const auth = await new Promise(function(resolve, reject){
+            db.conn.get("config_auth", function(err,res){
+                if(err) reject(err); 
+                resolve(JSON.parse(res));
+            })
+        })
+        return auth
     }
 }
 
