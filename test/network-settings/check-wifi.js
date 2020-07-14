@@ -9,7 +9,7 @@ var localDB = null
 
 describe("Check if a wifi saved is available", function(){
 
-    this.timeout(30000)
+    this.timeout(100000)
 
     before(async function(){
         localDB = await new Promise(function(resolve, reject){

@@ -11,7 +11,7 @@ var localDB = null
 //FUNZIONA SOLO CON WIFI CHE RICHIEDONO SSID E PASSWORD
 describe("Check WiFi parameters", function(){
 
-    this.timeout(30000)
+    this.timeout(100000)
 
     before(async function(){
         //salva database locale

@@ -7,7 +7,7 @@ const {info} = require("../set-before-test.js")
 var localDB = null
 
 describe("Check add certificate", function(){
-    this.timeout(100000)
+    this.timeout(200000)
 
     before(async function(){
         //salva database locale

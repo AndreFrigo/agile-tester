@@ -8,7 +8,7 @@ var localDB = null
 
 describe("check remote assistance settings", function(){
 
-    this.timeout(30000)
+    this.timeout(100000)
 
     before(async function(){
         //salva database locale

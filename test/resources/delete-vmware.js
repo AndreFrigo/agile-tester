@@ -9,7 +9,7 @@ var localDB = null
 
 describe("delete VMware resource tests", function(){
 
-    this.timeout(30000)
+    this.timeout(100000)
 
     before(async function(){
         //salva database locale

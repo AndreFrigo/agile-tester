@@ -9,7 +9,7 @@ var localDB = null
 
 describe("Check certificate parameters", function(){
 
-    this.timeout(50000)
+    this.timeout(150000)
 
     before(async function(){
         //salva database locale

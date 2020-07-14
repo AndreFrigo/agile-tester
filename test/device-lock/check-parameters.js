@@ -10,7 +10,7 @@ var localDB = null
 //Aggiunge una nuova regola per il blocco di un device
 describe("Check device lock parameters", function(){
 
-    this.timeout(30000)
+    this.timeout(100000)
 
     before(async function(){
         //salva database locale

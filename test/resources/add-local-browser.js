@@ -8,7 +8,7 @@ var localDB = null
 
 describe("Check if a resource created is available", function(){
 
-    this.timeout(30000)
+    this.timeout(100000)
 
     before(async function(){
         //salva database locale

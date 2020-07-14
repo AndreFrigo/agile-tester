@@ -6,7 +6,7 @@ var localDB = null
 
 describe("Check add usb redirection rule", function(){
 
-    this.timeout(30000)
+    this.timeout(100000)
 
     //qui le funzioni di agile-os-interface non funzionano correttamente
     before(async function(){
