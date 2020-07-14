@@ -3,6 +3,7 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
+const { info } = require("../set-before-test.js")
 
 var localDB = null
 
