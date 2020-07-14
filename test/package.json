@@ -4,7 +4,17 @@
   "description": "Test Framework for Electron Desktop Application",
   "main": "test.js",
   "scripts": {
-    "test:demo": "mocha ./src/test-suites/test-spec.js"
+    "Full": "mocha agile-authentication/ certificate-manager/ device-lock/ network-settings/ remote-assistance/ resources/ startup/ system-settings/ thinman-settings/ usb-redirection/",
+    "AgileAuthentication": "mocha agile-authentication/",
+    "CertificateManager": "mocha certificate-manager/",
+    "DeviceLock": "mocha device-lock/",
+    "NetworkSettings": "mocha network-settings/",
+    "RemoteAssistance": "mocha remote-assistance/",
+    "Resources": "mocha resources/",
+    "Startup": "mocha startup/",
+    "SystemSettings": "mocha system-settings/",
+    "ThinmanSettings": "mocha thinman-settings/",
+    "UsbRedirection": "mocha usb-redirection/"
   },
   "author": "",
   "license": "ISC",
