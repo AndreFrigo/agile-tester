@@ -284,26 +284,3 @@ const chooseEnglish = async function(lan){
         return null
     }
 }
-//return true se lingua database ed agile corrispondono, false altrimenti, null se ci sono stati errori
-const isSameLanguage = async function(){
-    var done = true
-    var language = await db.dbLanguage()
-
-    var l = null;
-    try{
-        const lang = global.app.client.$(info.SYSTEM_SETTINGS);
-        l = await lang.getText();
-    }catch{
-        done = false
-    }
-    var ret = false
-    if(l == "Impostazioni di Sistema") ret = (language == 1)
-    else if(l == "System Settings") ret = (language == 2)
-    else if(l == "Ajustes del Sistema") ret = (language == 3)
-
-    if(done){
-        return ret
-    }else{
-        return null
-    }
-}
