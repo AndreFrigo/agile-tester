@@ -1,7 +1,8 @@
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
-const agileService = require("agile-os-interface")
+const agileService = require("agile-os-interface");
+const {db} = require("../db.js");
 var localDB = null
 
 describe("Check imprivata authentication settings", function(){
@@ -45,6 +46,23 @@ describe("Check imprivata authentication settings", function(){
     rightValues.forEach(elem => {
         it("should return true if authentication has been added", async () => {
             expect(await utils.agileAuthentication.addImprivata(elem)).to.be.true
+        })
+
+        it("should return true if the authentication has been added and is now in the database", async () => {
+            var add = null
+            var checkDb = null
+            add = await utils.agileAuthentication.addImprivata(elem)
+            await utils.sleep(500)
+            try{
+                const dbinfo = await db.getAuthentication()
+                if(dbinfo.type == "imprivata" && dbinfo.value.address == elem && dbinfo.value.ignoreSSL == true){
+                    checkDb = true
+                }else{
+                    checkDb = false
+                }
+            }catch{
+            }
+            expect(add && checkDb).to.be.true
         })
     })
 
