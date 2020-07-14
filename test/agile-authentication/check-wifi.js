@@ -1,7 +1,8 @@
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
-const agileService = require("agile-os-interface")
+const agileService = require("agile-os-interface");
+const {db} = require("../db.js");
 var localDB = null
 
 describe("Check authentication settings", function(){
@@ -62,6 +63,23 @@ describe("Check authentication settings", function(){
     rightValues.forEach(elem => {
         it("should return true for right settings", async () => {
             expect(await utils.agileAuthentication.addWifiAuthentication(elem.ssid, elem.password)).to.be.true
+        })
+
+        it("should return true if wifi authentication has been added and is now in the database", async () => {
+            var add = null
+            var checkDb = null
+            add = await utils.agileAuthentication.addWifiAuthentication(elem.ssid, elem.password)
+            await utils.sleep(500)
+            try{
+                const dbinfo = await db.getAuthentication()
+                if(dbinfo.type == "wifi" && dbinfo.value.ssid == elem.ssid){
+                    checkDb = true
+                }else{
+                    checkDb = false
+                }
+            }catch{
+            }
+            expect(add && checkDb).to.be.true
         })
     })
 })
