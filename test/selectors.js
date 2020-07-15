@@ -219,7 +219,7 @@ module.exports = {
     agileAuthentication:{
         menuID: "#menu-link-12",
         //dropdown for authentication type (imprivata, wifi, thinman smart identity) with data-activates attribute 
-        dropdown = "#main-div > div.main-content > main > section > div > div > div.input-field > div > input",
+        dropdown: "#main-div > div.main-content > main > section > div > div > div.input-field > div > input",
         wifi:{
             //dropdown for choosing which wifi to use
             dropdown: "#wifi",
@@ -228,7 +228,7 @@ module.exports = {
             //filed containing password and class has-error or not
             passwordField: "#main-div > div > main > section > div > ul > li > div.collapsible-body > div.row:nth-child(4) > div > div",
             //password input
-            passwordInput: this.agileAuthentication.wifi.passwordField + " > input"
+            passwordInput: this.passwordField + " > input"
         },
         imprivata:{
             //server address
