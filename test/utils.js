@@ -298,176 +298,92 @@ const utils={
             }
             return true
         },
-
-        //ritorna true se l'elemento cercato è nella lista, altrimenti false, null se ci sono errori
-        //param type: citrix => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
+        /**
+         * Search for an element in the Agile resource list
+         * @param  {number} type This is the resource type: citrix => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
+         * @param  {string} name This is the name of the resource to find 
+         * @return {boolean | null} True if the resource is in the list, false if the resource is not in the list, null in case of errors
+         */
         isInAgileList: async function(type, name){
-            var done = true
+            var ret = null
             //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.menuID) == false) return null
 
             await utils.sleep(1000)
 
-
             const length = await db.getResourceListLength();
-            var found = false;
-            var n = null;
-            
-            for(i = 0; i < length; i++){
-                //prendo le informazioni dell'elemento
-                try{
-                    n = await global.app.client.$("#connection"+i+" > div > div.connection-item-properties > div > div").getText();
-                }catch{
-                    done = false
-                } 
-                //controllo se elemento trovato e cercato corrispondono 
-                switch(type){
-                    //Citrix
-                    case 1:{
-                        if(n == "agile_remote " + name){
-                            found = true 
-                        }
-                        break
-                    }
-                    //Microsoft
-                    case 2:{
-                        if(n == "agile_local " + name){
-                            found = true 
-                        }
-                        break
-                    }
-                    //VMware
-                    case 3:{
-                        if(n == "agile_remote " + name){
-                            found = true 
-                        }
-                        break
-                    }
-                    //Local Browser
-                    case 4:{
-                        if(n == "agile_local " + name){
-                            found = true 
-                        }
-                        break
-                    }
-                    //Local Application 
-                    case 5:{
-                        if(n == "agile_local " + name){
-                            found = true
-                        }
-                        break
-                    }
-                    default:{
-                        done = false
-                        break
-                    }
+
+            switch(type){
+                //Citrix
+                case 1:{
+                    ret = await utils.findInList("agile_remote " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //Microsoft
+                case 2:{
+                    ret = await utils.findInList("agile_local " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //VMware
+                case 3:{
+                    ret = await utils.findInList("agile_remote " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //Local Browser
+                case 4:{
+                    ret = await utils.findInList("agile_local " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //Local Application 
+                case 5:{
+                    ret = await utils.findInList("agile_local " + name, ids.resources.name, 0, length)
+                    break
+                }
+                default:{
+                    return null
                 }
             }
-
-            if(done){
-                return found
-            }else{
-                return null
-            }
+            if(ret == -2) return null
+            else if(ret == -1) return false
+            else return true 
         },
 
         //param resourceName: nome da assegnare alla risorsa, resourceInfo: nome della risorsa da aggiungere
         //ritorna true se la creazione è stata confermata, false altrimenti, null se ci sono stati errori
         addLocalApplication: async function(resourceName, resourceInfo){
-            var done = true
             //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            var click = null;
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             //clicca su add resource
-            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            try{
-                await addResource.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.addResource.button) == false) return null
 
             await utils.sleep(1000)
-
-
-            //inserisce il nome 
-            try{
-                await global.app.client.$("#add-connection-name").setValue(resourceName)
-            }catch{
-                done = false
-            }
-
-
-            await utils.sleep(1000)
-
 
             //seleziona local app
-            const localApp = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(5) > label");
-            try{
-                await localApp.click();
-            }catch{
-                done = false
-            }
-
+            if(await utils.click(ids.resources.addResource.localApplication.label) == false) return null
 
             await utils.sleep(1000)
 
+            //inserisce il nome 
+            if(await utils.insertText(ids.resources.addResource.name, resourceName) == false) return null
+
+            await utils.sleep(1000)
 
             //clicca in file
-            const file = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(4) > div > div > div > div.waves-effect.btn > span")
-            try{
-                await file.click()
-            }catch{
-                done = false
-            }
+            if(await utils.click(ids.resources.addResource.localApplication.file) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce il nome del file nel file picker (deve trovarsi nella directory agile-tester/files)
-            if(await utils.fileChooser(resourceInfo) == false){
-                done = false
-            }
+            if(await utils.fileChooser(resourceInfo) == false) return null
 
             await utils.sleep(1000)
 
-
             //preme su ok per confermare
-            try{
-                click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
-            }catch(err){
-                click = null
-            }
-
-            if(done){
-                if(click != null){
-                    return true
-                }else{
-                    return false
-                }
-            }else{
-                return null
-            }
-
+            if(await utils.click(ids.resources.addResource.localApplication.ok, false) == true) return true
+            else return false
         },
         //return true se ha aggiunto la risorsa, altrimenti false, null se ci sono errori
         addCitrix: async function(name, server, domain){
