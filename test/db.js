@@ -6,11 +6,7 @@ const db={
     //connessione al database
     dbConnection(){
         db.conn = redis.createClient(1681);
-        if(info.os == 'w'){
-            db.conn.auth(info.dbPassWin);
-        }else if(info.os == "l"){
-            db.conn.auth(info.dbPassLin)
-        }
+        db.conn.auth(info.dbPass);
     },
     //controlla lingua nel database, output: int (1,2,3), 0 for error
     dbLanguage: async function(){
