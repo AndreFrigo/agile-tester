@@ -347,9 +347,12 @@ const utils={
             else if(ret == -1) return false
             else return true 
         },
-
-        //param resourceName: nome da assegnare alla risorsa, resourceInfo: nome della risorsa da aggiungere
-        //ritorna true se la creazione è stata confermata, false altrimenti, null se ci sono stati errori
+        /**
+         * Add a resource of type Local Application
+         * @param  {string} resourceName This is the name of the resource to add
+         * @param  {string} resourceInfo This is the name of the application to add
+         * @return {boolean | null} True if the resource was added, false otherwise, null in case of errors
+         */
         addLocalApplication: async function(resourceName, resourceInfo){
             //va in risorse
             if(await utils.click(ids.resources.menuID) == false) return null
@@ -384,370 +387,196 @@ const utils={
             //preme su ok per confermare
             if(await utils.click(ids.resources.addResource.localApplication.ok, false) == true) return true
             else return false
+            
         },
         //return true se ha aggiunto la risorsa, altrimenti false, null se ci sono errori
+        /**
+         * Add a resource of type Citrix
+         * @param  {string} name This is the name of the resource to add
+         * @param  {string} server This is the server of the resource to add
+         * @param  {string} domain This is the domain of the resource to add
+         * @return {boolean | null} True if the resource has been added, false otherwise, null in case of errors
+         */
         addCitrix: async function(name, server, domain){
-            var done = true
-            //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            var click = null;
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             //clicca su add resource
-            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            try{
-                await addResource.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
-
+            if(await utils.click(ids.resources.addResource.button) == false) return null
+            
             await utils.sleep(1000)
 
-
             //seleziona citrix
-            const citrix = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(1) > label");
-            try{
-                await citrix.click();
-            }catch{
-                done = false
-            }
-
+            if(await utils.click(ids.resources.addResource.citrix.label) == false) return null
 
             await utils.sleep(500)
 
-
             //inserisce il nome 
-            try{
-                await global.app.client.$("#add-connection-name").setValue(name)
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.resources.addResource.name, name) == false) return null
 
             await utils.sleep(1000)
 
 
             //inserisce il server 
-            try{
-                await global.app.client.$("#add-connection-server").setValue(server)
-            }catch{
-                done = false
-            }
+            if(await utils.insertText(ids.resources.addResource.citrix.server, server) == false) return null
 
             await utils.sleep(1000)
 
-            
             //inserisce il domain 
-            try{
-                await global.app.client.$("#add-connection-domain").setValue(domain)
-            }catch{
-                done = false
-            }
+            if(await utils.insertText(ids.resources.addResource.citrix.domain, domain) == false) return null
 
             await utils.sleep(1000)
-
 
             //preme su ok per confermare
-            try{
-                click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
-            }catch{
-                click = null
-            }
-
-            if(done){
-                if(click != null){
-                    return true
-                }else{
-                    return false
-                }
-            }else{
-                return null
-            }            
+            if(await utils.click(ids.resources.addResource.citrix.ok, false) == true) return true
+            else return false
 
         },
         //return true se la risorsa è stata aggiunta, altrimenti false, null se ci sono errori
+        /**
+         * Add a resource of type Microsoft
+         * @param  {string} name This is the name of the resource to add
+         * @param  {string} resourceInfo This is the name of the Microsoft resource in the system
+         * @return {boolean | null} True if the resource has been added, false otherwise, null in case of errors
+         */
         addMicrosoft: async function(name, resourceInfo){
-            var done = true
             //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            var click = null;
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             //clicca su add resource
-            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            try{
-                await addResource.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.addResource.button) == false) return null
 
             await utils.sleep(1000)
 
-
             //seleziona microsoft
-            const citrix = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(2) > label");
-            try{
-                await citrix.click();
-            }catch{
-                done = false
-            }
-
+            if(await utils.click(ids.resources.addResource.microsoft.label) == false) return null
 
             await utils.sleep(500)
 
-
             //inserisce il nome 
-            try{
-                await global.app.client.$("#add-connection-name").setValue(name)
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.resources.addResource.name, name) == false) return null
 
             await utils.sleep(1000)
-
 
             //clicca in file
-            const file = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(5) > div > div > div > div.waves-effect.btn > span")
-            try{
-                await file.click()
-            }catch{
-                done = false
-            }
+            if(await utils.click(ids.resources.addResource.microsoft.file) == false) return null
 
             await utils.sleep(1000)
 
-
             //inserisce il nome del file nel file picker (deve trovarsi nella directory agile-tester/files)
-            if(await utils.fileChooser(resourceInfo) == false){
-                done = false
-            }
+            if(await utils.fileChooser(resourceInfo) == false) return null
 
             await utils.sleep(1000)
 
             //preme su ok per confermare
-            try{
-                click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
-            }catch{
-                click = null
-            }
-
-            if(done){
-                if(click != null){
-                    return true
-                }else{
-                    return false
-                }
-            }else{
-                return null
-            }
+            if(await utils.click(ids.resources.addResource.citrix.ok, false) == true) return true
+            else return false
 
         },
 
         //return true se l'ha creata, altrimenti false, null se ci sono stati errori
+        /**
+         * Add a resource of type VMware
+         * @param  {string} name This is the name of the resource to add
+         * @param  {string} server This is the server of the resource to add
+         * @return {boolean | null} True if the resource has been added, false otherwise, null in case of errors
+         */
         addVMware: async function(name, server){
-            var done = true
             //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            var click = null;
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             //clicca su add resource
-            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            try{
-                await addResource.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.addResource.button) == false) return null
 
             await utils.sleep(1000)
-
 
             //seleziona VMware
-            const citrix = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(3) > label");
-            try{
-                await citrix.click();
-            }catch{
-                done = false
-            }
-
+            if(await utils.click(ids.resources.addResource.vmware.label) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce il nome 
-            try{
-                await global.app.client.$("#add-connection-name").setValue(name)
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.resources.addResource.name, name) == false) return null
 
             await utils.sleep(1000)
 
-
             //inserisce il server 
-            try{
-                await global.app.client.$("#add-connection-server").setValue(server)
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.resources.addResource.vmware.server, server) == false) return null
 
             await utils.sleep(500)
 
-
             //preme su ok per confermare
-            try{
-                click = await global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)").click()
-            }catch{
-                click = null
-            }
-
-            if(done){
-                if(click != null){
-                    return true
-                }else{
-                    return false
-                }
-            }else{
-                return null
-            }
+            if(await utils.click(ids.resources.addResource.citrix.ok, false) == true) return true
+            else return false
+            
         },
         //input: type: 1|2|3|4|5 identifica il tipo di risorsa, name: il nome della risorsa
         //output: true se il test ha prodotto una notifica di successo, false altrimenti, null in caso di errori
+        /**
+         * @param  {number} type This is the resource type: citrix => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
+         * @param  {string} name This is the name of the resource to test
+         * @return {boolean | null} True if the resource has been successfully tested, false otherwise, null in case of errors
+         */
         test: async function(type, name){
-            var done = true
+            var ret = null
             //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.menuID) == false) return null
 
             await utils.sleep(1000)
 
-
             const length = await db.getResourceListLength();
-            var elem = false;
-            var n = null;
-            
-            for(i = 0; i < length; i++){
-                //prendo le informazioni dell'elemento
-                try{
-                    n = await global.app.client.$("#connection"+i+" > div > div.connection-item-properties > div > div").getText();
-                }catch{
-                    done = false
-                } 
-                //controllo se elemento trovato e cercato corrispondono 
-                switch(type){
-                    //Citrix
-                    case 1:{
-                        if(n == "agile_remote " + name){
-                            elem = "#connection"+i
-                        }
-                        break
-                    }
-                    //Microsoft
-                    case 2:{
-                        if(n == "agile_local " + name){
-                            elem = "#connection"+i
-                        }
-                        break
-                    }
-                    //VMware
-                    case 3:{
-                        if(n == "agile_remote " + name){
-                            elem = "#connection"+i
-                        }
-                        break
-                    }
-                    //Local Browser
-                    case 4:{
-                        if(n == "agile_local " + name){
-                            elem = "#connection"+i
-                        }
-                        break
-                    }
-                    //Local Application 
-                    case 5:{
-                        if(n == "agile_local " + name){
-                            elem = "#connection"+i
-                        }
-                        break
-                    }
-                    default:{
-                        done = false
-                        break
-                    }
+
+            switch(type){
+                //Citrix
+                case 1:{
+                    ret = await utils.findInList("agile_remote " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //Microsoft
+                case 2:{
+                    ret = await utils.findInList("agile_local " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //VMware
+                case 3:{
+                    ret = await utils.findInList("agile_remote " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //Local Browser
+                case 4:{
+                    ret = await utils.findInList("agile_local " + name, ids.resources.name, 0, length)
+                    break
+                }
+                //Local Application 
+                case 5:{
+                    ret = await utils.findInList("agile_local " + name, ids.resources.name, 0, length)
+                    break
+                }
+                default:{
+                    return null
                 }
             }
 
             //preme sull'elemento
-            try{
-                await global.app.client.$(elem + " > div > div.connection-item-properties > div > div").click()
-            }catch{
-                done = false
-            }
+            if(await utils.click(ids.resources.element(ret)) == false) return null
 
             await utils.sleep(1000)
 
-
             //preme su test
-            try{
-                global.app.client.$(elem + " > div.connection-modal > div.connection-footer > span > a.test-connection").click()
-            }catch{
-                done = false
-                console.log("Errore click test")
-            }
+            if(await utils.click(ids.resources.test(ret)) == false) return null
 
             await utils.sleep(1500)
 
+            //controlla la notifica
             var not = null
             not = await utils.checkNotification("success")
 
-
-            if(done){
-                return not
-            }else{
-                return null
-            }
+            return not
         }
 
     },
