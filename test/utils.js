@@ -1,6 +1,7 @@
 const {db} = require ("./db.js");
 const {global} = require ("./global.js");
 const {info} = require("./set-before-test.js")
+const ids = require("./selectors.js")
 var robot = null
 const path = require("path")
 
@@ -152,151 +153,150 @@ const utils={
         return done
     },
 
-    resources:{
-        //return true se la risorsa è stata creata con successo, false se non è stata creata e null se qualche passo intermedio non è andato a buon fine
-        addLocalBrowser : async function (resourceName, resourceUrl) {
-
-            var done = true
-            //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            try{
-                await menu.click();
-            }catch{
-                done = false
+    /**
+     * Click on an element given his id
+     * @param  {string} id This is the ID ot the object to click
+     * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
+     * @return {boolean} True if the element was clicked, false in case of error
+     */
+    click: async function(id, printError = true){
+        try{
+            await global.app.client.$(id).click()
+        }catch(err){
+            if(printError){
+                console.log("Error while clicking element with id: " + id)
+                console.log("ERROR: " + err)
             }
-            global.app.client.waitUntilWindowLoaded();
+            return false
+        }
+        global.app.client.waitUntilWindowLoaded()
+        return true
+    },
+    /**
+     * Insert a text in the text field with the given ID
+     * @param  {string} id This is the ID ot the text field
+     * @param  {string} text This is the text to set to the text field
+     * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
+     * @return {boolean} True if the text was inserted, false in case of error
+     */
+    insertText: async function(id, text, printError = true){
+        try{
+            await global.app.client.$(id).setValue(text)
+        }catch(err){
+            if(printError){
+                console.log("Error while inserting text: " + text + " to the element with id: " + id)
+                console.log("ERROR: "+err)
+            }
+            return false
+        }
+        global.app.client.waitUntilWindowLoaded()
+        return true
+    },
+    /**
+     * Find an element in the Agile list
+     * @param  {string | Array} elemName This is the name of the element to find, can be a string or an array, the first occurence is returned
+     * @param  {string} nameId Id of the html element that contains the name 
+     * @param  {number} startIndex Start index for iteration
+     * @param  {number} listLength Length of the Agile list
+     * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
+     * @return {number} Index of the element founded, -1 if no element was found
+     */
+    findInList: async function(elemName, nameId, startIndex, listLength, printError = true){
+        var n = null
+        for(i = startIndex; i < startIndex + listLength; i++){
+            //salva il nome dell'elemento
+            try{
+                n = await global.app.client.$(nameId(i)).getText()
+            }catch(err){
+                if(printError){
+                    console.log("Error while getting name of the element with id: " + id)
+                    console.log("ERROR: "+err)
+                }
+            }
+            //controlla se i nomi coincidono
+            if(typeof elemName == "string"){
+                if(elemName == n){
+                    return i
+                }
+            }else{
+                elemName.forEach(elem => {
+                    if(elem == n){
+                        return i
+                    }
+                })
+            }
+        }
+        return -1
+    },
 
-
+    resources:{
+        /**
+         * Add a resource of type Local Browser
+         * @param  {string} resourceName This is the name to give to the resource
+         * @param  {string} resourceUrl This is the url to give to the resource
+         * @return {boolean | null} true if the resource was created successfully, false if not, null in case of errors
+         */
+        addLocalBrowser : async function (resourceName, resourceUrl) {
+            //va in risorse
+            if(await utils.click(ids.resources.menuID) == false) return null
+            
             await utils.sleep(1000)
-
 
             //clicca su add resource
-            const addResource = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a");
-            
-            try{
-                await addResource.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.addResource.button) == false) return null
 
             await utils.sleep(1000)
-
 
             //seleziona local browser
-            const localBrowser = global.app.client.$("#add-connection-modal > div.custom-modal.open > div.modal-content > div > div > div.row > div.col.s12 > div.connection-col > div:nth-child(4) > label");
-            try{
-                await localBrowser.click();
-            }catch{
-                done = false
-            }
-
+            if(await utils.click(ids.resources.addResource.localBrowser.label) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce il nome 
-            const text = global.app.client.$("#add-connection-name");
-            try{
-                text.click();
-                await text.setValue(resourceName);
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.resources.addResource.name, resourceName) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce l'url
-            const url = global.app.client.$("#add-connection-server");
-            try{
-                url.click();
-                await url.setValue(resourceUrl);
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.resources.addResource.localBrowser.server, resourceUrl) == false) return null
 
             await utils.sleep(1000)
 
-
             //preme ok per confermare
-            const ok = global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
-            var ret = null;
-            try{
-                ret = await ok.click();
-            }catch{
-                ret = null
-            }
-            if(done){
-                return ret != null
-            }else{
-                return null
-            }
+            if(await utils.click(ids.resources.addResource.localBrowser.ok, false) == true) return true
+            else return false
         },
 
 
-        //return true se la risorsa è stata eliminata, false se la risorsa non è presente nella lista, null se ci sono stati problemi 
+        /**
+         * Delete a resource
+         * @param  {string} name This is the name of the resource to delete
+         * @return {boolean | null} true if the resource was deleted, false if there is not a resource in the list with the given name, null in case of errors
+         */
         deleteResource: async function(name){
-            var done = true
             //va in risorse
-            const menu = global.app.client.$(info.RESOURCES);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.resources.menuID) == false) return null
 
             await utils.sleep(500)
 
-
-            var del = null
             const length = await db.getResourceListLength();
-            var n = null;
-            var index = -1
-            for(i = 0; i < length; i++){
-                const base = "#connection"+i+" > div > div.connection-item-properties > div";
-                try{
-                    n = await global.app.client.$(base + " > div").getText();
-                }catch{
-                    done = false
-                } 
-                if(n == "agile_local " + name || n == "agile_remote " + name){
-                    index = i
-                }
-            }
-
+            //indice dell'elemento da eliminare
+            const index = await utils.findInList(["agile_local " + name, "agile_remote " + name], ids.resources.name, 0, length)
 
             await utils.sleep(500)
-
 
             if(index != -1){
-                try{
-                    await global.app.client.$("#connection"+index+" > div > div.block-item-delete > i").click()
-                }catch{
-                    done = false
-                }
+                //preme sul bottone per eliminare 
+                if(await utils.click(ids.resources.delete(index)) == false) return null
     
                 await utils.sleep(500)
     
-    
-                try{
-                    del = await global.app.client.$("#connection"+index+" > div.connection-modal > div.connection-footer > a:nth-child(2)").click()
-                }catch{
-                    done = false
-                }
+                //conferma l'eliminazione 
+                if(await utils.click(ids.resources.confirmDelete(index)) == false) return null
             }else{
-                del = null
+                return false
             }
-            if(done){
-                return del != null
-            }else{
-                return null
-            }
+            return true
         },
 
         //ritorna true se l'elemento cercato è nella lista, altrimenti false, null se ci sono errori
