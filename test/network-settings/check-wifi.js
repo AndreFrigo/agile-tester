@@ -56,47 +56,7 @@ describe("Check if a wifi saved is available", function(){
 
     //Controlla che la nuova wifi sia nella lista di agile 
     it("should return true if the wifi is in the list", async () => {
-
-        //Va nella sezione impostazioni di rete
-        const menu = global.app.client.$(info.NETWORK_SETTINGS);
-        var click = null;
-        try{
-            click = await menu.click();
-        }catch{
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1000)
-
-
-        //Va nella sezione wifi
-        const wifi = global.app.client.$("#ab > a");
-        click = null;
-        try{
-            click = await wifi.click();
-        }catch{
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1500)
-
-
-        const length = await db.getWifiListLength();
-        const base = "#wifiTab > div > div > div.section-wrapper.scrollable > div"
-        var found = false; 
-        var name = null;
-        for(i = 1; i<= length; i++){
-            try{
-                name = await global.app.client.$(base + " > div:nth-child(" + i + ") > div > div.block-item-properties-wrapper > div").getText();
-                if(name.slice(14) == "prova_wifi"){
-                    found = true;
-                }
-            }catch{
-            }
-        }
-        expect(found).to.be.true
+        expect(await utils.networkSettings.isInAgileList("prova_wifi")).to.be.true
     })
 
 })

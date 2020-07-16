@@ -28,10 +28,8 @@ module.exports = {
         wifi:{
             //link for WIFI
             wifiTab: "#ab > a",
-            //list of wifi saved
-            list: "#wifiTab > div > div > div.section-wrapper.scrollable > div",
             //div containing ssid of a wifi of the list 
-            ssid: (index) => {return this.networkSettings.wifi + " > div:nth-child(" + index + ") > div > div.block-item-properties-wrapper > div"},
+            ssid: (index) => {return "#wifiTab > div > div > div.section-wrapper.scrollable > div > div:nth-child(" + index + ") > div > div.block-item-properties-wrapper > div"},
             addWifi: {
                 //button ADD WIFI NETWORK
                 button: "#wifiTab > div > div > div.header-inputs > a",

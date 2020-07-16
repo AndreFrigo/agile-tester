@@ -59,7 +59,7 @@ const utils={
         var ok = null
         while(ok == null){
             try{
-                ok = await global.app.client.$(info.ABOUT).getText()
+                ok = await global.app.client.$(ids.about.menuID).getText()
             }catch{
                 ok = null
                 await utils.sleep(1000)
@@ -812,6 +812,39 @@ const utils={
             if(await utils.click(ids.networkSettings.wifi.addWifi.ok, false) == true) return true
             else return false
          
+        },
+        /**
+         * Search for a wifi in the Agile list
+         * @param  {string} ssid This is the ssid of the wifi to search
+         * @return {boolean | null} True if the wifi is in the list, false otherwise, null in case of errors
+         */
+        isInAgileList: async function(ssid){
+            //Va nella sezione impostazioni di rete
+            if(await utils.click(ids.networkSettings.menuID) == false) return null
+
+            await utils.sleep(1000)
+
+            //Va nella sezione wifi
+            if(await utils.click(ids.networkSettings.wifi.wifiTab) == false) return null
+
+            await utils.sleep(1500)
+
+            const length = await db.getWifiListLength();
+            
+            var name = null;
+            for(i = 1; i<= length; i++){
+                try{
+                    name = await global.app.client.$(ids.networkSettings.wifi.ssid(i)).getText();
+                    if(name.slice(14) == ssid){
+                        return true
+                    }
+                }catch(err){
+                    console.log("Error while getting text from element with id: " + ids.networkSettings.wifi.ssid(i))
+                    console.log("ERROR: " + err)
+                    return null
+                }
+            }
+            return false
         }
     },
 

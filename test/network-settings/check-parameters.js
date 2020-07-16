@@ -68,6 +68,14 @@ describe("Check WiFi parameters", function(){
             expect(await utils.networkSettings.saveWifi(elem.ssid, elem.psw)).to.be.true
         })
 
+        it("should return true if the wifi has been added correctly", async () => {
+            await utils.networkSettings.saveWifi(elem.ssid, elem.psw)
+
+            await utils.sleep(1000)
+
+            expect(await utils.networkSettings.isInAgileList(elem.ssid)).to.be.true
+        })
+
         it("should return true if the wifi has been added correctly and success notification appeared", async () => {
             const res = await utils.networkSettings.saveWifi(elem.ssid, elem.psw)
             await utils.sleep(1000)
