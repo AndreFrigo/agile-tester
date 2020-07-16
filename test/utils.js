@@ -11,8 +11,6 @@ const utils={
      * @param {number} time This is the time to wait in milliseconds
      */
     sleep : time => new Promise(r => setTimeout(r, time)),
-
-    
     /**
      * Start the application
      */
@@ -162,7 +160,6 @@ const utils={
 
         return done
     },
-
     /**
      * Click on an element given his id
      * @param  {string} id This is the ID ot the object to click
@@ -445,8 +442,6 @@ const utils={
             if(await utils.click(ids.resources.addResource.localBrowser.ok, false) == true) return true
             else return false
         },
-
-
         /**
          * Delete a resource
          * @param  {string} name This is the name of the resource to delete
@@ -1231,7 +1226,7 @@ const utils={
                     console.log("ERROR: " + err)
                     return null
                 } 
-                
+
                 if(n == name && c == command){
                     return true
                 }
@@ -1541,14 +1536,12 @@ const utils={
 
             return num
         },
-        
         /**
          * Add a certificate
          * @param  {string} name The name of the certificate to add
          * @return {boolean | null} True if the certificate has been added, false otherwise, null in case of errors
          */
         addCertificate: async function(name){
-
             const certNumber = await utils.certificateManager.getAgileListLength()
             if(certNumber == null) return null
             //va in certificati
