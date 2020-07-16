@@ -3,6 +3,8 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require ("agile-os-interface")
+const {audio} = require("system-control")
+//requires npm install win-audio for windows and npm install loudness for unix
 var localVolume = null
 var localMute = null
 
@@ -66,7 +68,14 @@ describe("set output sound", function(){
             var changeDb = null
             changeAgile = await utils.systemSettings.setAudio(elem)
             changeDb = await db.getOutputVolume()
-            expect(changeAgile && changeDb < elem +1 && changeDb > elem -1).to.be.true
+            expect(changeAgile && changeDb <= elem +1 && changeDb >= elem -1).to.be.true
+        })
+
+        it("should return true if audio changed in the agile indicator and the system audio corresponds", async () => {
+            const changeAgile = await utils.systemSettings.setAudio(elem)
+            await utils.sleep(500)
+            const actualVolume = await audio.volume()
+            expect(changeAgile && actualVolume <= elem +1 && actualVolume >= elem -1).to.be.true
         })
     })
 
