@@ -49,7 +49,7 @@ before(async function(){
         if(info.os == "w"){
             filePath = "C:\\Program Files (x86)\\Praim\\Agile\\AgileService\\AgileBroker.conf"
         }else if(info.os == "l"){
-            filePath = "etc/praim-agile/broker.conf"
+            filePath = "/etc/praim-agile/broker.conf"
         }
     
         try{
