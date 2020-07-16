@@ -194,7 +194,7 @@ const utils={
     },
     /**
      * Find an element in the Agile list
-     * @param  {string | Array} elemName This is the name of the element to find, can be a string or an array, the first occurence is returned
+     * @param  {string | string[]} elemName This is the name of the element to find, can be a string or an array, the first occurence is returned
      * @param  {string} nameId Id of the html element that contains the name 
      * @param  {number} startIndex Start index for iteration
      * @param  {number} listLength Length of the Agile list
@@ -582,62 +582,32 @@ const utils={
     },
     
     networkSettings:{
-
-        //ritorna true se c'è una wifi disponibile con l'ssid dato, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Secect a wifi 
+         * @param  {string} ssid This is the ssid of the wifi to select
+         * @return {boolean | null} True if the wifi has been successfully selected, false if it is not in the list, null in case of errors
+         */
         checkSsid : async function (ssid) {
-            var done = true
             //Va nella sezione impostazioni di rete
-            const menu = global.app.client.$(info.NETWORK_SETTINGS);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.networkSettings.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             //Va nella sezione wifi
-            const wifi = global.app.client.$("#ab > a");
-            try{
-                await wifi.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.networkSettings.wifi.wifiTab) == false) return null
 
             await utils.sleep(1000)
 
-
-            //Clicca su aggiungi rete wifi
-            const add = global.app.client.$("#wifiTab > div > div > div.header-inputs > a");
-            try{
-                await add.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.networkSettings.wifi.addWifi.button) == false) return null
 
             await utils.sleep(1000)
-
 
             //apre la lista delle reti disponibili
-            const button = global.app.client.$("#wifi");
-            try{
-                await button.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.networkSettings.wifi.addWifi.selectNetwork) == false) return null
 
             await utils.sleep(1000)
 
-
+            //preme su quella con ssid dato
             var ret = null
             try{
                 ret = await global.app.client.$("span.network-ssid=" + ssid).click();
@@ -645,260 +615,150 @@ const utils={
                 ret = null
             }
             
-            await utils.sleep(1000)
-
-            if(done){
-                return ret != null
-            }else{
-                return null
-            }
+            return ret != null
+            
         },
-
-
-        //ritorna true se ha confermato la wifi, false se la password non è corretta o la rete non è presente nell'elenco, null se qualcosa non ha funzionato
+        /**
+         * Add a wifi
+         * @param  {string} ssid This is the ssid of the wifi to add
+         * @param  {string} psw This is the password of the wifi to add
+         * @return {boolean | null} True if the wifi has been successfully added, false if it is not in the list or has not been added, null in case of errors
+         */
         saveWifi: async function (ssid, psw){
-            var done = true
-            const first = await utils.networkSettings.checkSsid(ssid)
+            //seleziona la wifi con ssid corrispondente
+            if(await utils.networkSettings.checkSsid(ssid) != true) return false
+
+            await utils.sleep(1000)
 
             //inserisce la password
-            const password = global.app.client.$("#add-connection-modal > div > div.modal-content > div > div > div.row:nth-child(4) > div > div > input");
-            try{
-                password.click();
-                await password.setValue(psw);
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.networkSettings.wifi.addWifi.password, psw) == false) return null
 
             await utils.sleep(1000)
 
-
             //conferma premendo ok
-            const ok = global.app.client.$("#add-connection-modal > div > div.modal-footer > div > a:nth-child(1)");
-            var click = null;
-            try{
-                click = await ok.click();
-            }catch{
-                click = null
-            }
-            if(done){
-                return first && click != null
-            }else{
-                return null
-            }
+            if(await utils.click(ids.networkSettings.wifi.addWifi.ok, false) == true) return true
+            else return false
+         
         }
     },
 
     deviceLock:{
-
-        //ritorna true se ha creato la regola, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Add a device
+         * @param  {string} vid This is the vid of the device
+         * @param  {string} pid This is the pid of the device
+         * @return {boolean | null} True if the device has been successfully added, false otherwise, null in case of errors
+         */
         addRule: async function (vid, pid){
-            var done = true
-            const menu = global.app.client.$(info.DEVICE_LOCK);
-            var click = null;
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
+            //va nel menu device lock
+            if(await utils.click(ids.deviceLock.menuID) == false) return null
 
+            await utils.sleep(1000);
 
-            await utils.sleep(1500);
-            
-
-            const addRule = global.app.client.$("#main-div > div.main-content > main > section > div.fixed-header > div > div > a");
-            try{
-                await addRule.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
-
-            await utils.sleep(1000)
-            
-
-            var v = global.app.client.$("#vid");
-            try{
-                v.click();
-                await v.setValue(vid);
-            }catch{
-                done = false
-            }
-
+            //clicca su add rule
+            if(await utils.click(ids.deviceLock.addRule.button) == false) return null
 
             await utils.sleep(1000)
 
-
-            v = global.app.client.$("#pid");
-            try{
-                v.click();
-                await v.setValue(pid);
-            }catch{
-                done = false
-            }
-
+            //inserisce vid
+            if(await utils.insertText(ids.deviceLock.addRule.vid, vid) == false) return null
 
             await utils.sleep(1000)
 
+            //inserisce pid
+            if(await utils.insertText(ids.deviceLock.addRule.pid, pid) == false) return null
 
-            const ok = global.app.client.$("#add-usb-rule-modal > div > div.modal-footer > div > a:nth-child(1)")
-            try{
-                click = await ok.click()
-            }catch{
-                click = null;
-            }
-            if(done){
-                return click != null
-            }else{
-                return null
-            }
+            await utils.sleep(1000)
+
+            //conferma premendo ok
+            if(await utils.click(ids.deviceLock.addRule.ok, false) == true) return true
+            else return false
+
         },
-        //ritorna true se ha eliminato con successo, altrimenti false, null se ci sono errori
+        /**
+         * Delete a device
+         * @param  {string} vid This is the vid of the device
+         * @param  {string} pid This is the pid of the device
+         * @return {boolean | null} True if the device has been successfully delete, false if the device is not in the list, null in case of errors
+         */
         deleteRule: async function(vid, pid){
-            var done = true
-            //va in impostazioi
-            const menu = global.app.client.$(info.DEVICE_LOCK);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-            
+            //va nel menu device lock
+            if(await utils.click(ids.deviceLock.menuID) == false) return null
 
             await utils.sleep(500)
-
 
             const length = await db.getDeviceLockListLength()
 
             await utils.sleep(500)
-            var click = null
-            var base = null
+
             var vidPid = null
-            var index = null
-            for(i=1; i<=length;i++){
-                base = "#main-div > div.main-content > main > section > div.section-wrapper > div.usbredir-list > div > div:nth-child("+i+") > div"
-                try{
-                    vidPid = await global.app.client.$(base + " > div.usbredir-item-properties > div > div").getText()
-                }catch{
-                    done = false
-                }
-                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
-                    index = i
-                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
-                    index = i
-                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
-                    index = i
-                }
-                
-            }
-            if(index != null){
-                try{
-                    click = await global.app.client.$("#main-div > div.main-content > main > section > div.section-wrapper > div.usbredir-list > div > div:nth-child("+index+") > div > div.usbredir-item-delete > i").click()
-                }catch(err){
-                    done = false
-                }
-            }
+            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
             
-            if(done){
-                return click != null
-            }else{
-                return null
-            }
-
+            const index = await utils.findInList(vidPid, ids.deviceLock.vidPid, 1, length)
+        
+            //clicca su elimina
+            if(await utils.click(ids.deviceLock.delete(index), false) == true) return true
+            else return false
+            
         },
-
-        //ritorna true se l'elemento è nella lista, false altrimenti, null in caso di errori
+        /**
+         * Search an element in the list
+         * @param  {string} vid This is the vid of the device
+         * @param  {string} pid This is the pid of the device
+         * @return {boolean | null} True if the device is in the list, false otherwise, null in case of errors
+         */
         isInAgileList: async function(vid, pid){
-            var done = true
-            //apre device lock menu
-            const menu = global.app.client.$(info.DEVICE_LOCK);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
+            //va nel menu device lock
+            if(await utils.click(ids.deviceLock.menuID) == false) return null
 
+            await utils.sleep(500)
 
-            await utils.sleep(1500);
+            const length = await db.getDeviceLockListLength()
 
+            await utils.sleep(500)
 
-            const length = await db.getDeviceLockListLength();
-            const base = "#main-div > div.main-content > main > section > div.section-wrapper.with-header.scrollable > div > div"
-            var found = false;
-            var vidPid = null;
-            for(i = 1; i <= length; i++){
-                try{
-                    vidPid = await global.app.client.$(base + " > div:nth-child("+i+") > div > div.usbredir-item-properties > div > div").getText();
-                }catch{
-                    done = false
-                }
-                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
-                    found = true
-                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
-                    found = true
-                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
-                    found = true
-                } 
-            }
-            if(done){
-                return found
-            }else{
-                return null
-            }
+            var vidPid = null
+            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
+            
+            const index = await utils.findInList(vidPid, ids.deviceLock.vidPid, 1, length)
+
+            if(index > 0) return true
+            else return false
 
         }
     },
 
     thinmanSettings: {
-        //ritorna true se ha aggiunto l'address, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Add a thinman address
+         * @param  {string} address This is the address/hostname of the thinman
+         * @param  {string} port This is the port of the thinman
+         * @param  {string} timeout This is the timeout of the thinman
+         * @return {boolean | null} True if the device has been added, false otherwise, null in case of errors
+         */
         addAddress: async function(address, port, timeout){
-            var done = true
             //va in thinman settings
-            const menu = global.app.client.$(info.THINMAN_SETTINGS);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-        
+            if(await utils.click(ids.thinmanSettings.menuID) == false) return null
         
             await utils.sleep(1000)
-        
         
             //preme su add address
-            const add = global.app.client.$('h5 > a');
-            try{
-                await add.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-        
+            if(await utils.click(ids.thinmanSettings.addAddress.button) == false) return null
         
             await utils.sleep(1000)
         
-        
-            //inserisce l'hostname
-            const hostname = global.app.client.$("#new-address");
-            try{
-                hostname.click();
-                await hostname.setValue(address);
-            }catch{
-                done = false
-            }
-        
+            //inserisce l'address
+            if(await utils.insertText(ids.thinmanSettings.addAddress.hostname, address) == false) return null
         
             await utils.sleep(1000)
         
-        
-            //inserisce la porta
-            const p = global.app.client.$("#new-port");
-            
+            // inserisce la porta
+            //la funzione insertText qui non funziona
+            const p = global.app.client.$(ids.thinmanSettings.addAddress.port);
             try{
                 p.click();
                 
@@ -916,16 +776,14 @@ const utils={
                     await p.setValue(port)
                 }
             }catch{
-                done = false
+                return null
             }
         
-        
             await utils.sleep(1000)
-        
-        
+
             //inserisce il timeout
-            const t = global.app.client.$("#new-timeout");
-        
+            //la funzione insertText qui non funziona
+            const t = global.app.client.$(ids.thinmanSettings.addAddress.timeout);
             try{
                 t.click()
                 const val = timeout.toString()
@@ -946,50 +804,29 @@ const utils={
                     })
                 })                    
             }catch{
-                done = false
+                return null
             }
-
         
             await utils.sleep(1000)
         
-        
-            const confirm = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.modal-footer > div.buttons > a:nth-child(1)");
-            var ret = null;
-            try{
-                ret = await confirm.click();
-            }catch{
-                ret = null
-            }
-            if(done){
-                return ret != null
-            }else{
-                return null
-            }
+            //conferma premendo ok
+            if(await utils.click(ids.thinmanSettings.addAddress.ok, false) == true) return true
+            else return false
+
         },
-
-
-        //return true se ha premuto sul bottone elimina, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Delete an address of the list
+         * @param  {string} address This is the address/hostname of the thinman
+         * @return {boolean | null} True if the device has been deleted, false if the device is not in the list, null in case of errors
+         */
         deleteAddress: async function(address){
-            var done = true
             //va in thinman settings
-            const menu = global.app.client.$(info.THINMAN_SETTINGS);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
-
+            if(await utils.click(ids.thinmanSettings.menuID) == false) return null
+        
             await utils.sleep(1000)
-
 
             //numero di address agile 
             const length = await db.getThinManListLength();
-            var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
-            var child = null;
-            //selector per il bottone da premere
-            var elimina = null;
             //aggiorno lingua
             const language = await db.dbLanguage()
             //string per html che dipende dalla lingua in uso
@@ -997,60 +834,28 @@ const utils={
             if(language == 1) indirizzo = "Indirizzo"
             else if(language == 2) indirizzo = "Address"
             else if(language == 3) indirizzo = "Dirección"
+
+            //indice dell'elemento da eliminare
+            const index = await utils.findInList("<div><b>"+indirizzo+":</b> "+ address +"</div>", ids.thinmanSettings.address, 1, length)
+
+            //elimina l'elemento premendo il bottone
+            if(await utils.click(ids.thinmanSettings.delete(index), false) == true) return true
+            else return false
             
-            for(i=1;i<=length;i++){
-                //cerco l'address che voglio eliminare
-                child = thinman + " > li:nth-child("+i+") > div > div"
-                //guardo se gli address corrispondono
-                var x = null;
-                try{
-                    x = await global.app.client.$(child + " > div.address-info > div").getHTML();
-                }catch{
-                    done = false
-                }
-                if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
-                    //salvo elemento da eliminare per eliminarlo in seguito
-                    elimina = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div.address-item-delete > i";
-                }
-            } 
-            //bottone da premere per eliminare l'elemento
-            var elim = null;
-            try{
-                elim = await global.app.client.$(elimina).click();
-            }catch{
-                elim = null
-            }
-            if(done){
-                return elim != null
-            }else{
-                return null
-            }
         },
-
-
-        //return true se non l'address con l'hostname dato è nella lista, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Search a device in the list
+         * @param  {string} address This is the address/hostname of the thinman
+         * @return {boolean | null} True if the device is in the list, false otherwise, null in case of errors
+         */
         isInAgileList: async function(address){
-            var done = true
             //va in thinman settings
-            const menu = global.app.client.$(info.THINMAN_SETTINGS);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
-
+            if(await utils.click(ids.thinmanSettings.menuID) == false) return null
+        
             await utils.sleep(1000)
-
 
             //numero di address agile 
             const length = await db.getThinManListLength();
-
-            var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
-            var child = null;
-            //indica se ho trovato un'address con quell'hostname
-            var found = false;
             //aggiorno lingua
             const language = await db.dbLanguage()
             //string per html che dipende dalla lingua in uso
@@ -1059,51 +864,26 @@ const utils={
             else if(language == 2) indirizzo = "Address"
             else if(language == 3) indirizzo = "Dirección"
 
-            for(i=1;i<=length;i++){
-                //cerco l'address
-                child = thinman + " > li:nth-child("+i+") > div > div"
-                //guardo se gli address corrispondono
-                var x = null;
-                try{
-                    x = await global.app.client.$(child + " > div.address-info > div").getHTML();
-                }catch{
-                    done = false
-                }
-                if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
-                    //aggiorno found
-                    found = true;
-                }
-            }
-            if(done){
-                return found
-            }else{
-                return null
-            }
+            //indice dell'elemento
+            const index = await utils.findInList("<div><b>"+indirizzo+":</b> "+ address +"</div>", ids.thinmanSettings.address, 1, length)
+
+            if(index > 0) return true
+            else return false
             
         },
-
-        //return true se ha premuto sul bottone test ed è apparsa la notifica di successo, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Test an address
+         * @param  {string} address This is the address/hostname of the thinman
+         * @return {boolean | null} True if the device has been successfully testd and success notification appeared, false otherwise, null in case of errors
+         */
         testAddress: async function(address){
-            var done = true
             //va in thinman settings
-            const menu = global.app.client.$(info.THINMAN_SETTINGS);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
-
+            if(await utils.click(ids.thinmanSettings.menuID) == false) return null
+        
             await utils.sleep(1000)
-
 
             //numero di address agile 
             const length = await db.getThinManListLength();
-            var thinman = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
-            var child = null;
-            //selector per il bottone da premere
-            var test = null;
             //aggiorno lingua
             const language = await db.dbLanguage()
             //string per html che dipende dalla lingua in uso
@@ -1111,182 +891,87 @@ const utils={
             if(language == 1) indirizzo = "Indirizzo"
             else if(language == 2) indirizzo = "Address"
             else if(language == 3) indirizzo = "Dirección"
-            
-            for(i=1;i<=length;i++){
-                //cerco l'address che voglio eliminare
-                child = thinman + " > li:nth-child("+i+") > div > div"
-                //guardo se gli address corrispondono
-                var x = null;
-                try{
-                    x = await global.app.client.$(child + " > div.address-info > div").getHTML();
-                }catch{
-                    done = false
-                }
-                if(x == "<div><b>"+indirizzo+":</b> "+ address +"</div>"){
-                    //salvo elemento da testare per testarlo in seguito
-                    test = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul > li:nth-child("+i+") > div > div > div:nth-child(2) > a";
-                }
-            } 
-            //bottone da premere per testare l'elemento
-            var t = null;
-            try{
-                t = await global.app.client.$(test).click();
-            }catch{
-                t = null
-            }
+
+            //indice dell'elemento
+            const index = await utils.findInList("<div><b>"+indirizzo+":</b> "+ address +"</div>", ids.thinmanSettings.address, 1, length)
+
+            //preme bottone test
+            if(await utils.click(ids.thinmanSettings.test(index), false) == false) return false
 
             await utils.sleep(1500)
 
             //a volte ci mette un po' quindi attende fino a 60 secondi per ricevere la notifica e poi controlla il titolo
             const not = await utils.checkNotification("success", 30)
 
-            if(done){
-                return t != null && not
-            }else{
-                return null
-            }
+            return not
+            
         }
     },
 
     usbRedirection: {
         //return true se ha confermato la creazione della regola, false altrimenti, null se qualcosa non ha funzionato 
+        /**
+         * @param  {string} description This is the description of the rule
+         * @param  {string} vid This is the vid of the rule
+         * @param  {string} pid This is the pid of the rule
+         * @return {boolean | null} True if the rule has been added, false otherwise, null in case of errors
+         */
         addRule: async function(description, vid, pid){
-            var done = true
             //Apre menù USB Redirection
-            const menu = global.app.client.$(info.USB_REDIRECTION);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.usbRedirection.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             //clicca add redirection rule
-            const button = global.app.client.$('#citrix > div > div > div > a');
-            try{
-                await button.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.usbRedirection.addRule.button) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce descrizione 
-            const d = global.app.client.$("#description");
-            try{
-                d.click();
-                await d.setValue(description);
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.usbRedirection.addRule.description, description) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce il vid
-            if(vid != null){
-                const v = global.app.client.$("#vid");
-                try{
-                    v.click();
-                    await v.setValue(vid);
-                }catch{
-                    done = false
-                }
-            }
-            
+            if(await utils.insertText(ids.usbRedirection.addRule.vid, vid) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce il pid
-
-            if(pid != null){
-                const p = global.app.client.$("#pid");
-                try{
-                    p.click();
-                    await p.setValue(pid);
-                }catch{
-                    done = false
-                }
-            }
-
+            if(await utils.insertText(ids.usbRedirection.addRule.pid, pid) == false) return null
 
             await utils.sleep(1000)
 
-
-            //conferma
-            const ok = global.app.client.$("#add-usb-rule-modal > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
-            var click = null;
-            try{
-                click = await ok.click();
-            }catch{
-                click = null
-            }
-            if(done){
-                return click != null
-            }else{
-                return null
-            }
+            //conferma premendo ok
+            if(await utils.click(ids.usbRedirection.addRule.ok, false) == true) return true
+            else return false
+            
         },
-
-        //return true se ha eliminato la regola, false altrimenti, null se ci sono stati errori 
+        /**
+         * Delete a rule of the list
+         * @param  {string} vid This is the vid of the rule
+         * @param  {string} pid This is the pid of the rule
+         * @return {boolean | null} True if the rule has been deleted, false if the rule is not in the list, null in case of errors
+         */
         deleteRule: async function(vid, pid){
-            var done = true
             //Apre menù USB Redirection
-            const menu = global.app.client.$(info.USB_REDIRECTION);
-            var click = null;
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.usbRedirection.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             const length = await db.getUSBRedirectionListLength()
-            var base = null
+
             var vidPid = null
-            var index = null
-            for(i=1; i<=length;i++){
-                base = "#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div"
-                try{
-                    vidPid = await global.app.client.$(base + " > div.usbredir-item-properties > div > p").getText()
-                }catch{
-                    done = false
-                }
-                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
-                    index = i
-                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
-                    index = i
-                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
-                    index = i
-                }
-                
-            }
-            if(index != null){
-                try{
-                    click = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+index+") > div > div.usbredir-item-delete > i").click()
-                }catch{
-                    done = false
-                }
-            }
+            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
             
-            if(done){
-                return click != null
-            }else{
-                return null
-            }
+            //indice dell'elemento da eliminare
+            const index = await utils.findInList(vidPid, ids.usbRedirection.vidPid, 1, length)
+
+            //elimina l'elemento premendo il bottone
+            if(await utils.click(ids.usbRedirection.delete(index), false) == true) return true
+            else return false
 
         },
 
