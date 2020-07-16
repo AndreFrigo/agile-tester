@@ -229,6 +229,37 @@ const utils={
         return -1
     },
 
+    insertTextPromise: async function(id, text, printError = true){
+        const elem = global.app.client.$(id)
+        try{
+            elem.click()
+            const val = text.toString()
+            await new Promise(function (resolve, reject){
+                elem.getValue().then(async function(result){
+                    //cancella il valore predefinito
+                    for(i=0;i<result.length;i++){	
+                        global.app.client.keys("Backspace");	
+                    }
+
+                    await utils.sleep(500)
+
+                    //inserisce manualmente il valore da settare
+                    for(i=0;i<val.length;i++){
+                        global.app.client.keys(val[i])
+                    }
+                    resolve(true)
+                })
+            })                    
+        }catch(err){
+            if(printError){
+                console.log("Error while getting/setting value of the element with id: " + id)
+                console.log("ERROR: "+err)
+            }
+            return false
+        }
+        return true        
+    },
+
     resources:{
         /**
          * Add a resource of type Local Browser
@@ -757,55 +788,14 @@ const utils={
             await utils.sleep(1000)
         
             // inserisce la porta
-            //la funzione insertText qui non funziona
-            const p = global.app.client.$(ids.thinmanSettings.addAddress.port);
-            try{
-                p.click();
-                
-                if(port == ""){
-                    //cancellazione manuale, con clearElement non funziona in questo caso
-                    await new Promise(function (resolve, reject){
-                        p.getValue().then(function(result){
-                            for(i=0;i<result.length;i++){	
-                                global.app.client.keys("Backspace");	
-                            }
-                            resolve(true)
-                        })
-                    }) 
-                }else{
-                    await p.setValue(port)
-                }
-            }catch{
-                return null
-            }
+            //la funzione insertText qui non funziona            
+            if(await utils.insertTextPromise(ids.thinmanSettings.addAddress.port, port) == false) return null
         
             await utils.sleep(1000)
 
             //inserisce il timeout
             //la funzione insertText qui non funziona
-            const t = global.app.client.$(ids.thinmanSettings.addAddress.timeout);
-            try{
-                t.click()
-                const val = timeout.toString()
-                await new Promise(function (resolve, reject){
-                    t.getValue().then(async function(result){
-                        //cancella il valore predefinito
-                        for(i=0;i<=result.length;i++){	
-                            await global.app.client.keys("Backspace");	
-                        }
-
-                        await utils.sleep(500)
-
-                        //inserisce manualmente il valore da settare
-                        for(i=0;i<val.length;i++){
-                            await global.app.client.keys(val[i])
-                        }
-                        resolve(true)
-                    })
-                })                    
-            }catch{
-                return null
-            }
+            if(await utils.insertTextPromise(ids.thinmanSettings.addAddress.timeout, timeout) == false) return null
         
             await utils.sleep(1000)
         
@@ -974,260 +964,162 @@ const utils={
             else return false
 
         },
-
-        //return true se ha trovato la rule nella lista di agile, altrimenti false, null se ci sono errori
+        /**
+         * Search a rule in the list
+         * @param  {string} vid This is the vid of the rule
+         * @param  {string} pid This is the pid of the rule
+         * @return {boolean | null} True if the rule is in the list, false otherwise, null in case of errors
+         */
         findRule: async function(vid, pid){
-            var done = true
-            //apre menu usb redirection
-            const menu = global.app.client.$(info.USB_REDIRECTION);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            //Apre menù USB Redirection
+            if(await utils.click(ids.usbRedirection.menuID) == false) return null
 
             await utils.sleep(500)
-
 
             //numero di address agile 
             const length = await db.getUSBRedirectionListLength();
 
-            //indica se ho trovato un'address con quell'hostname
-            var found = false;
-            var vidPid = null;
+            var vidPid = null
+            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
+            
+            //indice dell'elemento
+            const index = await utils.findInList(vidPid, ids.usbRedirection.vidPid, 1, length)
 
-            for(i = 1; i <= length; i++){
-                try{
-                    vidPid = await global.app.client.$("#citrix > div > div.usbredir-list > div > div:nth-child("+i+") > div > div.usbredir-item-properties > div > p > span").getText();
-                }catch{
-                    done = false
-                }
-                if(vid != null && pid != null && vidPid == "Vid: "+vid+", Pid: "+pid){
-                    found = true
-                }else if((vid == null || vid == "") && pid != null && vidPid == "Pid: "+pid){
-                    found = true
-                }else if(vid != null && (pid == null || pid == "") && vidPid == "Vid: "+vid){
-                    found = true
-                }
-            }
-
-            if(done){
-                return found
-            }else{
-                return null
-            }
+            if(index > 0) return true
+            else return false
         }
     },
 
     startup: {
         //ritorna true se ha creato la startup, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Add a startup
+         * @param  {string} name This is the name of the startup to add
+         * @param  {string} command This is the command of the startup to add
+         * @return {boolean | null} True if the startup has been added, false otherwise, null in case of errors
+         */
         addStartup: async function(name, command){
-            var done = true
             //va in startup
-            const menu = global.app.client.$(info.STARTUP);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.startup.menuID) == false) return null
 
             await utils.sleep(1000)
-
 
             //preme su Add startup
-            const button = global.app.client.$("#main-div > div.main-content > main > section > div > div.fixed-header > div > a")
-            try{
-                await button.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.startup.addStartup.button) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce nome 
-            const n = global.app.client.$("#name");
-            try{
-                n.click();
-                await n.setValue(name);
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.startup.addStartup.name, name) == false) return null
 
             await utils.sleep(1000)
-
 
             //inserisce comando 
-            const c = global.app.client.$("#command");
-            try{
-                c.click();
-                await c.setValue(command);
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.startup.addStartup.command, command) == false) return null
 
             await utils.sleep(1000)
 
-
-            //conferma
-            const ok = global.app.client.$("#add-connection-modal.form > div.custom-modal.open > div.modal-footer > div.buttons > a:nth-child(1)");
-            var ret = null;
-            try{
-                ret = await ok.click();
-            }catch{
-                ret = null
-            }
-
-            if(done){
-                return ret != null
-            }else{
-                return null
-            }
+            //conferma premendo ok
+            if(await utils.click(ids.usbRedirection.addRule.ok, false) == true) return true
+            else return false
+            
         }
     },
     
     remoteAssistance: {
-        //ritorna true se remote assistance è enabled, altrimenti false. ritorna null se qualcosa non ha funzionato 
+        /**
+         * Enable remote assistance
+         * @return {boolean | null} True if remote assistance is enable, false otherwise, null in case of errors
+         */
         enableRemoteAssistance: async function(){
-            var done = true
             //va nella sezione remote assistance
-            const menu = global.app.client.$(info.REMOTE_ASSISTANCE);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.remoteAssistance.menuID) == false) return null
 
             await utils.sleep(1000)
 
-            var checkbox = null
-            try{
-                checkbox = global.app.client.$("#enable-remote-assistance")
-            }catch{
-                done = false
-            }
             var val = null
             var isEnable = false
             try{
-                val = await checkbox.getValue()
+                val = await global.app.client.$(ids.remoteAssistance.enable).getValue()
             }catch{
-                done = false
+                return null
             }
             if(val == "false"){
-                const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row > div > label")
                 try{
-                    await label.click()
+                    await global.app.client.$(ids.remoteAssistance.labelEnable).click()
                     isEnable = true
                 }catch{
-                    done = false
+                    return null
                 }
             }else if(val == "true"){
                 isEnable = true
             }
             
-            if(done){
-                return isEnable
-            }else{
-                return null
-            }
+            return isEnable
         },
-
-
-        //input: valore da inserire
-        //output: true se enable remote assistance e require user authorization sono spuntate e auto-accept after ... seconds ha il valore corretto, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Set auto-accept and the timeout value
+         * @param  {string | number} v This is the value to set to the timeout
+         * @return {boolean | null} True if remote assistance and require user authentication are enable and the timeout is correct, false otherwise, null in case of errors
+         */
         setAutoAccept: async function(v){
-            var done = true
             await utils.remoteAssistance.enableRemoteAssistance()
+
             await utils.sleep(500)
-            var checkbox = global.app.client.$("#allow-reject")
+
             var val = null
             try{
-                val = await checkbox.getValue()
+                val = await global.app.client.$(ids.remoteAssistance.requireAuthorization).getValue()
             }catch{
-                done = false
+                return null
             }
             if(val == "false"){
-                const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row:nth-child(2) > div > div > label")
                 try{
-                    await label.click()
+                    await global.app.client.$(ids.remoteAssistance.labelRequireAuthorization).click()
                 }catch{
-                    done = false
+                    return null
                 }
             }
+
             await utils.sleep(500)
+
             var isEnable = false
             val = null
-            checkbox = global.app.client.$("#check-auto-accept")
             try{
-                val = await checkbox.getValue()
+                val = await global.app.client.$(ids.remoteAssistance.autoAccept).getValue()
             }catch{
-                done = false
+                return null
             }
             if(val == "false"){
-                const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row:nth-child(2) > div > div.col > div > label")
                 try{
-                    await label.click()
+                    await global.app.client.$(ids.remoteAssistance.labelAutoAccept).click()
                     isEnable = true
                 }catch{
-                    done = false
+                    return null
                 }
             }else if (val == "true"){
                 isEnable = true
             }
-            await utils.sleep(500)
-            const time = global.app.client.$("#auto-accept")
-            if(isEnable){
-                try{
-                    time.click()
-                    const val = v.toString()
-                    await new Promise(function (resolve, reject){
-                        time.getValue().then(function(result){
-                            //cancella il valore predefinito
-                            for(i=0;i<result.length;i++){	
-                                global.app.client.keys("Backspace");	
-                            }
-                            //inserisce manualmente il valore da settare
-                            for(i=0;i<val.length;i++){
-                                global.app.client.keys(val[i])
-                            }
-                            resolve(true)
-                        })
-                    })                    
-                }catch{
-                    done = false
-                }
-            }
 
+            await utils.sleep(500)
+
+            //insertText non funziona qui
+            if(isEnable){
+                if(await utils.insertTextPromise(ids.remoteAssistance.timeAutoAccept, v) == false) return null
+            }
 
             await utils.sleep(1000)
             
-            
             //preme sul menù per confermare 
-            const menu = global.app.client.$(info.REMOTE_ASSISTANCE);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
+            if(await utils.click(ids.remoteAssistance.menuID) == false) return null
 
             await utils.sleep(500)
 
             const radb = await db.getRemoteAssistance()
-            if(done){
-                return (radb.enabled && radb.acceptance.allow_reject && radb.acceptance.auto_accept == v)
-            }else{
-                return null
-            }
+            
+            return (radb.enabled && radb.acceptance.allow_reject && radb.acceptance.auto_accept == v)
             
         }
     },
