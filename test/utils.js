@@ -347,6 +347,64 @@ const utils={
             if(await utils.click(sel) == true) return true
             else return false
             
+        },
+        /**
+         * Set output volume
+         * @param  {number} val This is the volume to set
+         * @return {boolean | null} True if the volume changed correctly (+-1 margin), false otherwise, null in case of errors
+         */
+        setAudio: async function(val){
+            //va nelle impostazioni di sistema
+            if(await utils.click(ids.systemSettings.menuID) == false) return null
+
+            await utils.sleep(1000)
+
+            //va nella sezione audio
+            if(await utils.click(ids.systemSettings.sound.soundTab) == false) return null
+
+            await utils.sleep(1000)
+
+            var widthElem = null
+            try{
+                widthElem = await global.app.client.getCssProperty(ids.systemSettings.sound.outputVolume, "width")
+            }catch{
+                return null
+            }
+
+            var width = null
+            width = widthElem.parsed.value
+            
+            //formula ricavata dal grafico x: expected value, y: actual value. L'equazione della retta è y = 1.1x - 6, viene concesso un errore di +-1 a causa dell'approssimazione 
+            var x = Math.round(((val + 6)/1.1)*width/100)   
+
+            //opzions deprecated
+            try{
+                await global.app.client.moveToObject("#outputVolume",x,0)
+                await utils.sleep(1000)
+                await global.app.client.buttonPress()
+                await utils.sleep(500)
+                await global.app.client.buttonPress()
+            }catch{
+                return null
+            }
+
+            await utils.sleep(500)
+
+            //legge il valore attuale dall'interfaccia agile
+            var currentValue = null
+            try{
+                currentValue = await global.app.client.$(ids.systemSettings.sound.outputLevel).getText()
+            }catch{
+                return null
+            }
+            var ret = false
+            try{
+                if(currentValue <= val + 1 && currentValue >= val -1) return true
+                else return false
+            }catch{
+                return null
+            }
+
         }
     },
 
