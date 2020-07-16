@@ -6,10 +6,16 @@ var robot = null
 const path = require("path")
 
 const utils={
-    //funzione di wait
+    /**
+     * Wait some time
+     * @param {number} time This is the time to wait in milliseconds
+     */
     sleep : time => new Promise(r => setTimeout(r, time)),
 
-    //funzione per avviare l'applicazione
+    
+    /**
+     * Start the application
+     */
     start: async function(){
         await global.app.start()
         
@@ -61,10 +67,12 @@ const utils={
         }
         
     },
-
-    //return true se è apparso il pop up , altrimenti false 
-    //param type: tipo di notifica: success | warning
-    //param time: tempo massimo di attesa in secondi (da moltiplicare per 2)
+    /**
+     * Wait for a pop-up to appear
+     * @param  {string} type This is the type of notification: {"success" | "warning" | "error"}
+     * @param  {number} time This is the max time to wait (divided by 2)
+     * @return {boolean} True if the pop-up has shown in time, false otherwise
+     */
     checkNotification: async function(type, time = 2){
         var notification = null
         var i = 0
@@ -101,9 +109,11 @@ const utils={
         }
         return notification == not && notification != null
     },
-
-    //seleziona il file con il nome dato in input nella cartella agile-tester/files
-    //return true se tutto è andato bene, altrimenti false
+    /**
+     * Select the file with the given name, it has to be in the folder agile-tester/files
+     * @param  {string} fileName This is the name of the file to choose
+     * @return {boolean} True if everything was right, false if there were errors
+     */
     fileChooser: async function(fileName){
         var done = true
         //va nella sezione path
@@ -228,7 +238,13 @@ const utils={
         }
         return -1
     },
-
+    /**
+     * Insert a text in the text field with the given ID using promises, this function is used instead of insertText when it does not work
+     * @param  {string} id This is the ID ot the text field
+     * @param  {string} text This is the text to set to the text field
+     * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
+     * @return {boolean} True if the text was inserted, false in case of error
+     */
     insertTextPromise: async function(id, text, printError = true){
         const elem = global.app.client.$(id)
         try{
@@ -420,7 +436,6 @@ const utils={
             else return false
             
         },
-        //return true se ha aggiunto la risorsa, altrimenti false, null se ci sono errori
         /**
          * Add a resource of type Citrix
          * @param  {string} name This is the name of the resource to add
@@ -464,7 +479,6 @@ const utils={
             else return false
 
         },
-        //return true se la risorsa è stata aggiunta, altrimenti false, null se ci sono errori
         /**
          * Add a resource of type Microsoft
          * @param  {string} name This is the name of the resource to add
@@ -507,8 +521,6 @@ const utils={
             else return false
 
         },
-
-        //return true se l'ha creata, altrimenti false, null se ci sono stati errori
         /**
          * Add a resource of type VMware
          * @param  {string} name This is the name of the resource to add
@@ -546,8 +558,6 @@ const utils={
             else return false
             
         },
-        //input: type: 1|2|3|4|5 identifica il tipo di risorsa, name: il nome della risorsa
-        //output: true se il test ha prodotto una notifica di successo, false altrimenti, null in caso di errori
         /**
          * @param  {number} type This is the resource type: citrix => 1, Microsoft => 2, VMware => 3, Local Browser => 4, Local Application => 5
          * @param  {string} name This is the name of the resource to test
@@ -899,7 +909,6 @@ const utils={
     },
 
     usbRedirection: {
-        //return true se ha confermato la creazione della regola, false altrimenti, null se qualcosa non ha funzionato 
         /**
          * @param  {string} description This is the description of the rule
          * @param  {string} vid This is the vid of the rule
@@ -993,7 +1002,6 @@ const utils={
     },
 
     startup: {
-        //ritorna true se ha creato la startup, altrimenti false, null se qualcosa non ha funzionato
         /**
          * Add a startup
          * @param  {string} name This is the name of the startup to add
@@ -1125,328 +1133,244 @@ const utils={
     },
     
     agileAuthentication: {
-        //input: 
-            //ssid: ssid della wifi da scegliere
-        //output: 
-            //true se l'ssid è corretto, altrimenti false, null se qualcosa non ha funzionato
+        /**
+         * Choose a wifi for authentication given the ssid
+         * @param  {string} ssid This is the ssid of the wifi to choose
+         * @return {boolean | null} True if the ssid is correct, false otherwise, null in case of errors
+         */
         checkWifiAuthenticationSsid: async function(ssid){
-            var done = true
             //va nella sezione agile authentication
-            const menu = global.app.client.$(info.AGILE_AUTHENTICATION);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.agileAuthentication.menuID) == false) return null
 
             await utils.sleep(1000)
 
-
-            const dropdown = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.input-field > div > input")
+            //dropdown per scegliere il tipo di autenticazione
+            const dropdown = global.app.client.$(ids.agileAuthentication.dropdown)
             var dataActivates = null
             try{
                 dropdown.click()
                 dataActivates = await dropdown.getAttribute("data-activates")
             }catch{
-                done = false
-            }
-
-
-            await utils.sleep(500)
-
-
-            const wifi = global.app.client.$("#"+dataActivates+" > li:nth-child(2)")
-            try{
-                wifi.click()
-            }catch{
-                done = false
+                return null
             }
 
             await utils.sleep(500)
 
-
-            try{
-                global.app.client.$("#wifi").click()
-            }catch{
-                done = false
-            }
-
+            //clicca sull'opzione wifi
+            if(await utils.click(ids.agileAuthentication.wifi.selector(dataActivates)) == false) return null
 
             await utils.sleep(500)
 
+            //apre il dropdown con lista wifi disponibili
+            if(await utils.click(ids.agileAuthentication.wifi.dropdown) == false) return null
 
+            await utils.sleep(500)
+
+            //clicca sulla wifi con ssid corrispondente
             var ret = null
             try{
                 ret = await global.app.client.$("span.network-ssid=" + ssid).click();
             }catch{
                 ret = null
             }
-            if(done){
-                return ret != null
-            }else{
-                return null
-            }
+
+            return ret != null
+
         },
-
-        //input: 
-            //ssid: ssid della wifi da scegliere
-            //password: password della wifi da scegliere
-        //output: 
-            //true se tutto è andato a buon fine, altrimenti false
+        /**
+         * Set authentication with wifi
+         * @param  {string} ssid This is the ssid of the wifi to connect
+         * @param  {string} password This is the password of the wifi to connect
+         * @return {boolean | null} True if the wifi has been added, false otherwise, null in case of errors
+         */
         addWifiAuthentication: async function(ssid, password){
-            var done = true
-            var classe = null
-
             await this.checkWifiAuthenticationSsid(ssid)
 
             await utils.sleep(500)
 
-            const auth = global.app.client.$("#main-div > div > main > section > div > ul > li > div.collapsible-body > div.row:nth-child(2) > div > div > input")
+            //dropdown per il tipo di autenticazione
+            const auth = global.app.client.$(ids.agileAuthentication.wifi.authentication)
             var dataActivates = null
             try{
                 auth.click()
                 dataActivates = await auth.getAttribute("data-activates")
-            }catch{
-                done = false
+            }catch(err){
+                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.wifi.authentication)
+                console.log("ERROR: " + err)
+                return null
             }
-
 
             await utils.sleep(500)
 
-
+            //scelta tipo autenticazione
             try{
                 global.app.client.$("#"+dataActivates+" > li:nth-child(4)").click()
-            }catch{
-                done = false
-            }
-
-
-            await utils.sleep(500)
-
-
-            const base = "#main-div > div > main > section > div > ul > li > div.collapsible-body > div.row:nth-child(4) > div > div"
-            const psw = global.app.client.$(base+" > input")
-
-            try{
-                psw.click()
-                await psw.setValue(password)
-            }catch{
-                done = false
-            }
-
-
-            await utils.sleep(500)
-
-
-            //clicca altrove per confermare 
-            try{
-                global.app.client.$(info.AGILE_AUTHENTICATION).click()
-            }catch{
-                done = false
-            }
-
-
-            await utils.sleep(500)
-
-
-            try{
-                classe = await global.app.client.$(base).getAttribute("class")
-            }catch{
-                done = false
-            }
-
-            if(done){
-                return classe == "password-element"
-            }else{
+            }catch(err){
+                console.log("Error while clicking or getting attribute from element with id: " + "#"+dataActivates+" > li:nth-child(4)")
+                console.log("ERROR: " + err)
                 return null
-            }   
-        },
-
-        addImprivata: async function(address){
-            var done = true
-            //va nella sezione agile authentication
-            const menu = global.app.client.$(info.AGILE_AUTHENTICATION);
-            try{
-                await menu.click();
-            }catch{
-                done = false
             }
-            global.app.client.waitUntilWindowLoaded();
 
+            await utils.sleep(500)
+
+            //inserisce password
+            if(await utils.insertText(ids.agileAuthentication.wifi.passwordInput, password) == false) return null
+
+            await utils.sleep(500)
+
+            //clicca nel menu per confermare 
+            if(await utils.click(ids.agileAuthentication.menuID) == false) return null
+
+            await utils.sleep(500)
+
+            //attributto class del text field per la password
+            var classe = null
+            try{
+                classe = await global.app.client.$(ids.agileAuthentication.wifi.passwordField).getAttribute("class")
+            }catch(err){
+                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.wifi.passwordField)
+                console.log("ERROR: " + err)
+                return null
+            }
+
+            //se la password è corretta allora la classe sarà password-element, altrimenti no
+            return classe == "password-element"
+               
+        },
+        /**
+         * Set authentication with imprivata
+         * @param  {string} address This is the address of the imprivata
+         * @return {boolean | null} True if the imprivata has been added, false otherwise, null in case of errors
+         */
+        addImprivata: async function(address){
+            //va nella sezione agile authentication
+            if(await utils.click(ids.agileAuthentication.menuID) == false) return null
 
             await utils.sleep(1000)
 
-
-            //apre dropdown di scelta
-            const dropdown = global.app.client.$("#main-div > div.main-content > main > section > div > div > div.input-field > div > input")
+            //dropdown per scegliere il tipo di autenticazione
+            const dropdown = global.app.client.$(ids.agileAuthentication.dropdown)
             var dataActivates = null
             try{
                 dropdown.click()
                 dataActivates = await dropdown.getAttribute("data-activates")
             }catch{
-                done = false
-            }
-
-
-            await utils.sleep(500)
-
-
-            //sceglie imprivata
-            const imprivata = global.app.client.$("#"+dataActivates+" > li:nth-child(3)")
-            try{
-                await imprivata.click()
-            }catch{
-                done = false
+                return null
             }
 
             await utils.sleep(500)
 
+            //clicca sull'opzione wifi
+            if(await utils.click(ids.agileAuthentication.imprivata.selector(dataActivates)) == false) return null
+
+            await utils.sleep(500)
 
             //inserisce l'address 
-            try{
-                await global.app.client.$("#addres").setValue(address)
-            }catch{
-                done = false
-            }
-
+            if(await utils.insertText(ids.agileAuthentication.imprivata.address, address) == false) return null
 
             await utils.sleep(500)
-
 
             //spunta ignora errori ssl
+            var ignore = null
             try{
-                if(await global.app.client.$("#ignoreSSL").getValue() == "false"){
-                    await global.app.client.$("#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row.align-children.top-element > div.col.s4 > div > label").click()
-                }
-            }catch{
-                done = false
+                ignore = await global.app.client.$(ids.agileAuthentication.imprivata.ignoreSsl).getValue()
+            }catch(err){
+                console.log("Error while getting value from element with id: " + ids.agileAuthentication.imprivata.ignoreSsl)
+                console.log("ERROR: " + err)
+                return null
             }
+            if(ignore == "false" && await utils.click(ids.agileAuthentication.imprivata.labelIgnoreSsl) == false) return null
 
             await utils.sleep(500)
-
 
             //preme altrove per confermare
-            try{
-                await global.app.client.$(info.AGILE_AUTHENTICATION).click()
-            }catch{
-                done = false
-            }
-
+            if(await utils.click(ids.agileAuthentication.menuID) == false) return null
 
             await utils.sleep(500)
 
-
-            var ret = null
+            //controlli finali
             var error = null
             var addressText = null
             try{
-                error = await global.app.client.$("#addres").getAttribute("aria-invalid")
-                addressText = await global.app.client.$("#addres").getValue()
+                error = await global.app.client.$(ids.agileAuthentication.imprivata.address).getAttribute("aria-invalid")
+                addressText = await global.app.client.$(ids.agileAuthentication.imprivata.address).getValue()
             }catch{
-                done = false
-            }
-            if(error == "true" || addressText == ""){
-                ret = false
-            }else if(error == "false" && addressText != ""){
-                ret = true
-            }
-
-
-
-            if(done){
-                return ret == true
-            }else{
+                console.log("Error while getting attribute or value from element with id: " + ids.agileAuthentication.imprivata.address)
+                console.log("ERROR: " + err)
                 return null
             }
+
+            if(error == "true" || addressText == ""){
+                return false
+            }else if(error == "false" && addressText != ""){
+                return true
+            }
+
         }
     },
 
     certificateManager: {
+        /**
+         * Get certificate agile list length
+         * @return {number | null} The number of certificate, null in case of errors
+         * @return {boolean | null} True if the imprivata has been added, false otherwise, null in case of errors
+         */
         getAgileListLength: async function(){
-            var done = true
             //va in certificati
-            const menu = global.app.client.$(info.CERTIFICATE_MANAGER);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.certificateManager.menuID) == false) return null
 
             await utils.sleep(1000)
 
-
             //itera nella lista e ne conta le righe 
-            const list = "#main-div > div.main-content > main > section > div.section-wrapper"
             var num = 0
             var cont = true
             var x = null
             while(cont){
                 x=null
                 try{
-                    x = await global.app.client.$(list + " > div:nth-child("+num+1+") > div").getHTML()
+                    x = await global.app.client.$(ids.certificateManager.list + " > div:nth-child("+num+1+") > div").getHTML()
                     if(x != null) num++
                 }catch{
                     cont = false
                 }
             }
 
-            if(done){
-                return num
-            }else{
-                return null
-            }
+            return num
         },
         
+        /**
+         * Add a certificate
+         * @param  {string} name The name of the certificate to add
+         * @return {boolean | null} True if the certificate has been added, false otherwise, null in case of errors
+         */
         addCertificate: async function(name){
 
             const certNumber = await utils.certificateManager.getAgileListLength()
-            var done = true
+            if(certNumber == null) return null
             //va in certificati
-            const menu = global.app.client.$(info.CERTIFICATE_MANAGER);
-            try{
-                await menu.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.certificateManager.menuID) == false) return null
 
             await utils.sleep(1000)
 
-
             //clicca su import certificate
-            const importCertificate = global.app.client.$("#main-div > div.main-content > main > section > div.fixed-header > div > div > div.waves-effect.btn-flat > span > i");
-            try{
-                await importCertificate.click();
-            }catch{
-                done = false
-            }
-            global.app.client.waitUntilWindowLoaded();
-
+            if(await utils.click(ids.certificateManager.importCertificate) == false) return null
 
             await utils.sleep(1000)
 
             //inserisce il nome del file nel file picker (deve trovarsi nella directory agile-tester/files)
             if(await utils.fileChooser(name) == false){
-                done = false
+                return null
             }
 
             await utils.sleep(1000)
 
-            var ret = false
-            if(await utils.certificateManager.getAgileListLength() > certNumber){
-                ret = true
-            }
+            const actualCertNumber = await utils.certificateManager.getAgileListLength()
+            if(actualCertNumber == null) return null
 
-            if(done){
-                return ret
-            }else{
-                return null
-            }
+            //controlla che il numero di certificati attuali sia maggiore di quello precedente
+            if(actualCertNumber > certNumber) return true
+            else return false
+
         }
     }
     
