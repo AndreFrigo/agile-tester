@@ -1198,6 +1198,45 @@ const utils={
             if(await utils.click(ids.usbRedirection.addRule.ok, false) == true) return true
             else return false
             
+        },
+        /**
+         * Check if a startup is in the list
+         * @param  {string} name This is the name of the startup
+         * @param  {string} command This is the command of the startup
+         * @return {boolean | null} True if the startup is in the list, false otherwise, null in case of errors
+         */
+        isInAgileList: async function(name, command){
+            //va in startup
+            if(await utils.click(ids.startup.menuID) == false) return null
+
+            await utils.sleep(1000)
+            ids.startup.name
+            const length = await db.getStartupListLength();
+            var n = null;
+            var c = null;
+            for(i = 0; i < length; i++){
+                //nome della startup nella lista
+                try{
+                    n = await global.app.client.$(ids.startup.name).getText();
+                }catch(err){
+                    console.log("Error while getting attribute from element with id: " + ids.startup.name)
+                    console.log("ERROR: " + err)
+                    return null
+                } 
+                //comando della startup nella lista
+                try{
+                    c = await global.app.client.$(ids.startup.command).getText();
+                }catch(err){
+                    console.log("Error while getting attribute from element with id: " + ids.startup.command)
+                    console.log("ERROR: " + err)
+                    return null
+                } 
+                
+                if(n == name && c == command){
+                    return true
+                }
+            }
+            return false
         }
     },
     

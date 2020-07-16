@@ -157,7 +157,7 @@ module.exports = {
         //div containing the startup name
         name: (index) => {return this.startup.properties(index) + " > div"},
         //span containing the startup command
-        name: (index) => {return this.startup.properties(index) + " > p > span"},
+        command: (index) => {return this.startup.properties(index) + " > p > span"},
         addStartup:{
             //button ADD STARTUP
             button: "#main-div > div.main-content > main > section > div > div.fixed-header > div > a",

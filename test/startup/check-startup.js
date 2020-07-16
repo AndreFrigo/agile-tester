@@ -2,7 +2,6 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
-const { info } = require("../set-before-test.js");
 const agileService = require("agile-os-interface")
 
 var localDB = null
@@ -65,34 +64,6 @@ describe("Check startup database", function(){
     })
 
     it("should return true if the startup is in the Agile list", async() => {
-        //va in startup
-        const menu = global.app.client.$(info.STARTUP);
-        var click = null;
-        try{
-            click = await menu.click();
-        }catch{
-        }
-        global.app.client.waitUntilWindowLoaded();
-
-
-        await utils.sleep(1000)
-
-
-        const length = await db.getStartupListLength();
-        var found = false;
-        var n = null;
-        var c = null;
-        for(i = 0; i < length; i++){
-            const base = "#connection"+i+" > div > div.autorun-item-properties > div.autorun-item-properties-wrapper";
-            try{
-                n = await global.app.client.$(base + " > div").getText();
-                c = await global.app.client.$(base + " > p > span").getText();
-            }catch{
-            } 
-            if(n == "test_startup" && c == "test_startup_cmd"){
-                found = true;
-            }
-        }
-        expect(found).to.be.true
+        expect(await utils.startup.isInAgileList("test_startup", "test_startup_cmd")).to.be.true
     })
 })
