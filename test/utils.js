@@ -276,6 +276,80 @@ const utils={
         return true        
     },
 
+    systemSettings: {
+         /**
+         * Choose english as Agile language
+         * @return {boolean | null} True if english has been selected, false otherwise, null in case of errors
+         */
+        chooseEnglish: async function(){
+            //va nelle impostazioni di sistema
+            if(await utils.click(ids.systemSettings.menuID) == false) return null
+
+            await utils.sleep(1000)
+
+            //va nella sezione lingua
+            if(await utils.click(ids.systemSettings.language.languageTab) == false) return null
+
+            await utils.sleep(1000)
+            
+            //string contenente "Lingua di Agile" nelle diverse lingue 
+            var agileLanguage = null
+            //stringa contenente il selector per la lingua da usare in seguito
+            var sel = null
+            
+            //testo da confrontare
+            switch(await db.dbLanguage()){
+                case 1:{
+                    agileLanguage = "Lingua di Agile"
+                    sel = "span=Inglese"
+                    break
+                }
+                case 2:{
+                    agileLanguage = "Agile language"
+                    sel = "span=English"
+                    break
+                }
+                case 3:{
+                    agileLanguage = "Idioma de Agile"
+                    sel = "span=Inglés"
+                    break
+                }
+                default:{
+                    agileLanguage = "error"
+                    sel = "error"
+                    break
+                }
+            }
+            //indice elemento
+            var index = null
+            //c'è un header prima dei div, quindi l'indice parte da 2 al posto che da 1
+            var i = 2
+            var text = null
+            var cont = true
+            while(cont){
+                try{
+                    text = await global.app.client.$(ids.systemSettings.language.label(i)).getText()
+                }catch{
+                    cont = false
+                }
+                if(text == agileLanguage){
+                    index = i
+                }
+                i ++
+            }
+            
+            //clicca sul dropdown corrispondente ad agile language
+            if(await utils.click(ids.systemSettings.language.dropdown(index)) == false) return null
+
+            await utils.sleep(1000)
+
+            //clicca nella lingua inglese
+            if(await utils.click(sel) == true) return true
+            else return false
+            
+        }
+    },
+
     resources:{
         /**
          * Add a resource of type Local Browser
