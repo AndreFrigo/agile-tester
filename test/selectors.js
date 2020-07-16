@@ -173,6 +173,8 @@ module.exports = {
     },
     certificateManager:{
         menuID: "#menu-link-8",
+        //div containing the list of certificates
+        list: "#main-div > div.main-content > main > section > div.section-wrapper",
         //button IMPORT CERTIFICATE
         importCertificate: "#main-div > div.main-content > main > section > div.fixed-header > div > div > div.waves-effect.btn-flat > span > i"
     },
@@ -221,6 +223,8 @@ module.exports = {
         //dropdown for authentication type (imprivata, wifi, thinman smart identity) with data-activates attribute 
         dropdown: "#main-div > div.main-content > main > section > div > div > div.input-field > div > input",
         wifi:{
+            //options to click for choosing wifi in agileAuthentication.dropdown
+            selector: (dataActivates) => {return "#"+dataActivates+" > li:nth-child(2)"},
             //dropdown for choosing which wifi to use
             dropdown: "#wifi",
             //dropdown for choosing authentication
@@ -231,6 +235,8 @@ module.exports = {
             passwordInput: this.passwordField + " > input"
         },
         imprivata:{
+            //options to click for choosing imprivata in agileAuthentication.dropdown
+            selector: (dataActivates) => {return "#"+dataActivates+" > li:nth-child(3)"},
             //server address
             address: "#addres",
             //checkbox for ignoring ssl errors
