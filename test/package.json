@@ -22,7 +22,6 @@
     "@types/mocha": "^5.2.3",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
-    "robotjs": "^0.6.0",
     "spectron": "^3.8.0"
   },
   "dependencies": {
@@ -31,8 +30,9 @@
     "redis": "^3.0.2"
   },
   "optionalDependencies": {
+    "loudness": "^0.3.0",
+    "robotjs": "^0.6.0",
     "system-control": "^0.1.1",
-    "win-audio": "^2.0.2",
-    "loudness": "^0.3.0"
+    "win-audio": "^2.0.2"
   }
 }
