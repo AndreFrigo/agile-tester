@@ -11,7 +11,6 @@ if(info.os == "w"){
 else if (info.os == "l"){
     audio = require ("loudness")
 }
-//requires npm install win-audio for windows and npm install loudness for unix
 var localVolume = null
 var localMute = null
 
@@ -81,8 +80,7 @@ describe("set output sound", function(){
         it("should return true if audio changed in the agile indicator and the system audio corresponds", async () => {
             const changeAgile = await utils.systemSettings.setAudio(elem)
             await utils.sleep(1000)
-            const actualVolume = await audio.volume()
-            console.log(actualVolume)
+            const actualVolume = await audio.getVolume()
             expect(changeAgile && actualVolume <= elem +1 && actualVolume >= elem -1).to.be.true
         })
     })
