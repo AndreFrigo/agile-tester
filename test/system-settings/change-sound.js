@@ -79,7 +79,6 @@ describe("set output sound", function(){
 
         it("should return true if audio changed in the agile indicator and the system audio corresponds", async () => {
             const changeAgile = await utils.systemSettings.setAudio(elem)
-            await utils.sleep(1000)
             const actualVolume = await audio.getVolume()
             expect(changeAgile && actualVolume <= elem +1 && actualVolume >= elem -1).to.be.true
         })

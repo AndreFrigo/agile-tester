@@ -379,7 +379,7 @@ const utils={
                 await global.app.client.moveToObject("#outputVolume",x,0)
                 await utils.sleep(1000)
                 await global.app.client.buttonPress()
-                await utils.sleep(500)
+                await global.app.client.buttonPress()
                 await global.app.client.buttonPress()
             }catch{
                 return null
