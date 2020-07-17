@@ -71,7 +71,7 @@ describe("test add microsoft resource", function(){
     })
 
 
-    if(info.os != "l"){
+    if(info.os == "w"){
         it("should return false if it tries to add a resource with the same name", async () => {
             //deve esserci il file microsoft_test.rdp
             expect(await utils.resources.addMicrosoft("test", "microsoft_test")).to.be.false

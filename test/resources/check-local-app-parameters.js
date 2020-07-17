@@ -46,7 +46,7 @@ describe("Add a local resource tests", function(){
         {name: "local_app", info: "app"}
     ]
     rightValues.forEach(element => {
-        if(info.os != "l"){
+        if(info.os == "w"){
             it("should return true if a local application has been added", async () => {
                 expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.true
             })
@@ -92,7 +92,7 @@ describe("Add a local resource tests", function(){
         {name: "any", info: "wrong"}
     ]
     wrongValues.forEach(element => {
-        if(info.os != "l"){
+        if(info.os == "w"){
             it("should return false if there is not any application to add with the given name", async () => {
                 expect(await utils.resources.addLocalApplication(element.name, element.info)).to.be.false
             })

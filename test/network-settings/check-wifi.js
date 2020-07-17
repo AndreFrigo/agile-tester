@@ -1,7 +1,6 @@
 const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
-const {info} = require("../set-before-test.js")
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
 

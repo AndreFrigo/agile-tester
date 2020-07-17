@@ -75,7 +75,7 @@ describe("add local application tests", function(){
         expect(found).to.be.true
     })
 
-    if(info.os != "l"){
+    if(info.os == "w"){
         it("should return false if it tries to add an application with the same name", async () => {
             expect(await utils.resources.addLocalApplication("app_test", "app_test")).to.be.false
         })

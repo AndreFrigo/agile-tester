@@ -47,7 +47,7 @@ describe("add microsoft resource parameters test", function(){
     ]
 
     rightValues.forEach(elem => {
-        if(info.os != "l"){
+        if(info.os == "w"){
             it("should return true if the resource has been added", async () => {
                 expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.true
             })
@@ -93,7 +93,7 @@ describe("add microsoft resource parameters test", function(){
     ]
 
     wrongValues.forEach(elem => {
-        if(info.os != "l"){
+        if(info.os == "w"){
             it("should return false if some data are not correct", async () => {
                 expect(await utils.resources.addMicrosoft(elem.name, elem.info)).to.be.false
             })
