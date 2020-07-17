@@ -5,12 +5,6 @@ const { expect } = require("chai");
 const agileService = require ("agile-os-interface");
 const { info } = require("../set-before-test.js");
 var audio = null
-if(info.os == "w"){
-    audio = require("system-control").audio
-} 
-else if (info.os == "l"){
-    audio = require ("loudness")
-}
 var localVolume = null
 var localMute = null
 
@@ -32,6 +26,12 @@ describe("set output sound", function(){
                 resolve(res)
             })
         })
+        if(info.os == "w"){
+            audio = require("system-control").audio
+        } 
+        else if (info.os == "l"){
+            audio = require ("loudness")
+        }
     })
 
     beforeEach(async function(){
