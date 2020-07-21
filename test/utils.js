@@ -216,7 +216,7 @@ const utils={
                 n = await global.app.client.$(nameId(i)).getText()
             }catch(err){
                 if(printError){
-                    console.log("Error while getting name of the element with id: " + id)
+                    console.log("Error while getting name of the element with id: " + nameId(i))
                     console.log("ERROR: "+err)
                 }
             }
@@ -893,10 +893,10 @@ const utils={
             await utils.sleep(500)
 
             var vidPid = null
-            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
-            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
-            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
-            
+            if(vid != null && pid != null) vidPid = "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid = "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid = "Vid: " + vid
+
             const index = await utils.findInList(vidPid, ids.deviceLock.vidPid, 1, length)
         
             //clicca su elimina
@@ -1383,7 +1383,7 @@ const utils={
          * @return {boolean | null} True if the wifi has been added, false otherwise, null in case of errors
          */
         addWifiAuthentication: async function(ssid, password){
-            await this.checkWifiAuthenticationSsid(ssid)
+            if(await this.checkWifiAuthenticationSsid(ssid) == false) return false
 
             await utils.sleep(500)
 
