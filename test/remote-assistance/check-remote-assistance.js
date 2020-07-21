@@ -49,52 +49,14 @@ describe("check remote assistance settings", function(){
     })
 
     it("should return true if show notification icon is checked", async () => {
-        await utils.remoteAssistance.enableRemoteAssistance()
-        await utils.sleep(500)
-        const checkbox = global.app.client.$("#show-icon")
-        var val = null
-        var isEnable = null
-        var click = null
-        try{
-            val = await checkbox.getValue()
-        }catch{
-        }
-        if(val == "false"){
-            const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row > div > div > label")
-            try{
-                click = label.click()
-            }catch{
-            }
-        }else if (val == "true"){
-            isEnable = true
-        }
-        if(click != null) isEnable = true
+        const isEnable = await utils.remoteAssistance.showNotificationIcon()
         await utils.sleep(500)
         const radb = await db.getRemoteAssistance()
         expect(isEnable && radb.appearance.show_icon).to.be.true
     })
 
     it("should return true if require user authentication is checked", async () => {
-        await utils.remoteAssistance.enableRemoteAssistance()
-        await utils.sleep(500)
-        const checkbox = global.app.client.$("#allow-reject")
-        var val = null
-        var isEnable = null
-        var click = null
-        try{
-            val = await checkbox.getValue()
-        }catch{
-        }
-        if(val == "false"){
-            const label = global.app.client.$("#main-div > div.main-content > main > section > div > div.row:nth-child(2) > div > div.row:nth-child(2) > div > div > label")
-            try{
-                click = label.click()
-            }catch{
-            }
-        }else if (val == "true"){
-            isEnable = true
-        }
-        if(click != null) isEnable = true
+        const isEnable = await utils.remoteAssistance.userAuthentication()
         await utils.sleep(500)
         const radb = await db.getRemoteAssistance()
         expect(isEnable && radb.acceptance.allow_reject).to.be.true

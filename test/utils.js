@@ -1267,6 +1267,64 @@ const utils={
             return isEnable
         },
         /**
+         * Check show notification icon
+         * @return {boolean | null} True if notification icon is checked, false otherwise, null in case of errors
+         */
+        showNotificationIcon: async function(){
+            await utils.remoteAssistance.enableRemoteAssistance()
+            await utils.sleep(500)
+            const checkbox = global.app.client.$(ids.remoteAssistance.showNotificationIcon)
+            var val = null
+            var click = null
+            try{
+                val = await checkbox.getValue()
+            }catch{
+                return null
+            }
+            if(val == "false"){
+                const label = global.app.client.$(ids.remoteAssistance.labelShowNotificationIcon)
+                try{
+                    click = label.click()
+                }catch{
+                    return null
+                }
+            }else if (val == "true"){
+                return true
+            }
+            if(click != null) return true
+            else return false
+            
+        },
+        /**
+         * Check user authentication
+         * @return {boolean | null} True if user authentication is checked, false otherwise, null in case of errors
+         */
+        userAuthentication: async function(){
+            await utils.remoteAssistance.enableRemoteAssistance()
+            await utils.sleep(500)
+            const checkbox = global.app.client.$(ids.remoteAssistance.requireAuthorization)
+            var val = null
+            var click = null
+            try{
+                val = await checkbox.getValue()
+            }catch{
+                return null
+            }
+            if(val == "false"){
+                const label = global.app.client.$(ids.remoteAssistance.labelRequireAuthorization)
+                try{
+                    click = label.click()
+                }catch{
+                    return null
+                }
+            }else if (val == "true"){
+                return true
+            }
+            if(click != null) return true
+            else return false
+
+        },
+        /**
          * Set auto-accept and the timeout value
          * @param  {string | number} v This is the value to set to the timeout
          * @return {boolean | null} True if remote assistance and require user authentication are enable and the timeout is correct, false otherwise, null in case of errors
