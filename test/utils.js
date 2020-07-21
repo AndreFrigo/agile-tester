@@ -220,18 +220,22 @@ const utils={
                     console.log("ERROR: "+err)
                 }
             }
-            //controlla se i nomi coincidono
-            if(typeof elemName == "string"){
-                if(elemName == n){
-                    return i
-                }
-            }else{
-                elemName.forEach(elem => {
-                    if(elem == n){
-                        return i
+            const ret = await new Promise(function(resolve, reject){
+                //controlla se i nomi coincidono
+                if(typeof elemName == "string"){
+                    if(elemName == n){
+                        resolve(i)
                     }
-                })
-            }
+                }else{
+                    elemName.forEach(elem => {
+                        if(elem == n){
+                            resolve(i)
+                        }
+                    })
+                }
+                resolve(-1)
+            })
+            if(ret != -1) return ret
         }
         return -1
     },
