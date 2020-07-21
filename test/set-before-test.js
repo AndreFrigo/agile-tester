@@ -1,5 +1,3 @@
-const os = require("os")
-
 const WINDOWS_AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile\\AgileConfigurator\\AgileConfigurator.exe"
 const LINUX_AGILE_PATH = "/usr/lib/agile-configurator/AgileConfigurator"
 const ADMIN_USERNAME = "admin"
@@ -7,44 +5,51 @@ const ADMIN_PASSWORD = "admin"
 //default os
 const OS = "w"
 
+
+const getCurrentOS = function(){
+    //Sistema operativo corrente
+    var osType = null
+    try{
+        osType = require("os").type()
+    }catch{
+        osType = null
+    }
+    if(osType == "Windows_NT"){
+        return "w"
+    }else if(osType == "Linux"){
+        return "l"
+    }else{
+        return OS
+    }
+}
+
+const getAgilePath = function(os){
+    //path per l'app di Agile
+    if(os == "w"){
+        return WINDOWS_AGILE_PATH
+    }else if(os == "l"){
+        return LINUX_AGILE_PATH
+    }
+}
+
+const currentOS = getCurrentOS()  
+
 const info={
     //l: linux, w: windows
-    os: null,
+    os: currentOS,
 
     //info sull'admin (per linux)
     adminUsername: ADMIN_USERNAME,
     adminPassword: ADMIN_PASSWORD,
 
-    //pass per l'accesso al database
-    dbPass: null,
-
     //path per l'app di Agile
-    path: null
+    path: getAgilePath(currentOS),
+
+    //password per connessione al database
+    dbPass: null
 }
 
 before(async function(){
-    //Sistema operativo corrente
-    var osType = null
-    try{
-        osType = os.type()
-    }catch{
-        osType = null
-    }
-    if(osType == "Windows_NT"){
-        info.os = "w"
-    }else if(osType == "Linux"){
-        info.os = "l"
-    }else{
-        info.os = OS
-    }
-
-    //path per l'app di Agile
-    if(info.os == "w"){
-        info.path = WINDOWS_AGILE_PATH
-    }else if(info.os == "l"){
-        info.path = LINUX_AGILE_PATH
-    }
-
     //password per accesso a database redis
     await new Promise(function(resolve, reject){
         //path file contenente la password per redis
@@ -72,7 +77,7 @@ before(async function(){
             reject()
         }
     })
-    
+
 })
 
 module.exports = {info}
