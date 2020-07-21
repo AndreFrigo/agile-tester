@@ -1,4 +1,8 @@
 const ADD_CONNECTION_SERVER = "#add-connection-server"
+const THINMAN_SETTINGS_LIST = "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul"
+const STARTUP_PROPERTIES = (index) => {return "#connection" + index + " > div > div.autorun-item-properties > div.autorun-item-properties-wrapper"}
+const USB_REDIRECTION_LIST = "#citrix > div > div.usbredir-list > div"
+const DEVICE_LOCK_LIST = "#main-div > div.main-content > main > section > div.section-wrapper > div.usbredir-list > div"
 
 module.exports = {
     about: {
@@ -45,13 +49,13 @@ module.exports = {
     thinmanSettings:{
         menuID: "#menu-link-3",
         //list of thinman saved
-        list: "#main-div > div.main-content > main > section > div > ul > li > div.collapsible-body > div.row > div.col.s12 > ul",
+        list: THINMAN_SETTINGS_LIST,
         //div containing address of a thinman in the list
-        address: (index) => {return this.thinmanSettings.list + " > li:nth-child(" + index + ") > div > div > div.address-info > div"},
+        address: (index) => {return THINMAN_SETTINGS_LIST + " > li:nth-child(" + index + ") > div > div > div.address-info > div"},
         //button for deleting a thinman of the list
-        delete: (index) => {return this.thinmanSettings.list + " > li:nth-child(" + index + ") > div > div > div.address-item-delete > i"},
+        delete: (index) => {return THINMAN_SETTINGS_LIST + " > li:nth-child(" + index + ") > div > div > div.address-item-delete > i"},
         //button for testing a thinman of the list
-        test: (index) => {return this.thinmanSettings.list + " > li:nth-child(" + index + ") > div > div > div:nth-child(2) > a"},
+        test: (index) => {return THINMAN_SETTINGS_LIST + " > li:nth-child(" + index + ") > div > div > div:nth-child(2) > a"},
         addAddress:{
             //button ADD ADDRESS
             button: "h5 > a",
@@ -153,11 +157,11 @@ module.exports = {
     startup:{
         menuID: "#menu-link-7",
         //div containing all the properties of a single startup
-        properties: (index) => {return "#connection" + index + " > div > div.autorun-item-properties > div.autorun-item-properties-wrapper"},
+        properties: STARTUP_PROPERTIES,
         //div containing the startup name
-        name: (index) => {return this.startup.properties(index) + " > div"},
+        name: (index) => {return STARTUP_PROPERTIES(index) + " > div"},
         //span containing the startup command
-        command: (index) => {return this.startup.properties(index) + " > p > span"},
+        command: (index) => {return STARTUP_PROPERTIES(index) + " > p > span"},
         addStartup:{
             //button ADD STARTUP
             button: "#main-div > div.main-content > main > section > div > div.fixed-header > div > a",
@@ -179,11 +183,11 @@ module.exports = {
     usbRedirection:{
         menuID: "#menu-link-10",
         //list of rules
-        list: "#citrix > div > div.usbredir-list > div",
+        list: USB_REDIRECTION_LIST,
         //p where there are vid and pid of a rule of the list
-        vidPid: (index) => {return this.usbRedirection.list + " > div:nth-child(" + index + ") > div > div.usbredir-item-properties > div > p"},
+        vidPid: (index) => {return USB_REDIRECTION_LIST + " > div:nth-child(" + index + ") > div > div.usbredir-item-properties > div > p"},
         //button to click for deleting a rule of the list
-        delete: (index) => {return this.usbRedirection.list + " > div:nth-child(" + index + ") > div > div.usbredir-item-delete > i"},
+        delete: (index) => {return USB_REDIRECTION_LIST + " > div:nth-child(" + index + ") > div > div.usbredir-item-delete > i"},
         addRule:{
             //button ADD REDIRECTION RULE
             button: "#citrix > div > div > div > a",
@@ -200,11 +204,11 @@ module.exports = {
     deviceLock:{
         menuID: "#menu-link-11",
         //list of devices
-        list: "#main-div > div.main-content > main > section > div.section-wrapper > div.usbredir-list > div",
+        list: DEVICE_LOCK_LIST,
         //div containing the vid and pid of a device of the list
-        vidPid: (index) => {return this.deviceLock.list + " > div:nth-child(" + index + ") > div > div.usbredir-item-properties > div > div"},
+        vidPid: (index) => {return DEVICE_LOCK_LIST + " > div:nth-child(" + index + ") > div > div.usbredir-item-properties > div > div"},
         //button to click for deleting a device of the list
-        delete: (index) => {return this.deviceLock.list + " > div:nth-child(" + index + ") > div > div.usbredir-item-delete > i"},
+        delete: (index) => {return DEVICE_LOCK_LIST + " > div:nth-child(" + index + ") > div > div.usbredir-item-delete > i"},
         addRule:{
             //button ADD RULE
             button:"#main-div > div.main-content > main > section > div.fixed-header > div > div > a",
@@ -230,7 +234,7 @@ module.exports = {
             //filed containing password and class has-error or not
             passwordField: "#main-div > div > main > section > div > ul > li > div.collapsible-body > div.row:nth-child(4) > div > div",
             //password input
-            passwordInput: this.passwordField + " > input"
+            passwordInput: "#main-div > div > main > section > div > ul > li > div.collapsible-body > div.row:nth-child(4) > div > div > input"
         },
         imprivata:{
             //options to click for choosing imprivata in agileAuthentication.dropdown
