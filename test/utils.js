@@ -921,9 +921,9 @@ const utils={
             await utils.sleep(500)
 
             var vidPid = null
-            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
-            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
-            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
+            if(vid != null && pid != null) vidPid = "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid = "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid = "Vid: " + vid
             
             const index = await utils.findInList(vidPid, ids.deviceLock.vidPid, 1, length)
 
@@ -1121,9 +1121,9 @@ const utils={
             const length = await db.getUSBRedirectionListLength()
 
             var vidPid = null
-            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
-            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
-            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
+            if(vid != null && pid != null) vidPid = "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid = "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid = "Vid: " + vid
             
             //indice dell'elemento da eliminare
             const index = await utils.findInList(vidPid, ids.usbRedirection.vidPid, 1, length)
@@ -1149,9 +1149,9 @@ const utils={
             const length = await db.getUSBRedirectionListLength();
 
             var vidPid = null
-            if(vid != null && pid != null) vidPid == "Vid: " + vid + ", Pid: " + pid
-            else if((vid == null || vid == "") && pid != null) vidPid == "Pid: " + pid
-            else if(vid != null && (pid == null || pid == "")) vidPid == "Vid: " + vid
+            if(vid != null && pid != null) vidPid = "Vid: " + vid + ", Pid: " + pid
+            else if((vid == null || vid == "") && pid != null) vidPid = "Pid: " + pid
+            else if(vid != null && (pid == null || pid == "")) vidPid = "Vid: " + vid
             
             //indice dell'elemento
             const index = await utils.findInList(vidPid, ids.usbRedirection.vidPid, 1, length)
