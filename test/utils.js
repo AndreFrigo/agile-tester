@@ -1194,7 +1194,7 @@ const utils={
             await utils.sleep(1000)
 
             //conferma premendo ok
-            if(await utils.click(ids.usbRedirection.addRule.ok, false) == true) return true
+            if(await utils.click(ids.startup.addStartup.ok, false) == true) return true
             else return false
             
         },
@@ -1209,24 +1209,23 @@ const utils={
             if(await utils.click(ids.startup.menuID) == false) return null
 
             await utils.sleep(1000)
-            ids.startup.name
             const length = await db.getStartupListLength();
             var n = null;
             var c = null;
             for(i = 0; i < length; i++){
                 //nome della startup nella lista
                 try{
-                    n = await global.app.client.$(ids.startup.name).getText();
+                    n = await global.app.client.$(ids.startup.name(i)).getText();
                 }catch(err){
-                    console.log("Error while getting attribute from element with id: " + ids.startup.name)
+                    console.log("Error while getting attribute from element with id: " + ids.startup.name(i))
                     console.log("ERROR: " + err)
                     return null
                 } 
                 //comando della startup nella lista
                 try{
-                    c = await global.app.client.$(ids.startup.command).getText();
+                    c = await global.app.client.$(ids.startup.command(i)).getText();
                 }catch(err){
-                    console.log("Error while getting attribute from element with id: " + ids.startup.command)
+                    console.log("Error while getting attribute from element with id: " + ids.startup.command(i))
                     console.log("ERROR: " + err)
                     return null
                 } 
