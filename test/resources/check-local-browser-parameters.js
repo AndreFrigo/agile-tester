@@ -1,10 +1,9 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
 const agileService = require("agile-os-interface")
-
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -46,26 +45,14 @@ describe("Check resource parameters", function(){
     })
 
     
-    const wrongValues = [
-        {name:"" ,url:"" },
-        {name:"prova" ,url:"" },
-        {name:"" ,url:"google.com" },
-        {name:"prova" ,url:"prova" },
-        {name:"123" ,url:"123" },
-        {name:"!!!" ,url:"google.com.i" },
-        {name:"aaa" ,url:"aaa" },
-        {name:"aaa" ,url:"google" }
-    ]
+    const wrongValues = values.resources.localBrowser.add.wrongValues
     wrongValues.forEach(elem => {
         it("should return false if name or url are wrong", async () => {
             expect(await utils.resources.addLocalBrowser(elem.name, elem.url)).to.be.false
         })
     })
 
-    const rightValues = [
-        {name:"name1" ,url:"https://www.google.com" },
-        {name:"name2" ,url:"google.com" }
-    ]
+    const rightValues = values.resources.localBrowser.add.rightValues
     rightValues.forEach(elem => {
 
         it("should return true if the resource has been added", async () => {

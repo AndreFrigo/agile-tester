@@ -1,9 +1,9 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
 const agileService = require("agile-os-interface")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -42,9 +42,7 @@ describe("add microsoft resource parameters test", function(){
         await global.app.stop()
     })
 
-    const rightValues = [
-        {name: "microsoft", info: "microsoft_resource"}
-    ]
+    const rightValues = values.resources.microsoft.add.rightValues
 
     rightValues.forEach(elem => {
         if(info.os == "w"){
@@ -88,9 +86,7 @@ describe("add microsoft resource parameters test", function(){
         }
     })
 
-    const wrongValues = [
-        {name: "test", info: "wrong_info"}
-    ]
+    const wrongValues = values.resources.microsoft.add.wrongValues
 
     wrongValues.forEach(elem => {
         if(info.os == "w"){

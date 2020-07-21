@@ -2,7 +2,7 @@ const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
-const agileService = require("agile-os-interface")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -36,32 +36,14 @@ describe("Check WiFi parameters", function(){
         await global.app.stop()
     })
 
-    const wrongSsid = [
-        {ssid:"", psw:123455555},
-        {ssid:"allagriglia", psw:123455555},
-        {ssid:"bsn", psw:123455555},
-        {ssid:123345, psw:123455555}
-    ]
-    wrongSsid.forEach(elem => {
-        it("should return false if there is not a wifi with the given ssid in the list", async () => {
-            expect(await utils.networkSettings.checkSsid(elem.ssid)).to.be.false
-        })
-    })
-
-    const wrongPsw = [
-        {ssid:"PRAIM_WIFI_N", psw:1234},
-        {ssid:"PRAIM_WIFI_N", psw:"asdfghj"},
-        {ssid:"PRAIM_WIFI_N", psw:""}
-    ]
-    wrongPsw.forEach(elem => {
+    const wrongValues = values.networkSettings.addWifi.wrongValues
+    wrongValues.forEach(elem => {
         it("should return false if the password is wrong or there is not a wifi with the given ssid in the list", async () => {
             expect(await utils.networkSettings.saveWifi(elem.ssid, elem.psw)).to.be.false
         })
     })
 
-    const rightValues = [
-        {ssid:"PRAIM_WIFI_N", psw:"asd123!!"}
-    ]
+    const rightValues = values.networkSettings.addWifi.rightValues
     rightValues.forEach(elem => {
 
         it("should return true if the wifi has been added correctly", async () => {

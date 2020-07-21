@@ -3,6 +3,7 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -99,14 +100,14 @@ describe("check remote assistance settings", function(){
         expect(isEnable && radb.acceptance.allow_reject).to.be.true
     })
 
-    const rightValues = [23, 3e2]
+    const rightValues = values.remoteAssistance.enable.rightValues
     rightValues.forEach(elem => {
         it("should return true if auto-accept and enable remote assistance is checked and his lable is correct", async () => {
             expect(await utils.remoteAssistance.setAutoAccept(elem)).to.be.true
         })
     })
 
-    const wrongValues = [0, "abc", 1234567, "", -7, 2e7]
+    const wrongValues = values.remoteAssistance.enable.wrongValues
     wrongValues.forEach(elem => {
         it("should return false if auto-accept or enable remote assistance are not checked, or if the lable is not correct", async () => {
             expect(await utils.remoteAssistance.setAutoAccept(elem)).to.be.false

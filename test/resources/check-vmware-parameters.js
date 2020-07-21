@@ -1,9 +1,9 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
 const { info } = require("../set-before-test.js")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -42,9 +42,7 @@ describe("add a VMware resource tests", function(){
         await global.app.stop()
     })
 
-    const rightValues = [
-        {name: "test", info: "test.com"}
-    ]
+    const rightValues = values.resources.vmware.add.rightValues
     rightValues.forEach(elem => {
         it("should return true if the resource has been added", async () => {
             expect(await utils.resources.addVMware(elem.name, elem.info)).to.be.true
@@ -85,20 +83,14 @@ describe("add a VMware resource tests", function(){
         }
     })
 
-    const wrongValues = [
-        {name: "", info: "test.com"},
-        {name: "test", info: "test"},
-        {name: "test", info: ""}
-    ]
+    const wrongValues = values.resources.vmware.add.wrongValues
     wrongValues.forEach(elem => {
         it("should return false if some data are wrong", async () => {
             expect(await utils.resources.addVMware(elem.name, elem.info)).to.be.false
         })
     })
 
-    const realValues = [
-        {name: "rv", info: "https://hview75.sup.praim.com"}
-    ]
+    const realValues = values.resources.vmware.test.rightValues
     realValues.forEach(elem => {
         it("should return true if the resource has been added and is now in the Agile list", async () => {
             var add = null

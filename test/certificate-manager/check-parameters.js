@@ -1,9 +1,9 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
 const {info} = require("../set-before-test.js")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -42,9 +42,7 @@ describe("Check certificate parameters", function(){
         await global.app.stop()
     })
 
-    const wrongValues = [
-        "wrongName", "", "app_test"
-    ]
+    const wrongValues = values.certificateManager.add.wrongValues
     wrongValues.forEach(elem => {
         if(info.os == 'w'){
             it("should return false for non valid certificate", async () => {
@@ -53,9 +51,7 @@ describe("Check certificate parameters", function(){
         }
     })
 
-    const rightValues = [
-        "DigiCertGlobalRootCA", "DigiCertSHA2SecureServerCA"
-    ]
+    const rightValues = values.certificateManager.add.rightValues
     rightValues.forEach(elem => {
         if(info.os == 'w'){
             it("should return true if the certificate has been added", async () => {

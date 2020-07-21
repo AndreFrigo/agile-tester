@@ -1,9 +1,9 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
 const agileService = require("agile-os-interface")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -42,9 +42,7 @@ describe("Add a local resource tests", function(){
         await global.app.stop()
     })
 
-    const rightValues = [
-        {name: "local_app", info: "app"}
-    ]
+    const rightValues = values.resources.localApplication.add.rightValues
     rightValues.forEach(element => {
         if(info.os == "w"){
             it("should return true if a local application has been added", async () => {
@@ -88,9 +86,7 @@ describe("Add a local resource tests", function(){
         
     });
 
-    const wrongValues = [
-        {name: "any", info: "wrong"}
-    ]
+    const wrongValues = values.resources.localApplication.add.wrongValues
     wrongValues.forEach(element => {
         if(info.os == "w"){
             it("should return false if there is not any application to add with the given name", async () => {

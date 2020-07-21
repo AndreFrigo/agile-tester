@@ -4,6 +4,7 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require ("agile-os-interface");
 const { info } = require("../set-before-test.js");
+const values = require("../test-values.js")
 var audio = null
 var localVolume = null
 var localMute = null
@@ -62,7 +63,7 @@ describe("set output sound", function(){
     })
 
     //essendo la scelta dell'audio implementata come range, è impossibile settare valori errati
-    const rightValues = [20, 50, 100]
+    const rightValues = values.systemSettings.setOutputVolume.rightValues
     rightValues.forEach(elem => {
         it("should return true if audio changed in the agile indicator", async () => {
             expect(await utils.systemSettings.setAudio(elem)).to.be.true

@@ -1,8 +1,8 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -53,15 +53,7 @@ describe("Check address parameters", function(){
     })
 
 
-    const wrongValues = [
-        {address:"", port:123, timeout:123},
-        {address:"prova", port:"", timeout:123},
-        {address:"aaaaaa", port:123, timeout:""},
-        {address:"sss", port:"aaa", timeout:123},
-        {address:"ddd", port:"1.5", timeout:1000},
-        {address:"fff", port:335, timeout:"abc"},
-        {address:"1234", port:"1a1", timeout:123}
-    ]
+    const wrongValues = values.thinmanSettings.addAddress.wrongValues
     wrongValues.forEach(elem => {
         
         it("should return false for invalid address, port or timeout", async () => {
@@ -69,10 +61,7 @@ describe("Check address parameters", function(){
         })
     })
 
-    const rightValues = [
-        {address:"test", port:123, timeout:123},
-        {address:"sdf", port:123, timeout:3e2}
-    ]
+    const rightValues = values.thinmanSettings.addAddress.rightValues
     rightValues.forEach(elem => {
 
         it("should return true if the address has been added", async () => {
@@ -113,10 +102,7 @@ describe("Check address parameters", function(){
         })
     })
 
-    const realValues = [
-        {address:"10.1.138.224", port:443, timeout:15},
-        {address:"av-praim.com", port:4443, timeout:15}
-    ]
+    const realValues = values.thinmanSettings.testAddress.rightValues
     realValues.forEach(elem => {
         it("should return true if the address has been added", async () => {
             expect(await utils.thinmanSettings.addAddress(elem.address, elem.port, elem.timeout)).to.be.true

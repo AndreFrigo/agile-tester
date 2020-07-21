@@ -1,8 +1,8 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -43,11 +43,7 @@ describe("Check startup parameters", function () {
 
 
 
-    const wrongValues = [
-        {name: "", command: ""},
-        {name: "aaaa", command: ""},
-        {name: "", command: "aaaa"}
-    ]
+    const wrongValues = values.startup.add.wrongValues
 
     wrongValues.forEach(elem => {
         it("should return false if some parameters were wrong", async () => {
@@ -56,9 +52,7 @@ describe("Check startup parameters", function () {
     })
 
     //c'è il problema che anche pulendo il db, gli startup vengono presi dal sistema e quindi in rightValues non va messo test_startup perchè altrimenti l'altro test fallirebbe
-    const rightValues = [
-        {name: "startup_name", command: "command_startup"}
-    ]
+    const rightValues = values.startup.add.rightValues
 
     rightValues.forEach(elem => {
         it("should return true if the startup was added successfully", async () => {

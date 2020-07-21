@@ -3,6 +3,8 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface");
 const {db} = require("../db.js");
+const values = require("../test-values.js")
+
 var localDB = null
 
 describe("Check authentication settings", function(){
@@ -40,26 +42,14 @@ describe("Check authentication settings", function(){
         await global.app.stop()
     })
 
-    const wrongSsid = ["aa", "bb", "1232"]
-    wrongSsid.forEach(elem => {
-        it("should return false for wrong ssid", async () => {
-            expect(await utils.agileAuthentication.checkWifiAuthenticationSsid(elem)).to.be.false
-        })
-    })
-
-    const wrongPassword = [
-        {ssid: "PRAIM_WIFI_N", password: ""},
-        {ssid: "PRAIM_WIFI_N", password: "1234567"}
-    ]
-    wrongPassword.forEach(elem => {
+    const wrongValues = values.agileAuthentication.wifi.add.wrongValues
+    wrongValues.forEach(elem => {
         it("should return false for wrong settings", async () => {
             expect(await utils.agileAuthentication.addWifiAuthentication(elem.ssid, elem.password)).to.be.false
         })
     })
 
-    const rightValues = [
-        {ssid: "PRAIM_WIFI_N", password: "asdfghjkksbd"}
-    ]
+    const rightValues = values.agileAuthentication.wifi.add.rightValues
     rightValues.forEach(elem => {
         it("should return true for right settings", async () => {
             expect(await utils.agileAuthentication.addWifiAuthentication(elem.ssid, elem.password)).to.be.true

@@ -3,6 +3,7 @@ const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const agileService = require("agile-os-interface")
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -45,44 +46,25 @@ describe("Check device lock parameters", function(){
     
 
     //pid e vid con cui provare il test should return false if the rule can't be confirmed
-    const wrongValues = [
-        {v:0, p:0},
-        {v:1234, p:0}, 
-        {v:1234, p:123}, 
-        {v:1234, p:12345}, 
-        {v:123, p:1234}, 
-        {v:123, p:12}, 
-        {v:12, p:1234}, 
-        {v:"12a12", p:1234}, 
-        {v:"", p:1234},
-        {v:"123", p:1234},
-        {v:"", p:"abcd"},
-        {v:1234, p:"qwer"},
-        {v:"aaaaaaa", p:1234},
-        {v:"aaaa", p:12374}
-    ]
-    wrongValues.forEach(elem => {
-        it("should return false if the rule can't be confirmed", async () => {
-            expect(await utils.deviceLock.addRule(elem.v, elem.p)).to.be.false
-        })
-    })
+    const wrongValues = values.deviceLock.addRule.wrongValues
+    // wrongValues.forEach(elem => {
+    //     it("should return false if the rule can't be confirmed", async () => {
+    //         expect(await utils.deviceLock.addRule(elem.vid, elem.pid)).to.be.false
+    //     })
+    // })
 
-    const rightValues = [
-        {v:1234, p:1234},
-        {v:8705, p:2640},
-        {v:"aaaa", p:1234}
-    ]
+    const rightValues = values.deviceLock.addRule.rightValues
     rightValues.forEach(elem => {                
         it("should return true if the rule has been confirmed", async () => {
-            expect( await utils.deviceLock.addRule(elem.v, elem.p)).to.be.true
+            expect( await utils.deviceLock.addRule(elem.vid, elem.pid)).to.be.true
         })
 
         it("should return true if the rule has been confirmed and is now in the agile list", async () => {
             var add = null
             var check = null
-            add = await utils.deviceLock.addRule(elem.v, elem.p)
+            add = await utils.deviceLock.addRule(elem.vid, elem.pid)
             await utils.sleep(500)
-            check = await utils.deviceLock.isInAgileList(elem.v, elem.p)
+            check = await utils.deviceLock.isInAgileList(elem.vid, elem.pid)
             await utils.sleep(500)
             expect(add && check).to.be.true
         })
@@ -90,9 +72,9 @@ describe("Check device lock parameters", function(){
         it("should return true if the rule has been confirmed and then deleted", async () => {
             var add = null
             var del = null
-            add = await utils.deviceLock.addRule(elem.v, elem.p)
+            add = await utils.deviceLock.addRule(elem.vid, elem.pid)
             await utils.sleep(500)
-            del = await utils.deviceLock.deleteRule(elem.v, elem.p)
+            del = await utils.deviceLock.deleteRule(elem.vid, elem.pid)
             await utils.sleep(500)
             expect(add && del).to.be.true
         })
@@ -102,13 +84,13 @@ describe("Check device lock parameters", function(){
             var checkAdd = null
             var del = null
             var checkDel = null
-            add = await utils.deviceLock.addRule(elem.v, elem.p)
+            add = await utils.deviceLock.addRule(elem.vid, elem.pid)
             await utils.sleep(500)
-            checkAdd = await utils.deviceLock.isInAgileList(elem.v, elem.p)
+            checkAdd = await utils.deviceLock.isInAgileList(elem.vid, elem.pid)
             await utils.sleep(500)
-            del = await utils.deviceLock.deleteRule(elem.v, elem.p)
+            del = await utils.deviceLock.deleteRule(elem.vid, elem.pid)
             await utils.sleep(500)
-            checkDel = await utils.deviceLock.isInAgileList(elem.v, elem.p)
+            checkDel = await utils.deviceLock.isInAgileList(elem.vid, elem.pid)
             await utils.sleep(500)
             expect(add && checkAdd && del && checkDel == false).to.be.true
         })

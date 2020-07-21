@@ -1,10 +1,9 @@
-const {db} = require ("../db.js");
 const {global} = require ("../global.js");
 const {utils} = require("../utils.js");
 const { expect } = require("chai");
 const { info } = require("../set-before-test.js");
 const agileService = require("agile-os-interface")
-
+const values = require("../test-values.js")
 
 var localDB = null
 
@@ -43,9 +42,7 @@ describe("add a citrix resource test", function(){
         await global.app.stop()
     })
 
-    const rightValues = [
-        {name: "name", server: "xxx.it", domain:""}
-    ]
+    const rightValues = values.resources.citrix.add.rightValues
     rightValues.forEach(elem => {
         it("should return true if the resource has been added", async () => {
             expect(await utils.resources.addCitrix(elem.name, elem.server, elem.domain)).to.be.true
@@ -86,20 +83,14 @@ describe("add a citrix resource test", function(){
         }
     })
 
-    const wrongValues = [
-        {name: "", server: "xxx.it", domain:"aa"},
-        {name: "name", server: "xxx", domain:"aaa"},
-        {name: "name", server: "", domain:""}
-    ]
+    const wrongValues = values.resources.citrix.add.wrongValues
     wrongValues.forEach(elem => {
         it("should return false if some data are not correct", async () => {
             expect(await utils.resources.addCitrix(elem.name, elem.server, elem.domain)).to.be.false
         })
     })
 
-    const realValues = [
-        {name: "rv", server: "https://xendesk715.sup.praim.com", domain:""}
-    ]
+    const realValues = values.resources.citrix.test.rightValues
     realValues.forEach(elem => {
         it("should return true if the resource has been added and is now in the Agile list", async () => {
             var add = null
