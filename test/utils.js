@@ -1000,7 +1000,7 @@ const utils={
             else if(language == 3) indirizzo = "Dirección"
 
             //indice dell'elemento da eliminare
-            const index = await utils.findInList("<div><b>"+indirizzo+":</b> "+ address +"</div>", ids.thinmanSettings.address, 1, length)
+            const index = await utils.findInList(indirizzo+": "+ address, ids.thinmanSettings.address, 1, length)
 
             //elimina l'elemento premendo il bottone
             if(await utils.click(ids.thinmanSettings.delete(index), false) == true) return true
@@ -1029,7 +1029,7 @@ const utils={
             else if(language == 3) indirizzo = "Dirección"
 
             //indice dell'elemento
-            const index = await utils.findInList("<div><b>"+indirizzo+":</b> "+ address +"</div>", ids.thinmanSettings.address, 1, length)
+            const index = await utils.findInList(indirizzo+": "+ address, ids.thinmanSettings.address, 1, length)
 
             if(index > 0) return true
             else return false
