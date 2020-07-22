@@ -206,14 +206,15 @@ const utils={
      * @param  {number} startIndex Start index for iteration
      * @param  {number} listLength Length of the Agile list
      * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
+     * @param  {object} app Application running, default: global.app  
      * @return {number} Index of the element founded, -1 if no element was found
      */
-    findInList: async function(elemName, nameId, startIndex, listLength, printError = true){
+    findInList: async function(elemName, nameId, startIndex, listLength, printError = true, app = global.app){
         var n = null
         for(i = startIndex; i < startIndex + listLength; i++){
             //salva il nome dell'elemento
             try{
-                n = await global.app.client.$(nameId(i)).getText()
+                n = await app.client.$(nameId(i)).getText()
             }catch(err){
                 if(printError){
                     console.log("Error while getting name of the element with id: " + nameId(i))
@@ -1606,6 +1607,19 @@ const utils={
             if(actualCertNumber > certNumber) return true
             else return false
 
+        }
+    },
+    agileMode: {
+        /**
+         * Check if a resource is in the list
+         * @param  {string} name This is the name of the resource 
+         * @param  {object} app This is the application running 
+         * @return true if the resource is in the list, false otherwise
+         */
+        checkResource: async function(name, app){
+            const length = await db.getResourceListLength()
+            if(await utils.findInList(name, ids.mode.agile.resourceName, 1, length, true, app) != -1) return true
+            return false
         }
     }
     
