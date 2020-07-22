@@ -251,7 +251,10 @@ module.exports = {
 
     },
     mode:{
-        menuID: "#menu-link-13"
+        menuID: "#menu-link-13",
+        agile:{
+            resourceName: (index) => {return "#container > div:nth-child(2) > div.card-body > div.connection-wrapper > div.connection-item:nth-child(" + index + ") > div.connection-name"}
+        }
     },
     //label with the title of a notification (success, warning, error)
     notification: "#main-div > div:nth-child(3) > span > div.notification > div.header > p.title"
