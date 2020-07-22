@@ -1,5 +1,7 @@
+//path per agile configurator
 const WINDOWS_AGILE_PATH = "C:\\Program Files (x86)\\Praim\\Agile\\AgileConfigurator\\AgileConfigurator.exe"
 const LINUX_AGILE_PATH = "/usr/lib/agile-configurator/AgileConfigurator"
+//info sull'admin (per linux)
 const ADMIN_USERNAME = "admin"
 const ADMIN_PASSWORD = "admin"
 //default os
