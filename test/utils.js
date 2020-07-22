@@ -176,7 +176,7 @@ const utils={
             }
             return false
         }
-        global.app.client.waitUntilWindowLoaded()
+        await global.app.client.waitUntilWindowLoaded()
         return true
     },
     /**
@@ -196,7 +196,7 @@ const utils={
             }
             return false
         }
-        global.app.client.waitUntilWindowLoaded()
+        await global.app.client.waitUntilWindowLoaded()
         return true
     },
     /**
@@ -368,7 +368,9 @@ const utils={
             var widthElem = null
             try{
                 widthElem = await global.app.client.getCssProperty(ids.systemSettings.sound.outputVolume, "width")
-            }catch{
+            }catch(err){
+                console.log("Error while getting css width of element with id: " + ids.systemSettings.sound.outputVolume)
+                console.log("ERROR: " + err)
                 return null
             }
 
@@ -385,7 +387,9 @@ const utils={
                 await global.app.client.buttonPress()
                 await global.app.client.buttonPress()
                 await global.app.client.buttonPress()
-            }catch{
+            }catch(err){
+                console.log("Error in moveToObject or buttonPress")
+                console.log("ERROR: " + err)
                 return null
             }
 
@@ -395,14 +399,17 @@ const utils={
             var currentValue = null
             try{
                 currentValue = await global.app.client.$(ids.systemSettings.sound.outputLevel).getText()
-            }catch{
+            }catch(err){
+                console.log("Error while getting text of element with id: " + ids.systemSettings.sound.outputLevel)
+                console.log("ERROR: " + err)
                 return null
             }
-            var ret = false
             try{
                 if(currentValue <= val + 1 && currentValue >= val -1) return true
                 else return false
-            }catch{
+            }catch(err){
+                console.log("Error with condition")
+                console.log("ERROR: " + err)
                 return null
             }
 
@@ -1250,24 +1257,20 @@ const utils={
             await utils.sleep(1000)
 
             var val = null
-            var isEnable = false
             try{
                 val = await global.app.client.$(ids.remoteAssistance.enable).getValue()
-            }catch{
+            }catch(err){
+                console.log("Error while getting value of element with id: " + ids.remoteAssistance.enable)
+                console.log("ERROR: " + err)
                 return null
             }
             if(val == "false"){
-                try{
-                    await global.app.client.$(ids.remoteAssistance.labelEnable).click()
-                    isEnable = true
-                }catch{
-                    return null
-                }
+                return await utils.click(ids.remoteAssistance.labelEnable)
             }else if(val == "true"){
-                isEnable = true
+                return true
             }
             
-            return isEnable
+            return false
         },
         /**
          * Check show notification icon
@@ -1276,27 +1279,20 @@ const utils={
         showNotificationIcon: async function(){
             await utils.remoteAssistance.enableRemoteAssistance()
             await utils.sleep(500)
-            const checkbox = global.app.client.$(ids.remoteAssistance.showNotificationIcon)
             var val = null
-            var click = null
             try{
-                val = await checkbox.getValue()
-            }catch{
+                val = await global.app.client.$(ids.remoteAssistance.showNotificationIcon).getValue()
+            }catch(err){
+                console.log("Error while getting value of element with id: " + ids.remoteAssistance.showNotificationIcon)
+                console.log("ERROR: " + err)
                 return null
             }
             if(val == "false"){
-                const label = global.app.client.$(ids.remoteAssistance.labelShowNotificationIcon)
-                try{
-                    click = label.click()
-                }catch{
-                    return null
-                }
+                return await utils.click(ids.remoteAssistance.labelShowNotificationIcon)
             }else if (val == "true"){
                 return true
-            }
-            if(click != null) return true
-            else return false
-            
+            }else return null
+             
         },
         /**
          * Check user authentication
@@ -1305,26 +1301,20 @@ const utils={
         userAuthentication: async function(){
             await utils.remoteAssistance.enableRemoteAssistance()
             await utils.sleep(500)
-            const checkbox = global.app.client.$(ids.remoteAssistance.requireAuthorization)
             var val = null
             var click = null
             try{
-                val = await checkbox.getValue()
-            }catch{
+                val = await global.app.client.$(ids.remoteAssistance.requireAuthorization).getValue()
+            }catch(err){
+                console.log("Error while getting value of element with id: " + ids.remoteAssistance.requireAuthorization)
+                console.log("ERROR: " + err)
                 return null
             }
             if(val == "false"){
-                const label = global.app.client.$(ids.remoteAssistance.labelRequireAuthorization)
-                try{
-                    click = label.click()
-                }catch{
-                    return null
-                }
+                return await utils.click(ids.remoteAssistance.labelRequireAuthorization)
             }else if (val == "true"){
                 return true
-            }
-            if(click != null) return true
-            else return false
+            }else return null
 
         },
         /**
@@ -1340,15 +1330,13 @@ const utils={
             var val = null
             try{
                 val = await global.app.client.$(ids.remoteAssistance.requireAuthorization).getValue()
-            }catch{
+            }catch(err){
+                console.log("Error while getting value of element with id: " + ids.remoteAssistance.requireAuthorization)
+                console.log("ERROR: " + err)
                 return null
             }
             if(val == "false"){
-                try{
-                    await global.app.client.$(ids.remoteAssistance.labelRequireAuthorization).click()
-                }catch{
-                    return null
-                }
+                if(await utils.click(ids.remoteAssistance.labelRequireAuthorization) == false) return null
             }
 
             await utils.sleep(500)
@@ -1357,16 +1345,14 @@ const utils={
             val = null
             try{
                 val = await global.app.client.$(ids.remoteAssistance.autoAccept).getValue()
-            }catch{
+            }catch(err){
+                console.log("Error while getting value of element with id: " + ids.remoteAssistance.autoAccept)
+                console.log("ERROR: " + err)
                 return null
             }
             if(val == "false"){
-                try{
-                    await global.app.client.$(ids.remoteAssistance.labelAutoAccept).click()
-                    isEnable = true
-                }catch{
-                    return null
-                }
+                if(await utils.click(ids.remoteAssistance.labelAutoAccept) == true) isEnable = true
+                else return null
             }else if (val == "true"){
                 isEnable = true
             }
@@ -1410,7 +1396,9 @@ const utils={
             try{
                 dropdown.click()
                 dataActivates = await dropdown.getAttribute("data-activates")
-            }catch{
+            }catch(err){
+                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.dropdown)
+                console.log("ERROR: " + err)
                 return null
             }
 
@@ -1427,14 +1415,7 @@ const utils={
             await utils.sleep(500)
 
             //clicca sulla wifi con ssid corrispondente
-            var ret = null
-            try{
-                ret = await global.app.client.$("span.network-ssid=" + ssid).click();
-            }catch{
-                ret = null
-            }
-
-            return ret != null
+            return await utils.click("span.network-ssid=" + ssid, false)
 
         },
         /**
@@ -1463,13 +1444,7 @@ const utils={
             await utils.sleep(500)
 
             //scelta tipo autenticazione
-            try{
-                global.app.client.$("#"+dataActivates+" > li:nth-child(4)").click()
-            }catch(err){
-                console.log("Error while clicking or getting attribute from element with id: " + "#"+dataActivates+" > li:nth-child(4)")
-                console.log("ERROR: " + err)
-                return null
-            }
+            if(await utils.click("#"+dataActivates+" > li:nth-child(4)") == false) return null
 
             await utils.sleep(500)
 
@@ -1488,7 +1463,7 @@ const utils={
             try{
                 classe = await global.app.client.$(ids.agileAuthentication.wifi.passwordField).getAttribute("class")
             }catch(err){
-                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.wifi.passwordField)
+                console.log("Error while getting attribute from element with id: " + ids.agileAuthentication.wifi.passwordField)
                 console.log("ERROR: " + err)
                 return null
             }
@@ -1514,7 +1489,9 @@ const utils={
             try{
                 dropdown.click()
                 dataActivates = await dropdown.getAttribute("data-activates")
-            }catch{
+            }catch(err){
+                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.dropdown)
+                console.log("ERROR: " + err)
                 return null
             }
 
@@ -1554,7 +1531,7 @@ const utils={
             try{
                 error = await global.app.client.$(ids.agileAuthentication.imprivata.address).getAttribute("aria-invalid")
                 addressText = await global.app.client.$(ids.agileAuthentication.imprivata.address).getValue()
-            }catch{
+            }catch(err){
                 console.log("Error while getting attribute or value from element with id: " + ids.agileAuthentication.imprivata.address)
                 console.log("ERROR: " + err)
                 return null
