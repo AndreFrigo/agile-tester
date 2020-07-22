@@ -161,12 +161,36 @@ const utils={
         return done
     },
     /**
-     * Click on an element given his id
+     * Wait max 20 seconds for an element to be available
+     * @param  {string} id This is the id of the element that has to be available
+     * @param  {boolean} condition This is the initial condition to stop the loop
+     */
+    waitForExist: async function(id, condition = false){
+        await new Promise(async function(resolve, reject){
+            if(condition) resolve()
+            var time = 0
+            var el = null
+            while(el == null && time < 10){
+                try{
+                    el = await global.app.client.$(id).getHTML()
+                }catch{
+                    el = null
+                }
+                utils.sleep(2000)
+                time++
+            }
+            resolve()
+        })
+        return
+    },
+    /**
+     * Click on an element given his id (wait max 20 sec for it to be enable)
      * @param  {string} id This is the ID ot the object to click
      * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
      * @return {boolean} True if the element was clicked, false in case of error
      */
     click: async function(id, printError = true){
+        await utils.waitForExist(id)
         try{
             await global.app.client.$(id).click()
         }catch(err){
@@ -180,13 +204,14 @@ const utils={
         return true
     },
     /**
-     * Insert a text in the text field with the given ID
+     * Insert a text in the text field with the given ID (wait max 20 sec for it to be enable)
      * @param  {string} id This is the ID ot the text field
      * @param  {string} text This is the text to set to the text field
      * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
      * @return {boolean} True if the text was inserted, false in case of error
      */
     insertText: async function(id, text, printError = true){
+        await utils.waitForExist(id)
         try{
             await global.app.client.$(id).setValue(text)
         }catch(err){
@@ -200,7 +225,7 @@ const utils={
         return true
     },
     /**
-     * Find an element in the Agile list
+     * Find an element in the Agile list (wait max 20 sec for it to be enable)
      * @param  {string | string[]} elemName This is the name of the element to find, can be a string or an array, the first occurence is returned
      * @param  {string} nameId Id of the html element that contains the name 
      * @param  {number} startIndex Start index for iteration
@@ -210,6 +235,7 @@ const utils={
      * @return {number} Index of the element founded, -1 if no element was found
      */
     findInList: async function(elemName, nameId, startIndex, listLength, printError = true, app = global.app){
+        await utils.waitForExist(id, listLength <= 0)
         var n = null
         for(i = startIndex; i < startIndex + listLength; i++){
             //salva il nome dell'elemento
@@ -241,13 +267,14 @@ const utils={
         return -1
     },
     /**
-     * Insert a text in the text field with the given ID using promises, this function is used instead of insertText when it does not work
+     * Insert a text in the text field with the given ID using promises, this function is used instead of insertText when it does not work (wait max 20 sec for it to be enable)
      * @param  {string} id This is the ID ot the text field
      * @param  {string} text This is the text to set to the text field
      * @param  {boolean} printError If true in case of error, it prints in the console the error, default: true
      * @return {boolean} True if the text was inserted, false in case of error
      */
     insertTextPromise: async function(id, text, printError = true){
+        await utils.waitForExist(id)
         const elem = global.app.client.$(id)
         try{
             elem.click()
@@ -276,6 +303,25 @@ const utils={
             return false
         }
         return true        
+    },
+    /**
+     * Get an attribure of an element (wait max 20 sec for it to be enable)
+     * @param  {string} id This is the id of the element
+     * @param  {string} attribute This is the attribute 
+     * @return {string | null} Return the attribute, null in case of errors
+     */
+    getAttribute: async function(id, attribute){
+        await utils.waitForExist(id)
+        var attr = null
+        try{
+            global.app.client.$(id).click()
+            attr = await global.app.client.$(id).getAttribute(attribute)
+        }catch(err){
+            console.log("Error while clicking or getting attribute from element with id: " + id)
+            console.log("ERROR: " + err)
+            return null
+        }
+        return attr
     },
 
     systemSettings: {
@@ -328,6 +374,8 @@ const utils={
             var i = 2
             var text = null
             var cont = true
+            //attendo solo per il primo
+            await utils.waitForExist(ids.systemSettings.language.label(i))
             while(cont){
                 try{
                     text = await global.app.client.$(ids.systemSettings.language.label(i)).getText()
@@ -367,6 +415,7 @@ const utils={
             await utils.sleep(1000)
 
             var widthElem = null
+            await utils.waitForExist(ids.systemSettings.sound.outputVolume)
             try{
                 widthElem = await global.app.client.getCssProperty(ids.systemSettings.sound.outputVolume, "width")
             }catch(err){
@@ -398,6 +447,7 @@ const utils={
 
             //legge il valore attuale dall'interfaccia agile
             var currentValue = null
+            await utils.waitForExist(ids.systemSettings.sound.outputLevel)
             try{
                 currentValue = await global.app.client.$(ids.systemSettings.sound.outputLevel).getText()
             }catch(err){
@@ -841,6 +891,7 @@ const utils={
             var name = null;
             for(i = 1; i<= length; i++){
                 try{
+                    await utils.waitForExist(ids.networkSettings.wifi.ssid(i))
                     name = await global.app.client.$(ids.networkSettings.wifi.ssid(i)).getText();
                     if(name.slice(14) == ssid){
                         return true
@@ -1223,6 +1274,7 @@ const utils={
             for(i = 0; i < length; i++){
                 //nome della startup nella lista
                 try{
+                    await utils.waitForExist(ids.startup.name(i))
                     n = await global.app.client.$(ids.startup.name(i)).getText();
                 }catch(err){
                     console.log("Error while getting attribute from element with id: " + ids.startup.name(i))
@@ -1231,6 +1283,7 @@ const utils={
                 } 
                 //comando della startup nella lista
                 try{
+                    await utils.waitForExist(ids.startup.command(i))
                     c = await global.app.client.$(ids.startup.command(i)).getText();
                 }catch(err){
                     console.log("Error while getting attribute from element with id: " + ids.startup.command(i))
@@ -1259,6 +1312,7 @@ const utils={
 
             var val = null
             try{
+                await utils.waitForExist(ids.remoteAssistance.enable)
                 val = await global.app.client.$(ids.remoteAssistance.enable).getValue()
             }catch(err){
                 console.log("Error while getting value of element with id: " + ids.remoteAssistance.enable)
@@ -1282,6 +1336,7 @@ const utils={
             await utils.sleep(500)
             var val = null
             try{
+                await utils.waitForExist(ids.remoteAssistance.showNotificationIcon)
                 val = await global.app.client.$(ids.remoteAssistance.showNotificationIcon).getValue()
             }catch(err){
                 console.log("Error while getting value of element with id: " + ids.remoteAssistance.showNotificationIcon)
@@ -1303,8 +1358,8 @@ const utils={
             await utils.remoteAssistance.enableRemoteAssistance()
             await utils.sleep(500)
             var val = null
-            var click = null
             try{
+                await utils.waitForExist(ids.remoteAssistance.requireAuthorization)
                 val = await global.app.client.$(ids.remoteAssistance.requireAuthorization).getValue()
             }catch(err){
                 console.log("Error while getting value of element with id: " + ids.remoteAssistance.requireAuthorization)
@@ -1324,27 +1379,14 @@ const utils={
          * @return {boolean | null} True if remote assistance and require user authentication are enable and the timeout is correct, false otherwise, null in case of errors
          */
         setAutoAccept: async function(v){
-            await utils.remoteAssistance.enableRemoteAssistance()
-
-            await utils.sleep(500)
-
-            var val = null
-            try{
-                val = await global.app.client.$(ids.remoteAssistance.requireAuthorization).getValue()
-            }catch(err){
-                console.log("Error while getting value of element with id: " + ids.remoteAssistance.requireAuthorization)
-                console.log("ERROR: " + err)
-                return null
-            }
-            if(val == "false"){
-                if(await utils.click(ids.remoteAssistance.labelRequireAuthorization) == false) return null
-            }
+            if(await utils.agileAuthentication.userAuthentication() == null) return null
 
             await utils.sleep(500)
 
             var isEnable = false
             val = null
             try{
+                await utils.waitForExist(ids.remoteAssistance.autoAccept)
                 val = await global.app.client.$(ids.remoteAssistance.autoAccept).getValue()
             }catch(err){
                 console.log("Error while getting value of element with id: " + ids.remoteAssistance.autoAccept)
@@ -1392,16 +1434,9 @@ const utils={
             await utils.sleep(1000)
 
             //dropdown per scegliere il tipo di autenticazione
-            const dropdown = global.app.client.$(ids.agileAuthentication.dropdown)
             var dataActivates = null
-            try{
-                dropdown.click()
-                dataActivates = await dropdown.getAttribute("data-activates")
-            }catch(err){
-                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.dropdown)
-                console.log("ERROR: " + err)
-                return null
-            }
+            dataActivates = await utils.getAttribute(ids.agileAuthentication.dropdown, "data-activates")
+            if(dataActivates == null) return null
 
             await utils.sleep(500)
 
@@ -1431,16 +1466,9 @@ const utils={
             await utils.sleep(500)
 
             //dropdown per il tipo di autenticazione
-            const auth = global.app.client.$(ids.agileAuthentication.wifi.authentication)
             var dataActivates = null
-            try{
-                auth.click()
-                dataActivates = await auth.getAttribute("data-activates")
-            }catch(err){
-                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.wifi.authentication)
-                console.log("ERROR: " + err)
-                return null
-            }
+            dataActivates = await utils.getAttribute(ids.agileAuthentication.wifi.authentication, "data-activates")
+            if(dataActivates == null) return null
 
             await utils.sleep(500)
 
@@ -1461,13 +1489,8 @@ const utils={
 
             //attributto class del text field per la password
             var classe = null
-            try{
-                classe = await global.app.client.$(ids.agileAuthentication.wifi.passwordField).getAttribute("class")
-            }catch(err){
-                console.log("Error while getting attribute from element with id: " + ids.agileAuthentication.wifi.passwordField)
-                console.log("ERROR: " + err)
-                return null
-            }
+            classe = await utils.getAttribute(ids.agileAuthentication.wifi.passwordField, "class")
+            if(classe == null) return null
 
             //se la password è corretta allora la classe sarà password-element, altrimenti no
             return classe == "password-element"
@@ -1485,16 +1508,9 @@ const utils={
             await utils.sleep(1000)
 
             //dropdown per scegliere il tipo di autenticazione
-            const dropdown = global.app.client.$(ids.agileAuthentication.dropdown)
             var dataActivates = null
-            try{
-                dropdown.click()
-                dataActivates = await dropdown.getAttribute("data-activates")
-            }catch(err){
-                console.log("Error while clicking or getting attribute from element with id: " + ids.agileAuthentication.dropdown)
-                console.log("ERROR: " + err)
-                return null
-            }
+            dataActivates = await utils.getAttribute(ids.agileAuthentication.dropdown, "data-activates")
+            if(dataActivates == null) return null
 
             await utils.sleep(500)
 
@@ -1511,6 +1527,7 @@ const utils={
             //spunta ignora errori ssl
             var ignore = null
             try{
+                await utils.waitForExist(ids.agileAuthentication.imprivata.ignoreSsl)
                 ignore = await global.app.client.$(ids.agileAuthentication.imprivata.ignoreSsl).getValue()
             }catch(err){
                 console.log("Error while getting value from element with id: " + ids.agileAuthentication.imprivata.ignoreSsl)
@@ -1529,6 +1546,7 @@ const utils={
             //controlli finali
             var error = null
             var addressText = null
+            await utils.waitForExist(ids.agileAuthentication.imprivata.address)
             try{
                 error = await global.app.client.$(ids.agileAuthentication.imprivata.address).getAttribute("aria-invalid")
                 addressText = await global.app.client.$(ids.agileAuthentication.imprivata.address).getValue()
@@ -1537,6 +1555,9 @@ const utils={
                 console.log("ERROR: " + err)
                 return null
             }
+            error = await utils.getAttribute(ids.agileAuthentication.imprivata.address, "aria-invalid")
+            //TODO: addressText, con funzione utils.getValue da fare
+            if(error == null || addressText == null) return null
 
             if(error == "true" || addressText == ""){
                 return false
@@ -1559,6 +1580,7 @@ const utils={
 
             await utils.sleep(1000)
 
+            await utils.waitForExist(ids.certificateManager.list)
             //itera nella lista e ne conta le righe 
             var num = 0
             var cont = true
