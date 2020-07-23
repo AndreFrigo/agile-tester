@@ -323,6 +323,23 @@ const utils={
         }
         return attr
     },
+    /**
+     * Get the value of an element (wait max 20 sec for it to be enable)
+     * @param  {string} id This is the id of the element
+     * @return {string | null} Return the value, null in case of errors
+     */
+    getValue: async function(id){
+        await utils.waitForExist(id)
+        var val = null
+        try{
+            val = await global.app.client.$(id).getValue()
+        }catch(err){
+            console.log("Error while getting value of element with id: " + id)
+            console.log("ERROR: " + err)
+            return null
+        }
+        return val
+    },
 
     systemSettings: {
          /**
@@ -1311,14 +1328,8 @@ const utils={
             await utils.sleep(1000)
 
             var val = null
-            try{
-                await utils.waitForExist(ids.remoteAssistance.enable)
-                val = await global.app.client.$(ids.remoteAssistance.enable).getValue()
-            }catch(err){
-                console.log("Error while getting value of element with id: " + ids.remoteAssistance.enable)
-                console.log("ERROR: " + err)
-                return null
-            }
+            val = await utils.getValue(ids.remoteAssistance.enable)
+            if(val == null) return null
             if(val == "false"){
                 return await utils.click(ids.remoteAssistance.labelEnable)
             }else if(val == "true"){
@@ -1335,14 +1346,8 @@ const utils={
             await utils.remoteAssistance.enableRemoteAssistance()
             await utils.sleep(500)
             var val = null
-            try{
-                await utils.waitForExist(ids.remoteAssistance.showNotificationIcon)
-                val = await global.app.client.$(ids.remoteAssistance.showNotificationIcon).getValue()
-            }catch(err){
-                console.log("Error while getting value of element with id: " + ids.remoteAssistance.showNotificationIcon)
-                console.log("ERROR: " + err)
-                return null
-            }
+            val = await utils.getValue(ids.remoteAssistance.showNotificationIcon)
+            if(val == null) return null
             if(val == "false"){
                 return await utils.click(ids.remoteAssistance.labelShowNotificationIcon)
             }else if (val == "true"){
@@ -1358,14 +1363,8 @@ const utils={
             await utils.remoteAssistance.enableRemoteAssistance()
             await utils.sleep(500)
             var val = null
-            try{
-                await utils.waitForExist(ids.remoteAssistance.requireAuthorization)
-                val = await global.app.client.$(ids.remoteAssistance.requireAuthorization).getValue()
-            }catch(err){
-                console.log("Error while getting value of element with id: " + ids.remoteAssistance.requireAuthorization)
-                console.log("ERROR: " + err)
-                return null
-            }
+            val = await utils.getValue(ids.remoteAssistance.requireAuthorization)
+            if(val == null) return null
             if(val == "false"){
                 return await utils.click(ids.remoteAssistance.labelRequireAuthorization)
             }else if (val == "true"){
@@ -1385,14 +1384,8 @@ const utils={
 
             var isEnable = false
             val = null
-            try{
-                await utils.waitForExist(ids.remoteAssistance.autoAccept)
-                val = await global.app.client.$(ids.remoteAssistance.autoAccept).getValue()
-            }catch(err){
-                console.log("Error while getting value of element with id: " + ids.remoteAssistance.autoAccept)
-                console.log("ERROR: " + err)
-                return null
-            }
+            val = await utils.getValue(ids.remoteAssistance.autoAccept)
+            if(val == null) return null
             if(val == "false"){
                 if(await utils.click(ids.remoteAssistance.labelAutoAccept) == true) isEnable = true
                 else return null
@@ -1526,14 +1519,8 @@ const utils={
 
             //spunta ignora errori ssl
             var ignore = null
-            try{
-                await utils.waitForExist(ids.agileAuthentication.imprivata.ignoreSsl)
-                ignore = await global.app.client.$(ids.agileAuthentication.imprivata.ignoreSsl).getValue()
-            }catch(err){
-                console.log("Error while getting value from element with id: " + ids.agileAuthentication.imprivata.ignoreSsl)
-                console.log("ERROR: " + err)
-                return null
-            }
+            ignore = await utils.getValue(ids.agileAuthentication.imprivata.ignoreSsl)
+            if(ignore == null) return null
             if(ignore == "false" && await utils.click(ids.agileAuthentication.imprivata.labelIgnoreSsl) == false) return null
 
             await utils.sleep(500)
@@ -1546,17 +1533,8 @@ const utils={
             //controlli finali
             var error = null
             var addressText = null
-            await utils.waitForExist(ids.agileAuthentication.imprivata.address)
-            try{
-                error = await global.app.client.$(ids.agileAuthentication.imprivata.address).getAttribute("aria-invalid")
-                addressText = await global.app.client.$(ids.agileAuthentication.imprivata.address).getValue()
-            }catch(err){
-                console.log("Error while getting attribute or value from element with id: " + ids.agileAuthentication.imprivata.address)
-                console.log("ERROR: " + err)
-                return null
-            }
             error = await utils.getAttribute(ids.agileAuthentication.imprivata.address, "aria-invalid")
-            //TODO: addressText, con funzione utils.getValue da fare
+            addressText = await utils.getValue(ids.agileAuthentication.imprivata.address)
             if(error == null || addressText == null) return null
 
             if(error == "true" || addressText == ""){
