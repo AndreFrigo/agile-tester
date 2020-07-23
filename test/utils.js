@@ -1396,7 +1396,7 @@ const utils={
          * @return {boolean | null} True if remote assistance and require user authentication are enable and the timeout is correct, false otherwise, null in case of errors
          */
         setAutoAccept: async function(v){
-            if(await utils.agileAuthentication.userAuthentication() == null) return null
+            if(await utils.remoteAssistance.userAuthentication() == null) return null
 
             await utils.sleep(500)
 
