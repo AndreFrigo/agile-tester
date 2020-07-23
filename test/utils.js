@@ -344,9 +344,10 @@ const utils={
     systemSettings: {
          /**
          * Choose english as Agile language
+         * @param  {boolean} checkLabel If true then read the text of the menu to confirm the language has changed, else only click to the language, default false
          * @return {boolean | null} True if english has been selected, false otherwise, null in case of errors
          */
-        chooseEnglish: async function(){
+        chooseEnglish: async function(checkLabel = false){
             //va nelle impostazioni di sistema
             if(await utils.click(ids.systemSettings.menuID) == false) return null
 
@@ -411,8 +412,23 @@ const utils={
             await utils.sleep(1000)
 
             //clicca nella lingua inglese
-            if(await utils.click(sel) == true) return true
-            else return false
+            const ret = await utils.click(sel)
+
+            if(!checkLabel){
+                if(ret == true) return true
+                else return false
+            }else{
+                await utils.sleep(1000)
+                var lan = null
+                try{
+                    lan = await global.app.client.$(ids.systemSettings.menuID).getText()
+                }catch(err){
+                    console.log("Error while getting text of element with id: " + ids.systemSettings.menuID)
+                    console.log("ERROR: " + err)
+                    lan = null
+                }
+                return lan == "System Settings"
+            }
             
         },
         /**

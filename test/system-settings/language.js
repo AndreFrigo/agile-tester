@@ -57,17 +57,8 @@ describe("Choose english as language", function(){
         
         it("should return true if the language changed to english and Agile language is correct", async () => {
             var change = null
-            change = await utils.systemSettings.chooseEnglish()
-            var ret = false
-            await utils.sleep(1500)
-            var lan = null
-            try{
-                lan = await global.app.client.$(ids.systemSettings.menuID).getText()
-            }catch{
-                lan = null
-            }
-            ret = (lan == "System Settings")
-            expect(change && ret).to.be.true
+            change = await utils.systemSettings.chooseEnglish(true)
+            expect(change).to.be.true
         })
         
     })
@@ -108,17 +99,8 @@ describe("Choose english as language", function(){
         
         it("should return true if the language changed to english and Agile language is correct", async () => {
             var change = null
-            change = await utils.systemSettings.chooseEnglish()
-            var ret = false
-            await utils.sleep(1500)
-            var lan = null
-            try{
-                lan = await global.app.client.$(ids.systemSettings.menuID).getText()
-            }catch{
-                lan = null
-            }
-            ret = (lan == "System Settings")
-            expect(change && ret).to.be.true
+            change = await utils.systemSettings.chooseEnglish(true)
+            expect(change).to.be.true
         })
 
     })
@@ -159,17 +141,8 @@ describe("Choose english as language", function(){
 
         it("should return true if the language changed to english and Agile language is correct", async () => {
             var change = null
-            change = await utils.systemSettings.chooseEnglish()
-            var ret = false
-            await utils.sleep(1500)
-            var lan = null
-            try{
-                lan = await global.app.client.$(ids.systemSettings.menuID).getText()
-            }catch{
-                lan = null
-            }
-            ret = (lan == "System Settings")
-            expect(change && ret).to.be.true
+            change = await utils.systemSettings.chooseEnglish(true)
+            expect(change).to.be.true
         })
         
     })
