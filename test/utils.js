@@ -308,16 +308,18 @@ const utils={
      * Get an attribure of an element (wait max 20 sec for it to be enable)
      * @param  {string} id This is the id of the element
      * @param  {string} attribute This is the attribute 
+     * @param  {boolean} click If true it clicks the element before getting his attribute, if false otherwise, defaule true
      * @return {string | null} Return the attribute, null in case of errors
      */
-    getAttribute: async function(id, attribute){
+    getAttribute: async function(id, attribute, click = true){
         await utils.waitForExist(id)
         var attr = null
         try{
-            global.app.client.$(id).click()
+            if(click) global.app.client.$(id).click()
             attr = await global.app.client.$(id).getAttribute(attribute)
         }catch(err){
-            console.log("Error while clicking or getting attribute from element with id: " + id)
+            if(click) console.log("Error while clicking or getting attribute from element with id: " + id)
+            else console.log("Error while getting attribute from element with id: " + id)
             console.log("ERROR: " + err)
             return null
         }
@@ -1498,7 +1500,7 @@ const utils={
 
             //attributto class del text field per la password
             var classe = null
-            classe = await utils.getAttribute(ids.agileAuthentication.wifi.passwordField, "class")
+            classe = await utils.getAttribute(ids.agileAuthentication.wifi.passwordField, "class", false)
             if(classe == null) return null
 
             //se la password è corretta allora la classe sarà password-element, altrimenti no
