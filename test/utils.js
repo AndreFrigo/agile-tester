@@ -1095,7 +1095,7 @@ const utils={
 
             //indice dell'elemento da eliminare
             const index = await utils.findInList(indirizzo+": "+ address, ids.thinmanSettings.address, 1, length)
-
+            if(index == -1) return false
             //elimina l'elemento premendo il bottone
             if(await utils.click(ids.thinmanSettings.delete(index), false) == true) return true
             else return false
