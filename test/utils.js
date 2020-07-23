@@ -1226,6 +1226,7 @@ const utils={
             
             //indice dell'elemento da eliminare
             const index = await utils.findInList(vidPid, ids.usbRedirection.vidPid, 1, length)
+            if(index == -1) return false
 
             //elimina l'elemento premendo il bottone
             if(await utils.click(ids.usbRedirection.delete(index), false) == true) return true
