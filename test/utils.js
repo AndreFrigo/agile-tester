@@ -167,16 +167,17 @@ const utils={
      */
     waitForExist: async function(id, condition = false){
         await new Promise(async function(resolve, reject){
-            if(condition) resolve()
+            var el = false
+            if(condition) el = true
             var time = 0
-            var el = null
-            while(el == null && time < 10){
+            while(el == false && time < 10){
                 try{
-                    el = await global.app.client.$(id).getHTML()
+                    el = await global.app.client.isExisting(id)
                 }catch{
-                    el = null
+                    el = false
                 }
-                utils.sleep(2000)
+                if(el) resolve()
+                await utils.sleep(2000)
                 time++
             }
             resolve()
