@@ -235,7 +235,7 @@ const utils={
      * @return {number} Index of the element founded, -1 if no element was found
      */
     findInList: async function(elemName, nameId, startIndex, listLength, printError = true, app = global.app){
-        await utils.waitForExist(id, listLength <= 0)
+        await utils.waitForExist(nameId(startIndex), listLength <= 0)
         var n = null
         for(i = startIndex; i < startIndex + listLength; i++){
             //salva il nome dell'elemento
