@@ -7,7 +7,7 @@ var localDB = null
 
 
 
-describe("Add USB redirection rule", function(){
+describe("USB redirection tests", function(){
 
     this.timeout(100000)
 
@@ -35,30 +35,27 @@ describe("Add USB redirection rule", function(){
     })
     
 
-    describe("Usb redirection tests", async () => {
+    const wrongValues = values.usbRedirection.add.wrongValues
+    wrongValues.forEach(elem => {
+        it("should return false for invalid description, vid or pid", async () => {
+            expect(await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)).to.be.false
+        })
+    })
 
-        const wrongValues = values.usbRedirection.add.wrongValues
-        wrongValues.forEach(elem => {
-            it("should return false for invalid description, vid or pid", async () => {
-                expect(await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)).to.be.false
-            })
+    const rightValues = values.usbRedirection.add.rightValues
+    rightValues.forEach(elem => {
+        it("should return true if the rule has been added", async () => {
+            expect(await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)).to.be.true
         })
 
-        const rightValues = values.usbRedirection.add.rightValues
-        rightValues.forEach(elem => {
-            it("should return true if the rule has been added", async () => {
-                expect(await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)).to.be.true
-            })
-
-            it("should return true if the rule has been added and then deleted", async () => {
-                var add = null
-                var del = null
-                add = await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)
-                await utils.sleep(500)
-                del = await utils.usbRedirection.deleteRule(elem.vid, elem.pid)
-                await utils.sleep(500)
-                expect(add && del).to.be.true
-            })
+        it("should return true if the rule has been added and then deleted", async () => {
+            var add = null
+            var del = null
+            add = await utils.usbRedirection.addRule(elem.description, elem.vid, elem.pid)
+            await utils.sleep(500)
+            del = await utils.usbRedirection.deleteRule(elem.vid, elem.pid)
+            await utils.sleep(500)
+            expect(add && del).to.be.true
         })
     })
 
