@@ -55,13 +55,15 @@ const utils={
 
         //Dopo il login attende che l'applicazione sia completamente avviata e non in caricamento
         var ok = null
-        while(ok == null){
+        var i = 0
+        while(ok == null && i<20){
             try{
-                ok = await global.app.client.$(ids.about.menuID).getText()
+                ok = await global.app.client.$(ids.about.menuID).click()
             }catch{
                 ok = null
                 await utils.sleep(1000)
             }
+            i++
         }
         
     },
