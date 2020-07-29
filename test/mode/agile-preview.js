@@ -5,12 +5,20 @@ const {info} = require("../set-before-test");
 const agileService = require("agile-os-interface")
 var robot = null
 var localDB = null
+var preview = null
 
 describe("Test agile mode", function(){
-    const preview = new Application({
-        path: "C:\\Program Files (x86)\\Praim\\Agile\\Agile\\Agile.exe",
-        args: ["windowed"]
-    });
+    if(info.os == "w"){
+        preview = new Application({
+            path: "C:\\Program Files (x86)\\Praim\\Agile\\Agile\\Agile.exe",
+            args: ["windowed"]
+        });
+    }else if(info.os == "l"){
+        preview = new Application({
+            path: "/usr/lib/agile-kiosk/Agile",
+            args: ["windowed"]
+        });
+    }
 
     this.timeout(100000)
 

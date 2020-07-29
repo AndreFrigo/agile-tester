@@ -166,15 +166,16 @@ const utils={
      * Wait max 20 seconds for an element to be available
      * @param  {string} id This is the id of the element that has to be available
      * @param  {boolean} condition This is the initial condition to stop the loop
+     * @param  {application} app This is the app running, default global.app
      */
-    waitForExist: async function(id, condition = false){
+    waitForExist: async function(id, condition = false, app = global.app){
         await new Promise(async function(resolve, reject){
             var el = false
             if(condition) el = true
             var time = 0
             while(el == false && time < 10){
                 try{
-                    el = await global.app.client.isExisting(id)
+                    el = await app.client.isExisting(id)
                 }catch{
                     el = false
                 }
@@ -238,7 +239,7 @@ const utils={
      * @return {number} Index of the element founded, -1 if no element was found
      */
     findInList: async function(elemName, nameId, startIndex, listLength, printError = true, app = global.app){
-        await utils.waitForExist(nameId(startIndex), listLength <= 0)
+        await utils.waitForExist(nameId(startIndex), listLength <= 0, app)
         var n = null
         for(i = startIndex; i < startIndex + listLength; i++){
             //salva il nome dell'elemento
