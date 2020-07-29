@@ -8,8 +8,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-
-describe("Delete local browser tests", function(){
+describe("Test delete local browser", function(){
 
     this.timeout(100000)
 

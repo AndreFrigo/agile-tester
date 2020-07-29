@@ -5,7 +5,7 @@ const { expect } = require("chai");
 const agileService = require("agile-os-interface")
 var localDB = null
 
-describe("Check add device", function () {
+describe("Test add device lock rule", function () {
     
     this.timeout(100000)
 

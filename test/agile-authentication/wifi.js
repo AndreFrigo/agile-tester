@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("Check authentication settings", function(){
+describe("Test wifi authentication settings", function(){
 
     this.timeout(100000)
 

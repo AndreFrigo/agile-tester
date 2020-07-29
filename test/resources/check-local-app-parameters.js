@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("Add a local resource tests", function(){
+describe("Test local resource parameters", function(){
 
     this.timeout(150000)
 

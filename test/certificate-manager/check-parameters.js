@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("Check certificate parameters", function(){
+describe("Test certificate parameters", function(){
 
     this.timeout(150000)
 

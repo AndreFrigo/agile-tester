@@ -5,7 +5,7 @@ const agileService = require("agile-os-interface");
 const {db} = require("../db.js");
 var localDB = null
 
-describe("Check imprivata authentication settings", function(){
+describe("Test imprivata authentication settings", function(){
 
     this.timeout(100000)
 

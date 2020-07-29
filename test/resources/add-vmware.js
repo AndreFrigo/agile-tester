@@ -6,7 +6,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("test add VMware recource", function(){
+describe("Test add VMware recource", function(){
 
     this.timeout(100000)
 

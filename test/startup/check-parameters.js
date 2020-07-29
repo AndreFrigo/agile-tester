@@ -6,7 +6,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("Check startup parameters", function () {
+describe("Test startup parameters", function () {
 
     this.timeout(100000)
 

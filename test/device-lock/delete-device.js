@@ -6,7 +6,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("check delete device", function(){
+describe("Test delete device lock rule", function(){
 
     this.timeout(100000)
 

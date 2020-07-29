@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("check remote assistance settings", function(){
+describe("Test remote assistance settings", function(){
 
     this.timeout(100000)
 

@@ -9,7 +9,7 @@ var localDB = null
 
 
 
-describe("Check resource parameters", function(){
+describe("Test local browser parameters", function(){
 
     this.timeout(100000)
 

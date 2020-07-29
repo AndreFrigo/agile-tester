@@ -4,7 +4,7 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
 
-describe("Check add usb redirection rule", function(){
+describe("Test add usb redirection rule", function(){
 
     this.timeout(100000)
 

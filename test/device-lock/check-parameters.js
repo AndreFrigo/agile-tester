@@ -9,7 +9,7 @@ var localDB = null
 
 
 //Aggiunge una nuova regola per il blocco di un device
-describe("Check device lock parameters", function(){
+describe("Test device lock parameters", function(){
 
     this.timeout(100000)
 

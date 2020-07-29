@@ -7,7 +7,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("add local application tests", function(){
+describe("Test add local application", function(){
 
     this.timeout(150000)
 

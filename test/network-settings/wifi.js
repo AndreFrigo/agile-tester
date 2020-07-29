@@ -6,7 +6,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("Check if a wifi saved is available", function(){
+describe("Test wifi availability", function(){
 
     this.timeout(100000)
 

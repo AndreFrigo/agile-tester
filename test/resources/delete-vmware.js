@@ -7,7 +7,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("delete VMware resource tests", function(){
+describe("Test delete VMware resource", function(){
 
     this.timeout(100000)
 

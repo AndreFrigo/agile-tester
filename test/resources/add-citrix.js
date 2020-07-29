@@ -6,7 +6,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("test add citrix resource", function(){
+describe("Test add citrix resource", function(){
 
     this.timeout(100000)
 

@@ -6,7 +6,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("Check if a resource created is available", function(){
+describe("Test add local browser", function(){
 
     this.timeout(100000)
 

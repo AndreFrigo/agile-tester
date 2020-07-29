@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("add microsoft resource parameters test", function(){
+describe("Test microsoft parameters", function(){
 
     this.timeout(150000)
 

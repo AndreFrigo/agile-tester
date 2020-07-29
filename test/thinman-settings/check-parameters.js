@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 var localDB = null
 
 
-describe("Check address parameters", function(){
+describe("Test thinman address parameters", function(){
 
     //timeout lungo perchè può attendere diversi secondi per il test della connessione
     this.timeout(90000)

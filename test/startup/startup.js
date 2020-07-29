@@ -6,7 +6,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("Check startup database", function(){
+describe("Test startup availability", function(){
 
     this.timeout(100000)
 

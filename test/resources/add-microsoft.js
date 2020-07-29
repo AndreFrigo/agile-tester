@@ -7,7 +7,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("test add microsoft resource", function(){
+describe("Test add microsoft resource", function(){
 
     this.timeout(150000)
 

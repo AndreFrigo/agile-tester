@@ -8,7 +8,7 @@ var localDB = null
 
 
 
-describe("Check delete address", function(){
+describe("Test delete thinman address", function(){
 
     this.timeout(100000)
 

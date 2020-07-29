@@ -7,7 +7,7 @@ var localDB = null
 
 
 
-describe("USB redirection tests", function(){
+describe("Test usb redirection parameters", function(){
 
     this.timeout(100000)
 

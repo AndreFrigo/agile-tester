@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("add a VMware resource tests", function(){
+describe("Test VMware parameters", function(){
 
     this.timeout(100000)
 

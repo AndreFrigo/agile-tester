@@ -8,7 +8,7 @@ var localDB = null
 
 
 //Imposta la lingua di agile in english
-describe("Choose english as language", function(){
+describe("Test choose english as language", function(){
     
     this.timeout(100000)
     

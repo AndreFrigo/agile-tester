@@ -8,7 +8,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("delete microsoft resource tests", function(){
+describe("Test delete microsoft resource", function(){
 
     this.timeout(100000)
 

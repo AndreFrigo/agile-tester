@@ -4,7 +4,7 @@ const {utils} = require("../utils.js");
 const { expect } = require("chai");
 var localDB = null
 
-describe("delete usb rule tests", function(){
+describe("Test delete usb redirection rule tests", function(){
 
     this.timeout(100000)
 

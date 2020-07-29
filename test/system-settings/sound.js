@@ -9,7 +9,7 @@ var audio = null
 var localVolume = null
 var localMute = null
 
-describe("set output sound", function(){
+describe("Test output sound", function(){
 
     this.timeout(100000)
 

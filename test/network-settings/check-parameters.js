@@ -9,7 +9,7 @@ var localDB = null
 
 
 //FUNZIONA SOLO CON WIFI CHE RICHIEDONO SSID E PASSWORD
-describe("Check WiFi parameters", function(){
+describe("Test WiFi parameters", function(){
 
     this.timeout(100000)
 

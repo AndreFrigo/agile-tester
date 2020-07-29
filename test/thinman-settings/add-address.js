@@ -6,7 +6,7 @@ const agileService = require("agile-os-interface")
 
 var localDB = null
 
-describe("Check add address", function(){
+describe("Test add thinman address", function(){
 
     this.timeout(100000)
 

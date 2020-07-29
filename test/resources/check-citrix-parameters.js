@@ -7,7 +7,7 @@ const values = require("../test-values.js")
 
 var localDB = null
 
-describe("add a citrix resource test", function(){
+describe("Test citrix parameters", function(){
 
     this.timeout(100000)
 
