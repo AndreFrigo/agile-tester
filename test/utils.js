@@ -47,6 +47,7 @@ const utils={
                     //chiude il notification pop-up
                     await global.app.client.$("#main-div > div:nth-child(3) > span > div.notification > a").click();
                 }catch{
+                    console.log("Errore autenticazione")
                 }
             }catch{
                 console.log("Errore autenticazione")
