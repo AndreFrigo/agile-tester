@@ -3,12 +3,17 @@ const {info} = require ("./set-before-test.js")
 
 const db={
     conn: null,
-    //connessione al database
+    /**
+     * Connection to the database
+     */
     dbConnection(){
         db.conn = redis.createClient(1681);
         db.conn.auth(info.dbPass);
     },
-    //controlla lingua nel database, output: int (1,2,3), 0 for error
+    /**
+     * Check Agile language in database
+     * @return  {integer} 1 for Italian, 2 for English, 3 for Spanish, 0 otherwise
+     */
     dbLanguage: async function(){
         db.conn.select(1);
         //creo una promise con dentro il get dal db
@@ -24,10 +29,11 @@ const db={
         }) 
         return r;
     },
-    //input: 
-        //address: hostname dell'elemento da cercare
-    //output: 
-        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    /**
+     * Search for a thinman in the database
+     * @param  {string} address This is the hostname/address of the thinman to search
+     * @return {object | null} The thinman found, null if no thinman has been found
+     */
     getThinManFromHostname: async function(address){
         var elem = null;
         db.conn.select(1);
@@ -44,7 +50,10 @@ const db={
         });
         return elem;
     },
-    //output: list of address length
+    /**
+     * Get the length of the list of thinman address
+     * @return {integer} The number of thinman address
+     */
     getThinManListLength: async function(){
         db.conn.select(1);
         //numero di address agile 
@@ -56,11 +65,12 @@ const db={
         })
         return length;
     },
-    //input: 
-        //vid: vid dell'elemento da cercare
-        //pid: pid dell'elemento da cercare
-    //output: 
-        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    /**
+     * Get an usb redirection rule 
+     * @param  {string} vid This is the vid of the element
+     * @param  {string} pid This is the pid of the element
+     * @return {object | null} The rule found, null if there is no rule
+     */
     getUSBFromVidPid: async function(vid,pid){
         var elem = null;
         db.conn.select(1);
@@ -78,7 +88,10 @@ const db={
         });
         return elem;
     },
-    //output: length of the list of address 
+    /**
+     * Get the length of the list of usb redirection rules
+     * @return {integer} The number of usb redirection rules
+     */
     getUSBRedirectionListLength: async function(){
         db.conn.select(1);
         //numero di rules 
@@ -90,10 +103,11 @@ const db={
         })
         return length;
     },
-    //input: 
-        //name: nome dell'elemento da cercare
-    //output: 
-        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    /**
+     * Get a resource 
+     * @param  {string} name This is the name of the resource to find
+     * @return {object | null} The resource found, null if there is no resource
+     */
     getResourceFromName: async function(name){
         var elem = null;
         db.conn.select(1);
@@ -111,7 +125,10 @@ const db={
         })
         return elem;
     },
-    //output: length of the list of resources 
+    /**
+     * Get the length of the list of resources
+     * @return {integer} The number of resources
+     */ 
     getResourceListLength: async function(){
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
@@ -122,11 +139,12 @@ const db={
         })
         return length;
     },
-    //input: 
-        //vid: vid dell'elemento da cercare
-        //pid: pid dell'elemento da cercare
-    //output: 
-        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    /**
+     * Get a device lock rule 
+     * @param  {string} vid This is the vid of the element
+     * @param  {string} pid This is the pid of the element
+     * @return {object | null} The rule found, null if there is no rule
+     */
     getDeviceLock: async function(vid,pid){
         var elem = null;
         db.conn.select(1);
@@ -144,7 +162,10 @@ const db={
         })
         return elem;
     },
-    //output: length of the list of device locked  
+    /**
+     * Get the length of the list of device lock rules
+     * @return {integer} The number of device lock rules
+     */ 
     getDeviceLockListLength: async function(){
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
@@ -155,10 +176,11 @@ const db={
         })
         return length;
     },
-    //input: 
-        //ssid: ssid della WiFi da cercare 
-    //output: 
-        //elem: elemento da cercare, null se nessun elemento è stato trovato
+    /**
+     * Get a wifi 
+     * @param  {string} ssid This is the ssid of the wifi to find
+     * @return {object | null} The wifi found, null if there is no wifi
+     */
     getWifi: async function(ssid){
         var elem = null;
         db.conn.select(1);
@@ -176,7 +198,10 @@ const db={
         })
         return elem;
     },
-    //output: length of the list of device locked  
+    /**
+     * Get the length of the list of wifi
+     * @return {integer} The number of wifi
+     */ 
     getWifiListLength: async function(){
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
@@ -187,10 +212,11 @@ const db={
         })
         return length;
     },
-    //input: 
-        //name: nome della startup da cercare
-    //output: 
-        //elem: elemento da cercare, null se nessun elemento è stato trovato 
+    /**
+     * Get a startup 
+     * @param  {string} name This is the name of the startup to find
+     * @return {object | null} The startup found, null if there is no startup
+     */
     getStartup: async function(name){
         //select 0 perchè le funzioni getAutorun e setAutorun lavorano su quello
         db.conn.select(0)
@@ -208,7 +234,10 @@ const db={
         })
         return elem
     },
-    //output: length of the list of startup
+    /**
+     * Get the length of the list of startups
+     * @return {integer} The number of startups
+     */
     getStartupListLength: async function(){
         db.conn.select(1);
         const length = await new Promise(function(resolve, reject){
@@ -219,6 +248,10 @@ const db={
         })
         return length
     },
+    /**
+     * Get remote assistance object 
+     * @return {object} The remote assistance object
+     */
     getRemoteAssistance: async function(){
         db.conn.select(1)
         const remoteAssistance = await new Promise(function(resolve, reject){
@@ -229,6 +262,10 @@ const db={
         })
         return remoteAssistance
     },
+    /**
+     * Get the system output volume 
+     * @return {integer} The system output volume
+     */
     getOutputVolume: async function(){
         db.conn.select(0)
         const vol = await new Promise(function(resolve, reject){
@@ -239,6 +276,10 @@ const db={
         })
         return vol
     },
+    /**
+     * Get authentication object 
+     * @return {object} The authentication object
+     */
     getAuthentication: async function(){
         db.conn.select(1)
         const auth = await new Promise(function(resolve, reject){
