@@ -33,7 +33,7 @@
   "dependencies": {
     "agile-log": "^1.2.1",
     "agile-os-interface": "^5.3.5",
-    "redis": "^3.0.2"
+    "redis": "^3.1.1"
   },
   "optionalDependencies": {
     "loudness": "^0.3.0",
